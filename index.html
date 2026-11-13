@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>にいかわスポーツドーム｜コート予約（テスト）</title><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>にいかわスポーツドーム｜コート予約</title><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;color:#123247;background:#fff}*{box-sizing:border-box}body{margin:0}
 header{background:#006fb7;color:white;padding:16px max(16px,calc((100vw - 1000px)/2))}
@@ -67,32 +67,40 @@ input.nospin::-webkit-outer-spin-button,input.nospin::-webkit-inner-spin-button{
 details.how{margin:6px 0}details.how summary{cursor:pointer;color:#0b4f73;font-size:14px}
 .terms{border-top:1px solid #d5dde2;margin:16px 0 8px;padding-top:4px}.terms h3{font-size:16px;margin:12px 0 4px}.terms p{margin:4px 0;font-size:14.5px}
 table.cx{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}table.cx th,table.cx td{border:1px solid #c5d0d6;padding:6px 8px;text-align:left}table.cx th{background:#eef3f6}
+.tint.slim{padding:10px 12px;margin:0 0 10px}.tint.slim .window-line{margin:0}.tint.slim details.how{margin-top:6px}
+h2.step{font-size:20px;margin:18px 0 8px;color:#0b4f73}h2.step.wide{grid-column:1/-1;margin:10px 0 0}
+.multi-wrap{display:flex!important;align-items:center;gap:12px;border:2px solid #0a75ae;border-radius:10px;padding:14px;background:#fff;font-size:17px;cursor:pointer}
+.multi-wrap.hidden{display:none!important}.multi-wrap input{width:26px;height:26px;flex:none;margin:0}.multi-wrap:has(input:checked){background:#e6f6ee;border-color:#00a566}
+.date-label{font-size:18px;font-weight:700;color:#0b4f73;margin-top:-4px}.date-label:empty{display:none}
+.pick-head{font-size:19px;font-weight:700;color:#0b4f73;margin:14px 0 4px}
+.slot-status{background:#00a566;color:#fff;font-size:18px;font-weight:700;padding:14px;border-radius:10px;margin:12px 0;text-align:center}
+.slot-status.hidden{display:none}
 </style></head><body>
-<header><strong>にいかわスポーツドーム</strong><small>コート予約｜動作確認用デモ</small></header><main>
+<header><strong>にいかわスポーツドーム</strong><small>コート予約</small></header><main>
 
 <dialog id="action-confirm-dialog" class="modal-backdrop"><form method="dialog"><h2 id="action-confirm-title">操作の確認</h2><p id="action-confirm-text" style="white-space:pre-line"></p><div class="modal-actions"><button class="secondary" value="cancel" type="submit">戻る</button><button id="action-confirm-ok" value="ok" type="submit">この内容で実行</button></div></form></dialog>
 <section id="cancel-view" class="hidden"><div class="card"><h1>予約のキャンセル</h1><div id="cancel-detail" role="status">予約を確認中…</div><button id="cancel-action" type="button" class="secondary hidden" onclick="cancelSelected()">この予約をキャンセルする</button></div></section>
 <section id="user">
  <div class="card"><h1>予約希望を出す</h1>
   <ol class="flow" aria-label="申込みの流れ"><li><b>ここで申し込む</b></li><li><b>スタッフが確認・承認</b></li><li><b>確定のメールが届いて、予約が確定</b></li></ol>
-  <p class="hint test-note">テスト用のため、実際の予約には使わないでください。</p>
   <div class="tint"><label class="big-label">お客様の区分<span class="required">必須</span><select id="member" onchange="memberChanged()"><option value="">選んでください</option><option value="会員">会員の方</option><option value="一般">会員でない方（一般）</option></select></label>
    <p class="hint small">会員の方は、利用時に会員証を確認します。料金は、区分によって変わります。</p><p class="hint small">18歳未満の方は、保護者の同伴と署名が必要です。</p></div>
   <div class="grid"><label>お名前<span class="required">必須</span><input id="name" autocomplete="name" required></label><label>電話番号<span class="required">必須</span><input id="phone" type="tel" autocomplete="tel" required></label><label>メールアドレス<span class="required">必須</span><input id="email" type="email" autocomplete="email" required></label></div></div>
- <div class="card"><h2>施設と利用時間</h2><div class="tint"><strong>WEB予約の受付</strong><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></div><div id="summary" class="summary hidden"><strong>選択済みの施設</strong><div id="cart"></div></div>
+ <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>受付のくわしい案内（当日・前日・先の日程）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></details></div><h2 class="step">1　利用する施設</h2><div id="summary" class="summary hidden"><strong>追加した施設</strong><div id="cart"></div></div>
   <div class="grid"><label id="type-wrap">利用区分<select id="type" onchange="typeChanged()"><option value="soccer">サッカー</option><option value="baseball">野球</option><option value="multi">多目的のみ</option></select></label>
    <label id="facility-wrap">利用する施設<select id="facility" onchange="facilityChanged()"><option value="1">ミニコート（1/3面）</option><option value="2">ミニコート×2（2/3面）</option><option value="3">フルコート</option></select></label><div id="next-fixed" class="hidden"><strong>次に選べる施設</strong><div class="select-fixed">多目的コート</div></div>
-   <label id="people-wrap" class="hidden">利用人数（個人料金の比較に使用）<input id="people" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" oninput="updatePrice()"><small class="hint">対象時間内でも、ミニコート・多目的は5人以上、サブコートは2人以上でコート料金と同額になります。</small></label>
+   <label id="multi-wrap" class="multi-wrap hidden"><input type="checkbox" id="with-multi" onchange="multiChanged()"><span><strong>＋ 多目的コートも、同じ時間で使う</strong></span></label>
+   <label id="people-wrap" class="hidden">人数<input id="people" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" oninput="updatePrice()"></label>
    <label id="lane-wrap" class="hidden">ブルペンの利用レーン数<select id="lane-count" onchange="refreshSlots()"><option value="1">1レーン</option><option value="2">2レーン</option><option value="3">3レーン</option></select></label>
-   <label>利用日<input id="date" type="date" onchange="refreshSlots()"></label><div id="booking-date-warning" class="notice error hidden" role="alert" style="border:2px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700"></div>
+   <h2 class="step wide">2　日時</h2><label>利用日<input id="date" type="date" onchange="refreshSlots()"></label><div id="date-label" class="date-label wide"></div><div id="booking-date-warning" class="notice error hidden" role="alert" style="border:2px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700"></div>
    <label>利用時間<select id="duration" onchange="refreshSlots()"><option value="60">1時間</option><option value="90">1時間30分</option><option value="120">2時間</option><option value="150">2時間30分</option><option value="180">3時間</option><option value="210">3時間30分</option><option value="240">4時間</option><option value="270">4時間30分</option><option value="300">5時間</option><option value="330">5時間30分</option><option value="360">6時間</option><option value="390">6時間30分</option><option value="420">7時間</option><option value="450">7時間30分</option><option value="480">8時間</option></select></label></div>
-  <p id="hours" class="hours-line"></p><p><strong>利用開始時刻を選ぶ</strong></p><div id="slots" class="slots"></div>
-  <p id="selected-time" class="notice slot-status" role="status">利用開始時刻を選んでください。</p>
-  <div id="price-box" class="price-box hidden"><strong>予定料金（税込）</strong><p class="hint">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。人数が変わった場合は受付でお知らせください。実際の人数で再計算します。</p></details><div id="price-list"></div><div id="total" class="total"></div></div>
+  <p id="hours" class="hours-line"></p><p class="pick-head">開始時刻を選んでください</p><div id="slots" class="slots"></div>
+  <p id="selected-time" class="slot-status hidden" role="status"></p>
+  <div id="price-box" class="price-box hidden"><strong>予定料金（税込）</strong><p class="hint">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。人数が変わった場合は受付でお知らせください。実際の人数で再計算します。</p></details><div id="price-list"></div><div id="total" class="total"></div></div>
   <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。振込をご希望の場合は、ご相談ください。</p>
    <h3>キャンセル</h3><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table>
    <p class="hint small">キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p></div>
-  <div class="row"><button type="button" id="add-more" class="secondary" onclick="addToCart()">ほかの施設も選ぶ</button><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
+  <div class="row"><button type="button" id="add-more" class="secondary" onclick="addToCart()">＋ 別の施設を追加</button><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
   <div id="user-msg" role="status"></div>
  </div>
 </section>
@@ -100,7 +108,7 @@ table.cx{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}table.c
 <script>window.addEventListener('error',function(e){const box=document.getElementById('slots');if(box&&!box.querySelector('button'))box.textContent='画面の初期化でエラーが発生しました：'+e.message});</script>
 <script>
 /* Apps Script の画面用の呼び出し（google.script.run）を、通常の通信に置き換える。処理はApps Script側が行う。 */
-const EXEC_URL="https://script.google.com/macros/s/AKfycbzRKa9-ZWh0XP8idB4Jw0I4pPyWxxwRSigV3kNiP5ssxSufV6jTWC39iUWSSlDb_Y_BvA/exec";
+const EXEC_URL="https://script.google.com/macros/s/AKfycbyz7YIR3DmJZFkRSoHeKMoWOYuJXVESXEALb6OWikNP-W_uNhgJ8kp0TD_YW4e_YLizPQ/exec";
 window.google={script:{run:(function(){
   function make(ok,fail){return new Proxy({},{get(_,key){
     if(key==='withSuccessHandler')return f=>make(f,fail);
@@ -171,9 +179,16 @@ function options(id,values){$(id).innerHTML='';values.forEach(([value,label])=>{
 function typeChanged(){const t=$('type').value;const booked=cart.filter(x=>x.type==='baseball').map(x=>x.label);
   options('facility',t==='soccer'?[['1','ミニコート（1/3面）'],['2','ミニコート×2（2/3面）'],['3','フルコート']]:
   t==='baseball'?[['ブルペン','ブルペン'],['サブコート','サブコート']].filter(x=>!booked.includes(x[0])):[['多目的','多目的']]);facilityChanged()}
-function facilityChanged(){const visible=$('type').value==='baseball'&&$('facility').value==='ブルペン';$('lane-wrap').classList.toggle('hidden',!visible);$('people-wrap').classList.toggle('hidden',!eligible(picked()));refreshSlots()}
-function picked(){const type=$('type').value,value=$('facility').value;return {type,units:type==='soccer'?Number(value):type==='baseball'&&value==='ブルペン'?Number($('lane-count').value):1,label:type==='baseball'?value:'多目的',
-  date:$('date').value,memberType:$('member').value,start:chosen,end:chosen?hm(min(chosen)+Number($('duration').value)):'',people:($('people-wrap').classList.contains('hidden')?0:Number($('people').value))}}
+function facilityChanged(){const visible=$('type').value==='baseball'&&$('facility').value==='ブルペン';$('lane-wrap').classList.toggle('hidden',!visible);moreUI();refreshSlots()}
+function withMulti(){return !!$('with-multi')&&$('with-multi').checked&&!$('multi-wrap').classList.contains('hidden')}
+function picked(){const type=$('type').value,value=$('facility').value;const r={type,units:type==='soccer'?Number(value):type==='baseball'&&value==='ブルペン'?Number($('lane-count').value):1,label:type==='baseball'?value:'多目的',
+  date:$('date').value,memberType:$('member').value,start:chosen,end:chosen?hm(min(chosen)+Number($('duration').value)):'',people:0};
+  if(eligible(r))r.people=Number($('people').value);return r}
+function allPicked(){const r=picked();const list=[r];if(withMulti()){list.push({...r,type:'multi',units:1,label:'多目的',people:Number($('people').value)})}return list}
+function needPeople(){return eligible(picked())||withMulti()}
+function multiChanged(){$('people-wrap').classList.toggle('hidden',!needPeople());refreshSlots()}
+function moreUI(){const t=$('type').value,hasMulti=cart.some(x=>x.type==='multi');$('add-more').classList.toggle('hidden',t!=='baseball'||hasMulti);
+  const showMulti=(t==='soccer'||t==='baseball')&&!hasMulti;$('multi-wrap').classList.toggle('hidden',!showMulti);if(!showMulti)$('with-multi').checked=false;$('people-wrap').classList.toggle('hidden',!needPeople())}
 function min(t){const [h,m]=t.split(':').map(Number);return h*60+m}function hm(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
 function yen(v){return v.toLocaleString('ja-JP')+'円'}
 function rate(r){if(r.memberType==='一般')return r.type==='soccer'?(r.units===3?8500:4000*r.units):r.type==='multi'?4000:r.label==='ブルペン'?1500*r.units:1500;return r.type==='soccer'?(r.units===3?7000:3000*r.units):r.type==='multi'?3000:r.label==='ブルペン'?1500*r.units:1000}
@@ -183,7 +198,7 @@ function charge(r){const court=rate(r)*(min(r.end)-min(r.start))/60;if(!eligible
 let HOLIDAYS=new Set();
 function labelOf(r){return r.type==='soccer'?(r.units===3?'フルコート':r.units===2?'ミニコート×2（2/3面）':'ミニコート（1/3面）'):r.label==='ブルペン'?'ブルペン '+r.units+'レーン':r.label}
 const DRAFT_KEY='dome-member-selection-v34';let draftReady=false;
-function saveSelection(){if(!draftReady)return;try{sessionStorage.setItem(DRAFT_KEY,JSON.stringify({saved:Date.now(),cart,chosen,date:$('date').value,type:$('type').value,facility:$('facility').value,duration:$('duration').value,people:$('people').value,lanes:$('lane-count').value,member:$('member').value}))}catch(e){}}
+function saveSelection(){if(!draftReady)return;try{sessionStorage.setItem(DRAFT_KEY,JSON.stringify({saved:Date.now(),cart,chosen,date:$('date').value,type:$('type').value,facility:$('facility').value,duration:$('duration').value,people:$('people').value,lanes:$('lane-count').value,member:$('member').value,multi:$('with-multi').checked}))}catch(e){}}
 function clearSelection(){try{sessionStorage.removeItem(DRAFT_KEY)}catch(e){}}
 function restoreSelection(){try{const d=JSON.parse(sessionStorage.getItem(DRAFT_KEY)||'null');if(!d||Date.now()-d.saved>7200000){clearSelection();return false}
   if(!Array.isArray(d.cart)||d.cart.length>8)return false;cart=d.cart.filter(r=>r&&/^20\d\d-\d\d-\d\d$/.test(r.date)&&/^\d\d:\d\d$/.test(r.start));
@@ -191,7 +206,7 @@ function restoreSelection(){try{const d=JSON.parse(sessionStorage.getItem(DRAFT_
   if(d.people)$('people').value=d.people;if(d.lanes)$('lane-count').value=d.lanes;if(d.member)$('member').value=d.member;
   restrictNext();if([...$('type').options].some(o=>o.value===d.type)){$('type').value=d.type;typeChanged()}
   if([...$('facility').options].some(o=>o.value===d.facility)){$('facility').value=d.facility;facilityChanged()}
-  chosen=d.chosen||'';selectedTime();renderCart();refreshSlots(true);return true
+  moreUI();if(d.multi&&!$('multi-wrap').classList.contains('hidden')){$('with-multi').checked=true;moreUI()}chosen=d.chosen||'';selectedTime();renderCart();refreshSlots(true);return true
 }catch(e){clearSelection();return false}}
 function contactNotice(el,kind){const past=kind==='past';el.replaceChildren();const p=document.createElement('div');p.setAttribute('role','alert');p.style.cssText='font-weight:700;color:#673c00;background:#fff2da;border:2px solid #bd7c18;border-radius:8px;padding:10px';
   p.append(document.createTextNode(past?'過去の日付は選べません。'+mdLabel(tomorrowStr())+'以降の日付を選んでください。':kind==='sameDay'?'当日のご利用は、WEBでは受け付けていません。公式LINEまたはお電話でご連絡ください。':'前日のご利用は、WEBでは受け付けていません。公式LINEまたはお電話でご連絡ください（WEB予約は、利用日の'+webMinDays+'日前までです）。'));
@@ -200,9 +215,15 @@ function contactNotice(el,kind){const past=kind==='past';el.replaceChildren();co
   el.append(p)}
 function updatePrice(){renderCart()}
 function memberChanged(){cart.forEach(r=>r.memberType=$('member').value);renderCart()}
-function selectedTime(){const r=picked();$('selected-time').textContent=chosen?'今回の利用：'+r.date+' '+r.start+'～'+r.end+'（'+$('duration').selectedOptions[0].textContent+'）':'利用開始時刻を選んでください。'}
-function refreshSlots(keep=false){if(!ADMIN_MODE)publicBookingWindow();const previous=keep?chosen:'';if(!keep)chosen='';selectedTime();if(!keep)$('slots').textContent='空き状況を確認中…';updatePrice();const r=picked(),request=++slotRequest;
-  api('availability',[r.date,r.type,r.units,$('duration').value,r.label,cart],data=>{
+function dayLabel(d){const x=new Date(d+'T12:00:00+09:00');return (x.getUTCMonth()+1)+'月'+x.getUTCDate()+'日（'+'日月火水木金土'[x.getUTCDay()]+'）'}
+function selectedTime(){const r=picked(),el=$('selected-time');if(!chosen){el.classList.add('hidden');el.textContent='';return}el.classList.remove('hidden');el.textContent=dayLabel(r.date)+' '+r.start+'〜'+r.end+'（'+$('duration').selectedOptions[0].textContent+'）'+(withMulti()?'　コート＋多目的':'')}
+function availabilityMerged(args,ok,id){if(!withMulti()||args[1]==='multi')return api('availability',args,ok,id);
+  let a,b,n=0;const done=()=>{if(++n<2)return;if(a&&b&&Array.isArray(a.slots)&&Array.isArray(b.slots))a.slots=a.slots.filter(t=>b.slots.includes(t));ok(a)};
+  const bad=e=>msg(id,e.message||String(e),true);
+  rpc().withSuccessHandler(x=>{a=x;done()}).withFailureHandler(bad).availability(...args);
+  rpc().withSuccessHandler(x=>{b=x;done()}).withFailureHandler(bad).availability(args[0],'multi',1,args[3],'多目的',args[5])}
+function refreshSlots(keep=false){if(!ADMIN_MODE)publicBookingWindow();const previous=keep?chosen:'';$('date-label').textContent=$('date').value?dayLabel($('date').value):'';if(!keep)chosen='';selectedTime();if(!keep)$('slots').textContent='空き状況を確認中…';updatePrice();const r=picked(),request=++slotRequest;
+  availabilityMerged([r.date,r.type,r.units,$('duration').value,r.label,cart],data=>{
     if(request!==slotRequest)return;
     if(data.bookingEnd){bookingEndDate=data.bookingEnd;$('date').max=bookingEndDate;updateWindow()}showBookingDateWarning(r.date);
     if(data.bookingClosed){$('slots').textContent='受付期間外です。先の日程はLINEでお問い合わせください。';return}
@@ -219,24 +240,24 @@ function summaryRow(r,price=false){const d=document.createElement('div');d.class
   detail.textContent=price?labelOf(r)+(r.people?' '+r.people+'人':'')+'：'+(r.memberType?yen(charge(r)):'お客様の区分を選ぶと表示されます'):labelOf(r)+'｜'+r.date+' '+r.start+'～'+r.end;d.append(detail);return d}
 function renderCart(){saveSelection();$('cart').innerHTML='';$('price-list').innerHTML='';$('summary').classList.toggle('hidden',!cart.length);$('price-box').classList.toggle('hidden',!cart.length&&!chosen);
   cart.forEach((r,i)=>{const d=summaryRow(r);const b=document.createElement('button');b.className='secondary';b.textContent='選択を取り消す';b.onclick=()=>{cart.splice(i,1);restrictNext();renderCart()};d.append(b);$('cart').append(d);$('price-list').append(summaryRow(r,true))});
-  if(chosen)$('price-list').append(summaryRow(picked(),true));
-  $('total').textContent=$('member').value?'合計の目安：'+yen(cart.reduce((sum,r)=>sum+charge(r),chosen?charge(picked()):0)):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。'}
+  if(chosen)allPicked().forEach(x=>$('price-list').append(summaryRow(x,true)));
+  $('total').textContent=$('member').value?'合計の目安：'+yen(cart.reduce((sum,r)=>sum+charge(r),chosen?allPicked().reduce((q,x)=>q+charge(x),0):0)):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。'}
 function restrictNext(){const first=cart[0],allowed=!first?[['soccer','サッカー'],['baseball','野球'],['multi','多目的のみ']]:
   first.type==='soccer'?[['multi','多目的']]:first.type==='baseball'?
   [...(cart.some(x=>x.type==='multi')?[]:[['multi','多目的']]),...(cart.filter(x=>x.type==='baseball').length<2?[['baseball','野球']]:[])]:[['multi','多目的']];
   options('type',allowed);typeChanged();const fixed=cart.length>0&&allowed.length===1&&allowed[0][0]==='multi';
-  $('type-wrap').classList.toggle('hidden',fixed);$('facility-wrap').classList.toggle('hidden',fixed);$('next-fixed').classList.toggle('hidden',!fixed);$('add-more').classList.toggle('hidden',cart.some(x=>x.type==='multi'))}
+  $('type-wrap').classList.toggle('hidden',fixed);$('facility-wrap').classList.toggle('hidden',fixed);$('next-fixed').classList.toggle('hidden',!fixed);moreUI()}
 function addToCart(){if(eligible(picked())&&(!Number.isInteger(picked().people)||picked().people<1||picked().people>99))return msg('user-msg','利用人数を1～99人で入力してください。',true);if(!chosen)return msg('user-msg','開始時刻を選んでください。',true);
   if($('type').value==='multi'&&cart.length||cart.some(x=>x.type==='multi'))return msg('user-msg','多目的を追加済みです。この内容で送信してください。',true);
   if($('type').value==='multi'&&!cart.length)return msg('user-msg','多目的のみの場合は、そのまま「この内容で申し込む」を押してください。');
   cart.push(picked());chosen='';selectedTime();restrictNext();renderCart();msg('user-msg','選択した施設を保存しました。上の内容を確認してください。まだ予約は確定していません。')}
-function submit(){if(chosen&&eligible(picked())&&(!Number.isInteger(picked().people)||picked().people<1||picked().people>99))return msg('user-msg','利用人数を1～99人で入力してください。',true);const items=[...cart];if(chosen)items.push(picked());if(!items.length)return msg('user-msg','開始時刻を選んでください。',true);
+function submit(){if(chosen&&allPicked().some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','人数を1～99人で入力してください。',true);const items=[...cart];if(chosen)items.push(...allPicked());if(!items.length)return msg('user-msg','開始時刻を選んでください。',true);
   const payload={name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),memberType:$('member').value,items};
   for(const [id,label] of [['name','お名前'],['phone','電話番号'],['email','メールアドレス']]){const input=$(id);if(!input.value.trim()||!input.checkValidity()){input.focus();return msg('user-msg',label+(id==='email'&&input.value.trim()?'の形式を確認してください。':'を入力してください。'),true)}}
   if(!$('member').value){$('member').focus();return msg('user-msg','お客様の区分（会員／一般）を選んでください。',true)}
   const b=$('user-submit');b.disabled=true;msg('user-msg','送信中…');
   api('submitRequest',[payload],r=>{
-    b.disabled=false;cart=[];chosen='';clearSelection();restrictNext();renderCart();clearSelection();
+    b.disabled=false;cart=[];chosen='';$('with-multi').checked=false;clearSelection();restrictNext();renderCart();clearSelection();
     const target=$('user-msg');target.replaceChildren();
     const notice=document.createElement('div');notice.className='notice';
     const head=document.createElement('strong');head.textContent=(r.count||0)+'件の予約希望を受け付けました。';notice.append(head);
@@ -568,7 +589,7 @@ function renderAdmin(rows){$('list').innerHTML='';if(!rows.length){$('list').tex
               .adminCancelQuote($('pin').value,r.id,reason);
             return;
           }
-          const description=s==='不承認'?'WEB申込みを不承認として処理します。':s==='承認'?'予約を確定します。テスト専用版では承認メールは送信しません。':'状態を調整中に変更します。';
+          const description=s==='不承認'?'WEB申込みを不承認として処理します。':s==='承認'?'予約を確定します。確定のメールが、お客様に届きます。':'状態を調整中に変更します。';
           if(!await confirmAction(s+'に変更しますか？',info+'\n\n'+description,s==='承認'?'予約を承認する':s==='不承認'?'不承認にする':'調整中に戻す'))return;
           [...actions.children].forEach(b=>b.disabled=true);localMessage(feedback,'処理中…');
           rpc().withSuccessHandler(result=>{localMessage(feedback,result.warning||s+'に変更しました。',!!result.warning);refreshStaffIfSameDate(r.date);loadAdmin(adminPendingMode,result.warning||'記録できました：'+s+'に変更しました。')})
