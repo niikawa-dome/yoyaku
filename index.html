@@ -1,0 +1,1048 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>にいかわスポーツドーム｜コート予約（テスト）</title><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#123247;background:#fff}*{box-sizing:border-box}body{margin:0}
+header{background:#006fb7;color:white;padding:16px max(16px,calc((100vw - 1000px)/2))}
+header strong{font-size:21px}header small{display:block;color:#d9edf4}
+main{max-width:1000px;margin:auto;padding:16px}nav,.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+nav{margin-bottom:16px}button{font:inherit;border:0;border-radius:9px;background:#006fb7;color:#fff;padding:11px 15px;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+button.secondary{background:#fff;color:#075785;border:1px solid #8bb9d1}button[aria-selected=true]{background:#006fb7;color:white}
+.card{background:white;border:1px solid #c6e5f5;border-radius:13px;padding:18px;margin-bottom:16px}
+h1{font-size:21px;margin:0 0 12px}h2{font-size:17px;margin:0 0 12px}p{line-height:1.5}
+.hint{font-size:14px;color:#48677a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{font-size:14px;font-weight:650;display:block}input,select,textarea{font:inherit;width:100%;margin-top:5px;border:1px solid #a8bfcc;border-radius:8px;padding:10px;background:white;color:#183044}
+#report-view table,#report-host table{border-collapse:collapse;width:100%;margin:6px 0 16px;font-size:14px}
+#report-view th,#report-view td,#report-host th,#report-host td{border:1px solid #9aa9b3;padding:4px 7px;text-align:left;vertical-align:top}
+#report-view th,#report-host th{background:#e8edf0}
+#report-view .num,#report-host .num{text-align:right;white-space:nowrap}
+#report-view tr.sub td,#report-host tr.sub td{background:#f1f3f4;font-weight:700}
+#report-view tr.tot td,#report-host tr.tot td{background:#dfe6ea;font-weight:700}
+#report-view h2,#report-host h2{margin:8px 0 4px}#report-view h3,#report-host h3{margin:14px 0 2px}
+#report-host{display:none}
+@page{size:A4 landscape;margin:10mm}
+@media print{body.printing-report>*:not(#report-host){display:none!important}body.printing-report #report-host{display:block!important}
+  #report-host{-webkit-print-color-adjust:exact;print-color-adjust:exact}#report-host table{font-size:11px}#report-host tr{break-inside:avoid}#report-host h3{break-after:avoid}}
+.people-btn{min-width:48px;min-height:44px;padding:6px 10px}.people-btn.sel{background:#006fb7;color:#fff;border-color:#006fb7}
+.optional{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:4px;background:#eceff1;color:#4a5a65;font-size:12px;font-weight:700}
+.required{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:4px;background:#fbe7e5;color:#922d2d;font-size:12px;font-weight:700}
+.item{padding:15px 0;border-top:1px solid #d4eaf5}.pill{display:inline-block;padding:3px 8px;border-radius:6px;background:#fff1d3;color:#845615;font-weight:700}
+.pill.ok{background:#dcf0e6;color:#176e40}.notice{background:#e7f3f8;padding:12px;border-radius:8px;margin:12px 0}.error{background:#fbe7e5;color:#922d2d}
+.hidden{display:none}.slots{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.slots button{min-width:75px}
+.slots{min-height:156px;align-content:flex-start}.slots button.chosen{background:#00a566;color:#fff;border-color:#008b58;box-shadow:0 0 0 3px #b9f2d9}.cart{border-top:1px solid #d4eaf5;padding:10px 0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.summary{border:1px solid #8bb9d1;border-radius:10px;background:#f7fbff;padding:12px;margin:0 0 16px}.summary strong{color:#064b73}.summary .cart{font-size:15px}
+.price-box{border:2px solid #0a75ae;border-radius:10px;padding:12px;margin:16px 0}.price-box .cart{font-size:15px}.total{border-top:2px solid #0a75ae;padding-top:9px;font-weight:700;text-align:right}
+details.card>summary{cursor:pointer;font-size:18px;font-weight:700;color:#075785}details.card>summary+*{margin-top:14px}details.card[open]>summary{margin-bottom:12px}
+.allocation{margin:16px 0}.allocation .row{margin-top:8px}.allocation button.active{background:#00a566;color:#fff;border-color:#008b58}.admin-note{margin:14px 0 8px}.admin-actions{margin-top:16px}.slot-status{min-height:46px}.select-fixed{border:1px solid #a8bfcc;padding:11px;border-radius:8px;background:#eef6fa}.allocation button:disabled{opacity:.42;cursor:not-allowed;background:#eef1f3;color:#566;box-shadow:none}.form-hint{color:#48677a;font-size:13px;margin-top:6px}.danger{border-color:#bd4b4b!important;color:#a32929!important}.modal-backdrop{border:0;border-radius:14px;padding:22px;width:min(92vw,480px);max-height:80vh;box-shadow:0 15px 80px #0005}.modal-backdrop::backdrop{background:#10233199}.modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:20px}.nowrap{white-space:nowrap}
+/* 登録済み予定の閲覧と「この日だけ変更」を視覚的に分離 */
+.block-current{background:#f4f8fa;border:1px solid #c7dbe5;border-radius:9px;padding:12px;margin:14px 0}
+.block-current strong{display:block;margin-bottom:6px}
+.block-current p{margin:4px 0}
+.block-editor{border:1px solid #8bb9d1;border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.block-editor h3{font-size:17px;margin:0 0 8px;color:#075785}
+.block-editor .grid{margin-top:14px}
+.block-controls{margin:12px 0;display:flex;flex-wrap:wrap;gap:9px}
+
+/* 色の意味：赤=要対応・返金／黄=あと◯円受け取る／緑=完了。それ以外は灰色の線のみ。 */
+.notice{background:#f3f5f6}.notice.error{background:#fbe7e5;color:#922d2d}
+.card{border-color:#d5dce0}.item{border-top-color:#d5dce0}.cart{border-top-color:#d5dce0}
+.price-box{border-color:#7b8b95}.price-box .total{border-top-color:#7b8b95}
+.summary{border-color:#c9d1d6;background:#f7f9fa}.summary strong{color:#123247}
+.block-editor,.block-current{border-color:#d5dce0}.block-current{background:#f7f9fa}.block-editor h3{color:#123247}
+details.card>summary{color:#123247}
+input.nospin::-webkit-outer-spin-button,input.nospin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input.nospin{-moz-appearance:textfield;appearance:textfield}
+@media(max-width:650px){main{padding:12px}.card{padding:15px}.grid{grid-template-columns:1fr}button{min-height:44px}}
+
+.flow{display:flex;gap:6px;list-style:none;padding:0;margin:8px 0 12px;counter-reset:f}
+.flow li{flex:1;background:#eef6fa;border-radius:8px;padding:8px 8px 8px 30px;font-size:14px;line-height:1.4;position:relative;counter-increment:f}
+.flow li:before{content:counter(f);position:absolute;left:8px;top:8px;width:18px;height:18px;border-radius:50%;background:#0a75ae;color:#fff;font-size:12px;text-align:center;line-height:18px}
+@media(max-width:520px){.flow{flex-direction:column}}
+.tint{background:#eaf4fa;border:1px solid #c9e0ec;border-radius:10px;padding:12px;margin:12px 0}
+.big-label{font-size:17px;font-weight:700}.big-label select{font-size:16px;margin-top:6px}
+.hint.small{font-size:13px;margin:6px 0 0}
+.window-line{font-weight:700;margin:6px 0}
+.guide .g-row{display:flex;gap:8px;padding:5px 8px;border-radius:6px;font-size:15px}
+.guide .g-row.on{background:#fff;border:1px solid #0a75ae;font-weight:700}
+.guide .g-day{min-width:7.5em;color:#0b4f73}
+.hours-line{font-size:17px;font-weight:700;margin:10px 0}
+details.how{margin:6px 0}details.how summary{cursor:pointer;color:#0b4f73;font-size:14px}
+.terms{border-top:1px solid #d5dde2;margin:16px 0 8px;padding-top:4px}.terms h3{font-size:16px;margin:12px 0 4px}.terms p{margin:4px 0;font-size:14.5px}
+table.cx{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}table.cx th,table.cx td{border:1px solid #c5d0d6;padding:6px 8px;text-align:left}table.cx th{background:#eef3f6}
+</style></head><body>
+<header><strong>にいかわスポーツドーム</strong><small>コート予約｜動作確認用デモ</small></header><main>
+
+<dialog id="action-confirm-dialog" class="modal-backdrop"><form method="dialog"><h2 id="action-confirm-title">操作の確認</h2><p id="action-confirm-text" style="white-space:pre-line"></p><div class="modal-actions"><button class="secondary" value="cancel" type="submit">戻る</button><button id="action-confirm-ok" value="ok" type="submit">この内容で実行</button></div></form></dialog>
+<section id="cancel-view" class="hidden"><div class="card"><h1>予約のキャンセル</h1><div id="cancel-detail" role="status">予約を確認中…</div><button id="cancel-action" type="button" class="secondary hidden" onclick="cancelSelected()">この予約をキャンセルする</button></div></section>
+<section id="user">
+ <div class="card"><h1>予約希望を出す</h1>
+  <ol class="flow" aria-label="申込みの流れ"><li><b>ここで申し込む</b></li><li><b>スタッフが確認・承認</b></li><li><b>確定のメールが届いて、予約が確定</b></li></ol>
+  <p class="hint test-note">テスト用のため、実際の予約には使わないでください。</p>
+  <div class="tint"><label class="big-label">お客様の区分<span class="required">必須</span><select id="member" onchange="memberChanged()"><option value="">選んでください</option><option value="会員">会員の方</option><option value="一般">会員でない方（一般）</option></select></label>
+   <p class="hint small">会員の方は、利用時に会員証を確認します。料金は、区分によって変わります。</p><p class="hint small">18歳未満の方は、保護者の同伴と署名が必要です。</p></div>
+  <div class="grid"><label>お名前<span class="required">必須</span><input id="name" autocomplete="name" required></label><label>電話番号<span class="required">必須</span><input id="phone" type="tel" autocomplete="tel" required></label><label>メールアドレス<span class="required">必須</span><input id="email" type="email" autocomplete="email" required></label></div></div>
+ <div class="card"><h2>施設と利用時間</h2><div class="tint"><strong>WEB予約の受付</strong><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></div><div id="summary" class="summary hidden"><strong>選択済みの施設</strong><div id="cart"></div></div>
+  <div class="grid"><label id="type-wrap">利用区分<select id="type" onchange="typeChanged()"><option value="soccer">サッカー</option><option value="baseball">野球</option><option value="multi">多目的のみ</option></select></label>
+   <label id="facility-wrap">利用する施設<select id="facility" onchange="facilityChanged()"><option value="1">ミニコート（1/3面）</option><option value="2">ミニコート×2（2/3面）</option><option value="3">フルコート</option></select></label><div id="next-fixed" class="hidden"><strong>次に選べる施設</strong><div class="select-fixed">多目的コート</div></div>
+   <label id="people-wrap" class="hidden">利用人数（個人料金の比較に使用）<input id="people" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" oninput="updatePrice()"><small class="hint">対象時間内でも、ミニコート・多目的は5人以上、サブコートは2人以上でコート料金と同額になります。</small></label>
+   <label id="lane-wrap" class="hidden">ブルペンの利用レーン数<select id="lane-count" onchange="refreshSlots()"><option value="1">1レーン</option><option value="2">2レーン</option><option value="3">3レーン</option></select></label>
+   <label>利用日<input id="date" type="date" onchange="refreshSlots()"></label><div id="booking-date-warning" class="notice error hidden" role="alert" style="border:2px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700"></div>
+   <label>利用時間<select id="duration" onchange="refreshSlots()"><option value="60">1時間</option><option value="90">1時間30分</option><option value="120">2時間</option><option value="150">2時間30分</option><option value="180">3時間</option><option value="210">3時間30分</option><option value="240">4時間</option><option value="270">4時間30分</option><option value="300">5時間</option><option value="330">5時間30分</option><option value="360">6時間</option><option value="390">6時間30分</option><option value="420">7時間</option><option value="450">7時間30分</option><option value="480">8時間</option></select></label></div>
+  <p id="hours" class="hours-line"></p><p><strong>利用開始時刻を選ぶ</strong></p><div id="slots" class="slots"></div>
+  <p id="selected-time" class="notice slot-status" role="status">利用開始時刻を選んでください。</p>
+  <div id="price-box" class="price-box hidden"><strong>予定料金（税込）</strong><p class="hint">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。人数が変わった場合は受付でお知らせください。実際の人数で再計算します。</p></details><div id="price-list"></div><div id="total" class="total"></div></div>
+  <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。振込をご希望の場合は、ご相談ください。</p>
+   <h3>キャンセル</h3><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table>
+   <p class="hint small">キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p></div>
+  <div class="row"><button type="button" id="add-more" class="secondary" onclick="addToCart()">ほかの施設も選ぶ</button><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
+  <div id="user-msg" role="status"></div>
+ </div>
+</section>
+</main>
+<script>window.addEventListener('error',function(e){const box=document.getElementById('slots');if(box&&!box.querySelector('button'))box.textContent='画面の初期化でエラーが発生しました：'+e.message});</script>
+<script>
+/* Apps Script の画面用の呼び出し（google.script.run）を、通常の通信に置き換える。処理はApps Script側が行う。 */
+const EXEC_URL="https://script.google.com/macros/s/AKfycbzRKa9-ZWh0XP8idB4Jw0I4pPyWxxwRSigV3kNiP5ssxSufV6jTWC39iUWSSlDb_Y_BvA/exec";
+window.google={script:{run:(function(){
+  function make(ok,fail){return new Proxy({},{get(_,key){
+    if(key==='withSuccessHandler')return f=>make(f,fail);
+    if(key==='withFailureHandler')return f=>make(ok,f);
+    if(typeof key!=='string'||key==='then')return undefined;
+    return (...args)=>{
+      const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),90000);
+      fetch(EXEC_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:key,args:args}),redirect:'follow',signal:ctl.signal})
+        .then(r=>r.json())
+        .then(j=>{clearTimeout(timer);if(j&&j.ok){if(ok)ok(j.result)}else if(fail)fail({message:(j&&j.error)||'通信に失敗しました。'})})
+        .catch(()=>{clearTimeout(timer);if(fail)fail({message:'通信に失敗しました。電波のよいところで、もう一度お試しください。'})})}
+  }})}
+  return make(null,null)})()}};
+</script>
+<script>
+const $=id=>document.getElementById(id);let cart=[],chosen='',slotRequest=0,adminPendingMode=false;
+const CANCEL_TOKEN=(new URLSearchParams(location.search).get('cancel')||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,120),ADMIN_MODE=false;let bookingEndDate='2026-11-30';
+let webMinDays=2;
+function tomorrowStr(){return new Date(Date.now()+9*3600e3+webMinDays*86400e3).toISOString().slice(0,10)}
+function minDayLabel(){return webMinDays===1?'明日':webMinDays===2?'明後日':webMinDays+'日後'}
+function mdLabel(d){const a=d.split('-');return Number(a[1])+'/'+Number(a[2])}
+function bookingWindowText(){const t=tomorrowStr();
+  if(bookingEndDate&&bookingEndDate<t)return '現在、WEB予約の受付期間はありません。お電話または公式LINEでお問い合わせください。';
+  const end=bookingEndDate?(bookingEndDate.slice(0,4)===t.slice(0,4)?mdLabel(bookingEndDate):bookingEndLabel(bookingEndDate)):'';
+  return '現在の受付期間：'+mdLabel(t)+'（'+minDayLabel()+'）〜'+end}
+function nextDayStr(s){const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+1);return d.toISOString().slice(0,10)}
+function renderGuide(){const g=$('web-guide');if(!g)return;const t=tomorrowStr();
+  if(bookingEndDate&&bookingEndDate<t){g.textContent='';return}
+  const rows=[['当日・前日','公式LINEまたはお電話（0765-32-3807）']];
+  rows.push([mdLabel(t)+'〜'+(bookingEndDate?mdLabel(bookingEndDate):''),'このページから申込み',true]);
+  if(bookingEndDate)rows.push([mdLabel(nextDayStr(bookingEndDate))+'以降','公式LINE']);
+  g.textContent='';
+  rows.forEach(r=>{const d=document.createElement('div');d.className='g-row'+(r[2]?' on':'');
+    const a=document.createElement('span');a.className='g-day';a.textContent='【'+r[0]+'】';
+    const b=document.createElement('span');b.textContent=r[1];d.append(a,b);g.append(d)})}
+function updateWindow(){$('web-booking-window').textContent=bookingWindowText();renderGuide()}
+function bookingEndLabel(s){const a=s.split('-');return Number(a[0])+'年'+Number(a[1])+'月'+Number(a[2])+'日'}
+function showBookingDateWarning(date){const el=$('booking-date-warning');if(!el)return;
+  const invalid=date&&date>bookingEndDate;el.classList.toggle('hidden',!invalid);
+  el.textContent=invalid?'WEB予約の受付期間外です。'+bookingEndLabel(bookingEndDate)+'まで受け付けています。それ以降はLINEでお問い合わせください。':''}
+function publicBookingWindow(){rpc().withSuccessHandler(r=>{bookingEndDate=r.endDate;$('date').max=bookingEndDate;
+  updateWindow();
+  showBookingDateWarning($('date').value);if($('date').value>bookingEndDate){chosen='';$('slots').textContent='受付期間外です。先の日程はLINEでお問い合わせください。'}
+}).withFailureHandler(e=>msg('web-booking-window',e.message||String(e),true)).publicBookingSettings()}
+function loadBookingEnd(){if(!$('pin')||!$('pin').value)return;rpc().withSuccessHandler(r=>{$('booking-end-admin').value=r.endDate;$('booking-end-current').textContent='現在、'+bookingEndLabel(r.endDate)+'までWEB予約受付中'}).withFailureHandler(e=>msg('booking-end-msg',e.message||String(e),true)).adminBookingSettings($('pin').value)}
+async function saveBookingEnd(){const d=$('booking-end-admin').value;if(!d)return msg('booking-end-msg','受付期限を入力してください。',true);if(!await confirmAction('WEB予約の受付期限を変更しますか？','一般WEB予約を'+bookingEndLabel(d)+'まで受け付けます。既存予約・管理者の登録は変更しません。'))return;rpc().withSuccessHandler(r=>{msg('booking-end-msg','変更しました。');$('booking-end-current').textContent='現在、'+bookingEndLabel(r.endDate)+'までWEB予約受付中'}).withFailureHandler(e=>msg('booking-end-msg',e.message||String(e),true)).adminSetBookingEnd($('pin').value,d)}
+let actionDialogOpen=false;
+function confirmAction(title,body,okLabel){return new Promise(resolve=>{
+  if(actionDialogOpen){resolve(false);return}
+  const dialog=$('action-confirm-dialog');if(!dialog||!dialog.showModal){resolve(false);return}
+  actionDialogOpen=true;$('action-confirm-ok').textContent=okLabel||'この内容で実行';$('action-confirm-title').textContent=title;$('action-confirm-text').textContent=body;
+  dialog.returnValue='cancel';dialog.addEventListener('close',()=>{actionDialogOpen=false;resolve(dialog.returnValue==='ok')},{once:true});
+  dialog.showModal();
+})}
+
+function showCancellation(){if(!CANCEL_TOKEN)return;$('user').classList.add('hidden');if($('admin'))$('admin').classList.add('hidden');$('cancel-view').classList.remove('hidden');
+  rpc().withSuccessHandler(r=>{if(!r.found){$('cancel-detail').textContent='予約が見つかりません。施設へお問い合わせください。';return}
+    $('cancel-detail').textContent=r.date+' '+r.start+'～'+r.end+'｜'+(r.label==='ブルペン'?'ブルペン '+r.units+'レーン':r.label)+'｜利用料金 '+yen(r.amount)+'｜状態：'+r.status+(r.canCancel?'｜キャンセル料 0円':'｜この画面からはキャンセルできません。');
+    $('cancel-action').classList.toggle('hidden',!r.canCancel)
+  }).withFailureHandler(e=>{$('cancel-detail').textContent=e.message||String(e)}).cancelInfo(CANCEL_TOKEN)}
+async function cancelSelected(){if(!await confirmAction('予約をキャンセルしますか？',$('cancel-detail').textContent+'\n取消後の復元はできません。'))return;
+  const b=$('cancel-action');b.disabled=true;$('cancel-detail').textContent='キャンセル処理中…';
+  rpc().withSuccessHandler(()=>{b.classList.add('hidden');$('cancel-detail').textContent='この予約のキャンセルを受け付けました。キャンセル料は0円です。'}).withFailureHandler(e=>{b.disabled=false;$('cancel-detail').textContent=e.message||String(e)}).cancelBooking(CANCEL_TOKEN)}
+
+function msg(id,s,error=false){$(id).innerHTML='';const e=document.createElement('div');e.className='notice'+(error?' error':'');e.textContent=s;$(id).append(e)}
+function api(name,args,ok,id,fail){rpc().withSuccessHandler(ok).withFailureHandler(e=>{msg(id,e.message||String(e),true);if(fail)fail(e)})[name](...args)}
+function options(id,values){$(id).innerHTML='';values.forEach(([value,label])=>{const e=document.createElement('option');e.value=value;e.textContent=label;$(id).append(e)})}
+function typeChanged(){const t=$('type').value;const booked=cart.filter(x=>x.type==='baseball').map(x=>x.label);
+  options('facility',t==='soccer'?[['1','ミニコート（1/3面）'],['2','ミニコート×2（2/3面）'],['3','フルコート']]:
+  t==='baseball'?[['ブルペン','ブルペン'],['サブコート','サブコート']].filter(x=>!booked.includes(x[0])):[['多目的','多目的']]);facilityChanged()}
+function facilityChanged(){const visible=$('type').value==='baseball'&&$('facility').value==='ブルペン';$('lane-wrap').classList.toggle('hidden',!visible);$('people-wrap').classList.toggle('hidden',!eligible(picked()));refreshSlots()}
+function picked(){const type=$('type').value,value=$('facility').value;return {type,units:type==='soccer'?Number(value):type==='baseball'&&value==='ブルペン'?Number($('lane-count').value):1,label:type==='baseball'?value:'多目的',
+  date:$('date').value,memberType:$('member').value,start:chosen,end:chosen?hm(min(chosen)+Number($('duration').value)):'',people:($('people-wrap').classList.contains('hidden')?0:Number($('people').value))}}
+function min(t){const [h,m]=t.split(':').map(Number);return h*60+m}function hm(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
+function yen(v){return v.toLocaleString('ja-JP')+'円'}
+function rate(r){if(r.memberType==='一般')return r.type==='soccer'?(r.units===3?8500:4000*r.units):r.type==='multi'?4000:r.label==='ブルペン'?1500*r.units:1500;return r.type==='soccer'?(r.units===3?7000:3000*r.units):r.type==='multi'?3000:r.label==='ブルペン'?1500*r.units:1000}
+function eligible(r){return r.type==='soccer'&&r.units===1||r.type==='multi'||r.type==='baseball'&&r.label==='サブコート'}
+function charge(r){const court=rate(r)*(min(r.end)-min(r.start))/60;if(!eligible(r)||!Number.isInteger(r.people)||r.people<1)return court;const date=new Date(r.date+'T12:00:00+09:00'),weekend=[0,6].includes(date.getUTCDay());
+  const cutoff=(weekend||HOLIDAYS.has(r.date))?'18:00':'19:00';return min(r.end)>min(cutoff)?court:Math.min(court,(r.memberType==='一般'?800:600)*r.people*(min(r.end)-min(r.start))/60)}
+let HOLIDAYS=new Set();
+function labelOf(r){return r.type==='soccer'?(r.units===3?'フルコート':r.units===2?'ミニコート×2（2/3面）':'ミニコート（1/3面）'):r.label==='ブルペン'?'ブルペン '+r.units+'レーン':r.label}
+const DRAFT_KEY='dome-member-selection-v34';let draftReady=false;
+function saveSelection(){if(!draftReady)return;try{sessionStorage.setItem(DRAFT_KEY,JSON.stringify({saved:Date.now(),cart,chosen,date:$('date').value,type:$('type').value,facility:$('facility').value,duration:$('duration').value,people:$('people').value,lanes:$('lane-count').value,member:$('member').value}))}catch(e){}}
+function clearSelection(){try{sessionStorage.removeItem(DRAFT_KEY)}catch(e){}}
+function restoreSelection(){try{const d=JSON.parse(sessionStorage.getItem(DRAFT_KEY)||'null');if(!d||Date.now()-d.saved>7200000){clearSelection();return false}
+  if(!Array.isArray(d.cart)||d.cart.length>8)return false;cart=d.cart.filter(r=>r&&/^20\d\d-\d\d-\d\d$/.test(r.date)&&/^\d\d:\d\d$/.test(r.start));
+  if(d.date)$('date').value=d.date;if(d.duration)$('duration').value=d.duration;
+  if(d.people)$('people').value=d.people;if(d.lanes)$('lane-count').value=d.lanes;if(d.member)$('member').value=d.member;
+  restrictNext();if([...$('type').options].some(o=>o.value===d.type)){$('type').value=d.type;typeChanged()}
+  if([...$('facility').options].some(o=>o.value===d.facility)){$('facility').value=d.facility;facilityChanged()}
+  chosen=d.chosen||'';selectedTime();renderCart();refreshSlots(true);return true
+}catch(e){clearSelection();return false}}
+function contactNotice(el,kind){const past=kind==='past';el.replaceChildren();const p=document.createElement('div');p.setAttribute('role','alert');p.style.cssText='font-weight:700;color:#673c00;background:#fff2da;border:2px solid #bd7c18;border-radius:8px;padding:10px';
+  p.append(document.createTextNode(past?'過去の日付は選べません。'+mdLabel(tomorrowStr())+'以降の日付を選んでください。':kind==='sameDay'?'当日のご利用は、WEBでは受け付けていません。公式LINEまたはお電話でご連絡ください。':'前日のご利用は、WEBでは受け付けていません。公式LINEまたはお電話でご連絡ください（WEB予約は、利用日の'+webMinDays+'日前までです）。'));
+  if(!past){const d=document.createElement('div');d.style.marginTop='6px';const a=document.createElement('a');a.href='tel:0765323807';a.textContent='電話 0765-32-3807';
+    const b=document.createElement('a');b.href='https://lin.ee/p2QUSXa';b.target='_blank';b.rel='noopener noreferrer';b.textContent='公式LINEで連絡';d.append(a,document.createTextNode('　'),b);p.append(d)}
+  el.append(p)}
+function updatePrice(){renderCart()}
+function memberChanged(){cart.forEach(r=>r.memberType=$('member').value);renderCart()}
+function selectedTime(){const r=picked();$('selected-time').textContent=chosen?'今回の利用：'+r.date+' '+r.start+'～'+r.end+'（'+$('duration').selectedOptions[0].textContent+'）':'利用開始時刻を選んでください。'}
+function refreshSlots(keep=false){if(!ADMIN_MODE)publicBookingWindow();const previous=keep?chosen:'';if(!keep)chosen='';selectedTime();if(!keep)$('slots').textContent='空き状況を確認中…';updatePrice();const r=picked(),request=++slotRequest;
+  api('availability',[r.date,r.type,r.units,$('duration').value,r.label,cart],data=>{
+    if(request!==slotRequest)return;
+    if(data.bookingEnd){bookingEndDate=data.bookingEnd;$('date').max=bookingEndDate;updateWindow()}showBookingDateWarning(r.date);
+    if(data.bookingClosed){$('slots').textContent='受付期間外です。先の日程はLINEでお問い合わせください。';return}
+    if(data.minDays){webMinDays=data.minDays}
+    if(data.sameDay||data.past||data.tooSoon){chosen='';selectedTime();renderCart();$('hours').textContent='';contactNotice($('slots'),data.past?'past':data.sameDay?'sameDay':'tooSoon');return}
+    if(data.hours){if(data.hours.holiday)HOLIDAYS.add(r.date);else HOLIDAYS.delete(r.date)}$('hours').textContent=data.hours?('この日の営業時間　'+data.hours.open+'～'+data.hours.close+(data.hours.holiday?'（祝日）':'')):'';
+    $('slots').innerHTML='';if(data.cartChanged){$('slots').textContent='追加済みの予約が埋まりました。内容を確認してください。';msg('user-msg','追加済みの施設の空き状況が変わりました。削除して選び直してください。',true);chosen='';selectedTime();renderCart();return}
+    if(previous&&!data.slots.includes(previous)){chosen='';selectedTime();renderCart();msg('user-msg','選択した時刻の空き状況が変わりました。別の時刻を選んでください。',true)}
+    if(!data.slots.length){$('slots').textContent=data.closed?'休館日です。':'この条件で予約できる開始時刻はありません。';return}
+    data.slots.forEach(t=>{const b=document.createElement('button');b.className='secondary';b.textContent=t;
+      if(chosen===t)b.className='chosen';b.onclick=()=>{chosen=t;saveSelection();[...$('slots').children].forEach(x=>x.className='secondary');b.className='chosen';selectedTime();renderCart()};$('slots').append(b)})
+  },'user-msg')}
+function summaryRow(r,price=false){const d=document.createElement('div');d.className='cart';const detail=document.createElement('span');
+  detail.textContent=price?labelOf(r)+(r.people?' '+r.people+'人':'')+'：'+(r.memberType?yen(charge(r)):'お客様の区分を選ぶと表示されます'):labelOf(r)+'｜'+r.date+' '+r.start+'～'+r.end;d.append(detail);return d}
+function renderCart(){saveSelection();$('cart').innerHTML='';$('price-list').innerHTML='';$('summary').classList.toggle('hidden',!cart.length);$('price-box').classList.toggle('hidden',!cart.length&&!chosen);
+  cart.forEach((r,i)=>{const d=summaryRow(r);const b=document.createElement('button');b.className='secondary';b.textContent='選択を取り消す';b.onclick=()=>{cart.splice(i,1);restrictNext();renderCart()};d.append(b);$('cart').append(d);$('price-list').append(summaryRow(r,true))});
+  if(chosen)$('price-list').append(summaryRow(picked(),true));
+  $('total').textContent=$('member').value?'合計の目安：'+yen(cart.reduce((sum,r)=>sum+charge(r),chosen?charge(picked()):0)):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。'}
+function restrictNext(){const first=cart[0],allowed=!first?[['soccer','サッカー'],['baseball','野球'],['multi','多目的のみ']]:
+  first.type==='soccer'?[['multi','多目的']]:first.type==='baseball'?
+  [...(cart.some(x=>x.type==='multi')?[]:[['multi','多目的']]),...(cart.filter(x=>x.type==='baseball').length<2?[['baseball','野球']]:[])]:[['multi','多目的']];
+  options('type',allowed);typeChanged();const fixed=cart.length>0&&allowed.length===1&&allowed[0][0]==='multi';
+  $('type-wrap').classList.toggle('hidden',fixed);$('facility-wrap').classList.toggle('hidden',fixed);$('next-fixed').classList.toggle('hidden',!fixed);$('add-more').classList.toggle('hidden',cart.some(x=>x.type==='multi'))}
+function addToCart(){if(eligible(picked())&&(!Number.isInteger(picked().people)||picked().people<1||picked().people>99))return msg('user-msg','利用人数を1～99人で入力してください。',true);if(!chosen)return msg('user-msg','開始時刻を選んでください。',true);
+  if($('type').value==='multi'&&cart.length||cart.some(x=>x.type==='multi'))return msg('user-msg','多目的を追加済みです。この内容で送信してください。',true);
+  if($('type').value==='multi'&&!cart.length)return msg('user-msg','多目的のみの場合は、そのまま「この内容で申し込む」を押してください。');
+  cart.push(picked());chosen='';selectedTime();restrictNext();renderCart();msg('user-msg','選択した施設を保存しました。上の内容を確認してください。まだ予約は確定していません。')}
+function submit(){if(chosen&&eligible(picked())&&(!Number.isInteger(picked().people)||picked().people<1||picked().people>99))return msg('user-msg','利用人数を1～99人で入力してください。',true);const items=[...cart];if(chosen)items.push(picked());if(!items.length)return msg('user-msg','開始時刻を選んでください。',true);
+  const payload={name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),memberType:$('member').value,items};
+  for(const [id,label] of [['name','お名前'],['phone','電話番号'],['email','メールアドレス']]){const input=$(id);if(!input.value.trim()||!input.checkValidity()){input.focus();return msg('user-msg',label+(id==='email'&&input.value.trim()?'の形式を確認してください。':'を入力してください。'),true)}}
+  if(!$('member').value){$('member').focus();return msg('user-msg','お客様の区分（会員／一般）を選んでください。',true)}
+  const b=$('user-submit');b.disabled=true;msg('user-msg','送信中…');
+  api('submitRequest',[payload],r=>{
+    b.disabled=false;cart=[];chosen='';clearSelection();restrictNext();renderCart();clearSelection();
+    const target=$('user-msg');target.replaceChildren();
+    const notice=document.createElement('div');notice.className='notice';
+    const head=document.createElement('strong');head.textContent=(r.count||0)+'件の予約希望を受け付けました。';notice.append(head);
+    const status=document.createElement('p');status.textContent='状態：調整中（予約はまだ確定していません。スタッフの承認をお待ちください。）';notice.append(status);
+    let total=0;
+    if(Array.isArray(r.items))r.items.forEach(item=>{
+      const line=document.createElement('p');line.style.borderTop='1px solid #bbd9e7';line.style.paddingTop='9px';
+      line.textContent='利用日：'+item.date+'　時間：'+item.start+'～'+item.end+'　施設：'+item.facility+
+        (item.people?'　人数：'+item.people+'人':'')+'　予定料金：'+yen(Number(item.amount)||0);
+      notice.append(line);total+=Number(item.amount)||0;
+    });
+    if(Array.isArray(r.items)&&r.items.length>1){const sum=document.createElement('strong');sum.textContent='予定料金合計：'+yen(total);notice.append(sum)}
+    target.append(notice);target.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },'user-msg',()=>{b.disabled=false;refreshSlots(true)})}
+const courtOptions=[['A','A'],['B','B'],['C','C'],['AB','A＋B'],['BC','B＋C'],['ABC','全面']];
+let staffAllocationRequest=0,staffAllocationReady=false;
+function timeItems(){const items=[];for(let t=600;t<=1320;t+=30)items.push([hm(t),hm(t)]);return items}
+function makeFacilityForm(prefix){const e=$(prefix+'-form');e.innerHTML='';
+  const fields=[...(prefix==='staff'?[['date','利用日','date']]:[]),['type','利用区分','select'],['facility','施設','select'],['start','開始時刻','select'],...(prefix==='staff'?[['duration','利用時間','select']]:[['end','終了時刻','select']]),['allocation','使用コート','buttons']];
+  fields.forEach(([id,label,kind])=>{
+    if(kind==='buttons'){const wrap=document.createElement('div');const title=document.createElement('strong');title.textContent=label+'（選択）';wrap.append(title);
+      const hidden=document.createElement('input');hidden.type='hidden';hidden.id=prefix+'-allocation';wrap.append(hidden);
+      const choices=document.createElement('div');choices.id=prefix+'-allocation-choices';choices.className='row allocation';wrap.append(choices);
+      const hint=document.createElement('div');hint.id=prefix+'-allocation-hint';hint.className='form-hint';wrap.append(hint);e.append(wrap);return}
+    const l=document.createElement('label');l.textContent=label;
+    const input=document.createElement(kind==='select'?'select':'input');input.id=prefix+'-'+id;
+    if(kind==='date')input.type='date';
+    if(id==='type')input.onchange=()=>formType(prefix);
+    if(id==='facility')input.onchange=()=>formAllocation(prefix);
+    if(id==='date'||id==='start'||id==='duration'||id==='end')input.onchange=()=>prefix==='staff'?refreshStaffAllocations():null;
+    l.append(input);e.append(l)
+  });
+  options(prefix+'-start',timeItems());$(prefix+'-start').value='14:00';
+  if(prefix==='staff'){
+    options('staff-duration',Array.from({length:16},(_,i)=>{const minutes=60+i*30;return [String(minutes),Math.floor(minutes/60)+'時間'+(minutes%60?'30分':'')]}));
+    $('staff-duration').value='60';const status=document.createElement('p');status.id='staff-range';status.className='notice';e.append(status);
+  }else{options(prefix+'-end',timeItems());$(prefix+'-end').value='15:00'}
+  options(prefix+'-type',[['soccer','サッカー'],['multi','多目的'],['baseball','野球']]);formType(prefix);
+  if(prefix==='staff'){
+    ['staff-type','staff-facility'].forEach(i=>{$(i).parentNode.style.display='none'});
+    const l=document.createElement('label');l.textContent='施設';const c=document.createElement('select');c.id='staff-combo';l.append(c);
+    e.insertBefore(l,$('staff-type').parentNode);
+    options('staff-combo',[['soccer|1','ミニコート（1/3面）'],['soccer|2','ミニコート×2（2/3面）'],['soccer|3','フルコート'],['multi|多目的','多目的'],['baseball|ブルペン1','ブルペン 1レーン'],['baseball|ブルペン2','ブルペン 2レーン'],['baseball|ブルペン3','ブルペン 3レーン'],['baseball|サブコート','サブコート']]);
+    c.onchange=()=>{const p=c.value.split('|');$('staff-type').value=p[0];formType('staff');$('staff-facility').value=p[1];formAllocation('staff')};
+  }
+}
+function formType(p){const t=$(p+'-type').value;
+  options(p+'-facility',t==='soccer'?[['1','1/3面'],['2','2/3面'],['3','フルコート']]:
+    t==='multi'?[['多目的','多目的']]:[['ブルペン1','ブルペン 1レーン'],['ブルペン2','ブルペン 2レーン'],['ブルペン3','ブルペン 3レーン'],['サブコート','サブコート']]);formAllocation(p)}
+function possibleFormAllocations(p){const t=$(p+'-type').value,n=Number($(p+'-facility').value);
+  return t==='soccer'?(n===1?courtOptions.slice(0,3):n===2?courtOptions.slice(3,5):courtOptions.slice(5)):
+    t==='multi'?[['M','多目的']]:$(p+'-facility').value.startsWith('ブルペン')?laneOptions(Number($(p+'-facility').value.slice(-1))):[['S','サブコート']]
+}
+function formAllocation(p){renderFormAllocations(p,possibleFormAllocations(p),p==='staff'?[]:possibleFormAllocations(p).map(x=>x[0]));
+  if(p==='staff'){updateStaffPrice();refreshStaffAllocations()}
+}
+function renderFormAllocations(p,values,allowed){const holder=$(p+'-allocation-choices'),hidden=$(p+'-allocation');const prev=hidden.value;
+  holder.replaceChildren();hidden.value=allowed.includes(prev)?prev:allowed.length===1?allowed[0]:'';
+  values.forEach(([value,label])=>{const b=document.createElement('button');b.type='button';b.className='secondary'+(value===hidden.value?' active':'');b.textContent=label;
+    b.disabled=!allowed.includes(value);if(b.disabled)b.title='この時間は別の予約・調整中の申込みと重なります';
+    b.setAttribute('aria-pressed',value===hidden.value?'true':'false');
+    b.onclick=()=>{if(b.disabled)return;hidden.value=value;[...holder.children].forEach(x=>{x.classList.remove('active');x.setAttribute('aria-pressed','false')});b.classList.add('active');b.setAttribute('aria-pressed','true')};holder.append(b)
+  });
+  if(p==='staff')$('staff-allocation-hint').textContent=allowed.length?'利用可能な割当のみ選べます。':'空き状況を確認中…'
+}
+function formData(p){const type=$(p+'-type').value,value=$(p+'-facility').value,start=$(p+'-start').value;
+  const end=p==='staff'&&start?hm(min(start)+Number($('staff-duration').value)):$(p+'-end').value;
+  return {date:p==='staff'?$(p+'-date').value:'',type,
+    units:type==='soccer'?Number(value):type==='baseball'&&value.startsWith('ブルペン')?Number(value.slice(-1)):1,
+    label:type==='baseball'&&value.startsWith('ブルペン')?'ブルペン':type==='baseball'?value:'多目的',
+    allocation:$(p+'-allocation').value,memberType:p==='staff'&&$('staff-member')?$('staff-member').value:'',start,end,people:p==='staff'&&eligible({type,units:type==='soccer'?Number(value):1,label:type==='baseball'&&value.startsWith('ブルペン')?'ブルペン':value})?Number($('staff-people').value):0}
+}
+function staffPriceAmount(r){const court=rate(r)*(min(r.end)-min(r.start))/60;
+  if(!eligible(r)||!r.people)return yen(court);
+  const weekend=[0,6].includes(new Date(r.date+'T12:00:00+09:00').getUTCDay());
+  const limit=(weekend||staffPriceHoliday)?'18:00':'19:00';
+  return yen(min(r.end)<=min(limit)?Math.min(court,(r.memberType==='一般'?800:600)*r.people*(min(r.end)-min(r.start))/60):court);
+}
+let staffPriceHolidayKnown=false, staffPriceHoliday=false, staffPriceDate='';
+function staffMissing(x){const m=[];
+  if(!x.memberType)m.push('お客様の区分（会員／一般）');
+  if(!x.date)m.push('利用日');
+  if(!x.start)m.push('開始時刻');
+  if(!x.end)m.push('利用時間');
+  if(eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99))m.push('利用人数');
+  if(!x.allocation){const h=($('staff-allocation-hint')||{}).textContent||'';m.push('使用コート（空いている中から1つ選ぶ）'+(/空いている使用コートがありません|休館日/.test(h)?'　※'+h+'日時を変えてください。':''))}
+  if(!x.name)m.push('お客様のお名前');
+  return m}
+function staffTodo(){const box=$('staff-todo');if(!box||!$('staff-type'))return;
+  const x={...formData('staff'),name:$('staff-name').value.trim()},miss=staffMissing(x);box.replaceChildren();
+  if(miss.length){box.style.cssText='border-radius:10px;padding:12px 14px;margin:14px 0 8px;font-size:15px;line-height:1.7;background:#fff1d3;color:#845615';
+    const t=document.createElement('strong');t.textContent='登録には、あと'+miss.length+'件の入力が必要です';box.append(t);
+    miss.forEach(label=>{const d=document.createElement('div');d.textContent='・'+label;box.append(d)})}
+  else if(!staffAllocationReady){box.style.cssText='border-radius:10px;padding:12px 14px;margin:14px 0 8px;font-size:15px;line-height:1.7;background:#f1f3f4;color:#4a5a65';box.textContent='入力はそろいました。空き状況を確認しています…'}
+  else{box.style.cssText='border-radius:10px;padding:12px 14px;margin:14px 0 8px;font-size:15px;line-height:1.7;background:#dcf0e6;color:#176e40;font-weight:700';box.textContent='入力はそろっています。「この内容で予約を登録」を押してください。'}}
+function updateStaffPrice(){updateStaffPriceCore();staffTodo();setTimeout(staffTodo,0)}
+function staffPriceNote(box,t){box.style.cssText='margin:0 0 16px;border:2px dashed #9aa9b3;background:#f1f3f4;color:#4a5a65';box.textContent='※ '+t}
+function staffPeopleSet(n,from){const v=$('staff-people');if(!v)return;v.value=n?String(n):'';
+  document.querySelectorAll('#staff-people-buttons .people-btn').forEach(b=>{const on=from==='more'?b.dataset.more==='1':(String(n)===b.dataset.n&&!!n);b.classList.toggle('sel',on);b.setAttribute('aria-pressed',on?'true':'false')});
+  updateStaffPrice()}
+function peopleMore(){const x=$('staff-people-more-input').value;staffPeopleSet(x===''?'':Number(x),'more')}
+function staffPeopleReset(){const m=$('staff-people-more'),i=$('staff-people-more-input');if(m)m.classList.add('hidden');if(i)i.value='';staffPeopleSet('')}
+function buildPeopleButtons(){const box=$('staff-people-buttons');if(!box||box.children.length)return;
+  for(let n=1;n<=10;n++){const b=document.createElement('button');b.type='button';b.className='secondary people-btn';b.textContent=n;b.dataset.n=String(n);b.setAttribute('aria-pressed','false');
+    b.onclick=()=>{$('staff-people-more').classList.add('hidden');$('staff-people-more-input').value='';staffPeopleSet(n)};box.append(b)}
+  const more=document.createElement('button');more.type='button';more.className='secondary people-btn';more.textContent='11人以上';more.dataset.more='1';more.setAttribute('aria-pressed','false');
+  more.onclick=()=>{staffPeopleSet('');$('staff-people-more').classList.remove('hidden');more.classList.add('sel');more.setAttribute('aria-pressed','true');$('staff-people-more-input').focus()};box.append(more)}
+function updateStaffPriceCore(){
+  if(!$('staff-price')||!$('staff-people'))return;
+  const r=formData('staff'),qualified=eligible(r),wrap=$('staff-people-wrap'),box=$('staff-price');
+  wrap.classList.toggle('hidden',!qualified);
+  if(!r.memberType){staffPriceNote(box,'お客様の区分を選ぶと、料金が表示されます。');return}if(!r.date||!r.start||!r.end){staffPriceNote(box,'利用日と時間を選択してください。');return}
+  const hours=(min(r.end)-min(r.start))/60;
+  if(!(hours>=1)){staffPriceNote(box,'利用時間を確認してください。');return}
+  const court=rate(r)*hours;
+  const lines=['コート料金（'+r.memberType+'）：'+yen(court)];
+  if(qualified){
+    const n=Number($('staff-people').value);
+    if(!Number.isInteger(n)||n<1||n>99){staffPriceNote(box,'利用人数を選んでください。');return}
+    const weekend=[0,6].includes(new Date(r.date+'T12:00:00+09:00').getUTCDay());
+    if(staffPriceDate!==r.date||!staffPriceHolidayKnown){staffPriceNote(box,'料金の対象時間を確認中…');return}
+    const limit=(weekend||staffPriceHoliday)?'18:00':'19:00';
+    const personal=(r.memberType==='一般'?800:600)*n*hours,allowed=min(r.end)<=min(limit);
+    lines.push('個人価格：'+yen(personal)+(allowed?'':'（対象時間外）'));
+    lines.push('適用予定料金：'+yen(allowed?Math.min(court,personal):court));
+    lines.push('個人価格の対象は'+limit+'まで。終了時刻が超える場合は全時間を会員価格で計算します。');
+  }else lines.push('適用予定料金：'+yen(court));
+  box.style.cssText='margin:0 0 16px';box.replaceChildren();lines.forEach((s,i)=>{const p=document.createElement('div');p.textContent=s;if(s.startsWith('適用予定料金'))p.style.fontWeight='700';box.append(p)});
+}
+function jstNow(){const p=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+  const g=t=>p.find(x=>x.type===t).value;return {date:g('year')+'-'+g('month')+'-'+g('day'),min:Number(g('hour'))*60+Number(g('minute'))}}
+// 到着してすぐ使う場合を想定し、開始時刻はいまの時刻を30分で切り捨てる（例：14:10→14:00）。開館前は10:00、21:00以降は14:00。
+function staffNowDefaults(){const n=jstNow();let m=Math.floor(n.min/30)*30;if(m<600)m=600;if(m>=1260)m=840;
+  $('staff-date').value=n.date;$('staff-start').value=hm(m)}
+function staffPastNote(){const el=$('staff-past-warning');if(!el)return;const t=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date()),d=$('staff-date')?$('staff-date').value:'';el.classList.toggle('hidden',!(d&&d<t))}
+function refreshStaffAllocations(){staffPastNote();const r=formData('staff'),seq=++staffAllocationRequest,values=possibleFormAllocations('staff');
+  staffPriceDate=r.date;staffPriceHolidayKnown=false;updateStaffPrice();
+  if(adminUnlocked)adminDiagPhase('alloc','準備中');
+  staffAllocationReady=false;$('staff-submit').disabled=true;renderFormAllocations('staff',values,[]);
+  $('staff-range').textContent=r.date&&r.start?'利用時間：'+r.date+' '+r.start+'～'+r.end:'利用日と開始時刻を選択してください。';
+  if(!$('pin').value||!r.date||!r.start||!r.end){if(adminUnlocked)adminDiagPhase('alloc','条件待ち');return}
+  $('staff-allocation-hint').textContent='台帳の空き状況を確認中…';adminDiagPhase('alloc','通信中');
+  const watchdog=setTimeout(()=>{if(seq===staffAllocationRequest){adminDiagPhase('alloc','応答待ちが15秒超');$('staff-allocation-hint').textContent='空き状況の応答を待っています。連打せず、診断履歴を確認してください。'}},15000);
+  rpc().withSuccessHandler(data=>{if(seq!==staffAllocationRequest)return;clearTimeout(watchdog);
+    try{staffAllocationReady=true;staffPriceDate=r.date;staffPriceHolidayKnown=true;staffPriceHoliday=!!data.holiday;updateStaffPrice();renderFormAllocations('staff',values,data.available||[]);
+      if(!data.available.length)$('staff-allocation-hint').textContent=data.closed?'休館日です。':'この条件では空いている使用コートがありません。';
+      $('staff-submit').disabled=!data.available.length;adminDiagPhase('alloc','表示完了');
+    }catch(error){adminDiagPhase('alloc','描画エラー');adminDiagRecord('空きコート表示失敗',error)}
+  }).withFailureHandler(e=>{if(seq!==staffAllocationRequest)return;clearTimeout(watchdog);
+    $('staff-submit').disabled=true;$('staff-allocation-hint').textContent=e.message||String(e);adminDiagPhase('alloc','取得失敗');adminDiagRecord('空きコート通信失敗',e)
+  }).adminAvailableAllocations($('pin').value,r)
+}
+let adminListRequest=0;
+function loadAdmin(pendingOnly=false,warning=''){if(!$('pin').value)return msg('admin-msg','ログインし直してください。',true);adminPendingMode=pendingOnly;
+  const b=$('admin-load');b.disabled=true;msg('admin-msg','一覧を読み込み中…');const seq=++adminListRequest;
+  adminDiagPhase('list',pendingOnly?'未承認を取得中':'指定日を取得中');
+  const watchdog=setTimeout(()=>{if(seq===adminListRequest){b.disabled=false;adminDiagPhase('list','応答待ちが15秒超');msg('admin-msg','一覧の応答を待っています。何度も押さず診断履歴を確認してください。',true)}},15000);
+  api('adminList',[$('pin').value,$('filter-date').value,pendingOnly],rows=>{if(seq!==adminListRequest)return;clearTimeout(watchdog);b.disabled=false;
+    try{$('admin-msg').textContent=pendingOnly?'未承認 '+rows.length+'件を表示中':'';renderAdmin(rows);
+      adminDiagPhase('list','表示完了 '+rows.length+'件');if(warning)msg('admin-msg',warning,!/^(記録できました)/.test(warning));
+      if(pendingOnly)$('pending-count').textContent='（'+rows.length+'件）';else rpc().withSuccessHandler(p=>{$('pending-count').textContent='（'+p.length+'件）'}).withFailureHandler(e=>adminDiagRecord('未承認件数の取得失敗',e)).adminList($('pin').value,'',true)
+    }catch(error){adminDiagPhase('list','描画エラー');adminDiagRecord('予約一覧の表示失敗',error);msg('admin-msg','予約一覧の画面表示に失敗しました。診断履歴を確認してください。',true)}
+  },'admin-msg',e=>{clearTimeout(watchdog);b.disabled=false;adminDiagPhase('list','取得失敗');adminDiagRecord('予約一覧の通信失敗',e)})}
+function renderAdmin(rows){$('list').innerHTML='';if(!rows.length){$('list').textContent='この日の登録はありません。';return}
+  rows.forEach(r=>{const d=document.createElement('div');d.className='item';const h=document.createElement('strong');
+    h.textContent=`${r.date} ${r.start}～${r.end}　${r.label}${r.allocation?'（'+r.allocation+'）':''}`;d.append(h);
+    const status=document.createElement('p');const tag=document.createElement('span');tag.className='pill'+(r.status==='承認'?' ok':'');tag.textContent=r.status;status.append(tag);
+    status.append(document.createTextNode('　'+r.channel+' ／ 受付 '+r.received+(r.registeredBy?' ／ 登録者 '+r.registeredBy:'')));d.append(status);
+    const person=document.createElement('p');person.textContent=r.name+(r.phone&&r.phone!=='-'?' ／ '+r.phone:'')+(r.channel==='WEB'?' ／ '+r.email:'');d.append(person);if(r.channel==='WEB'){const mail=document.createElement('p');mail.className='hint';mail.textContent='受付メール：'+(r.receiptSent?'送信処理済み '+r.receiptSent:'送信記録なし')+' ／ 承認メール：'+(r.approvalSent?'送信処理済み '+r.approvalSent:'送信記録なし');d.append(mail)}
+    if(r.type==='closed'){if(r.status==='ブロック'&&adminCanChief()){const feedback=document.createElement('div');feedback.setAttribute('role','status');
+      const remove=button(d,'その日の休館を解除',()=>rowAction(remove,feedback,'adminClosureRemove',[$('pin').value,r.id],'休館を解除しました。','休館日を解除しますか？',r.date+' ／ '+r.name,r.date));d.append(feedback)}$('list').append(d);return}
+    if(r.status==='ブロック'){
+      // 閲覧が基本。本人が「この日だけ変更」を押した時だけ編集フォームを表示する。
+      const current=document.createElement('div');current.className='block-current';
+      const currentTitle=document.createElement('strong');currentTitle.textContent='現在登録されている予定';
+      const currentText=document.createElement('p');currentText.textContent=r.date+' '+r.start+'～'+r.end+' ／ '+r.label+(r.allocation?'（'+r.allocation+'）':'');
+      const currentHint=document.createElement('p');currentHint.className='hint';currentHint.textContent='この枠は使用中です。他の利用者には空き枠として表示されません。';
+      current.append(currentTitle,currentText,currentHint);d.append(current);
+      if(!adminCanChief()){const note=document.createElement('p');note.className='hint';note.textContent='スクール・試合などの予定の変更・解除は、責任者が行います。';d.append(note);$('list').append(d);return}
+      const controlsRow=document.createElement('div');controlsRow.className='block-controls';d.append(controlsRow);
+      const editor=document.createElement('section');editor.className='block-editor hidden';editor.setAttribute('aria-label','この日だけ予定を変更する');
+      const sectionTitle=document.createElement('h3');sectionTitle.textContent='この日だけ予定を変更する';
+      const guide=document.createElement('p');guide.className='hint';guide.textContent='下の「変更後の開始・終了時刻」と「変更後の使用コート」を選び、「変更内容を確認する」を押してください。ほかの日の予定は変更されません。';
+      editor.append(sectionTitle,guide);
+      const start=document.createElement('select'),end=document.createElement('select');
+      for(const [value,label] of timeItems()){const a=document.createElement('option'),b=document.createElement('option');a.value=b.value=value;a.textContent=b.textContent=label;start.append(a);end.append(b)}
+      start.value=r.start;end.value=r.end;
+      let desiredAllocation=r.allocation||'';
+      const allocation=allocationPicker(r,code=>{desiredAllocation=code;updateChangeButton()});
+      allocation.element.querySelector('strong').textContent='変更後の使用コート（緑＝選択中）';
+      const fields=document.createElement('div');fields.className='grid';
+      for(const [label,input] of [['変更後の開始時刻',start],['変更後の終了時刻',end]]){const field=document.createElement('label');field.textContent=label;field.append(input);fields.append(field)}
+      fields.append(allocation.element);editor.append(fields);
+      const blockAvailability=document.createElement('p');blockAvailability.className='hint';blockAvailability.setAttribute('role','status');
+      blockAvailability.textContent='変更を開始すると、現在の予定を除外して空き状況を確認します。';editor.append(blockAvailability);
+      const feedback=document.createElement('div');feedback.setAttribute('role','status');
+      const change=button(editor,'変更内容を確認する',()=>{
+        if(change.disabled)return;
+        if(!allocation.value())return localMessage(feedback,'変更後の使用コートを選んでください。',true);
+        const before=r.date+' '+r.start+'～'+r.end+' ／ '+r.label+'（'+r.allocation+'）';
+        const after=r.date+' '+start.value+'～'+end.value+' ／ '+r.label+'（'+allocation.value()+'）';
+        rowAction(change,feedback,'adminBlockChange',[$('pin').value,r.id,'時間変更',start.value,end.value,allocation.value()],
+          'この日の予定を変更しました。','この日だけ変更しますか？',
+          '変更前：'+before+'\n変更後：'+after+'\n\nほかの日の予定は変更されません。',r.date);
+      });
+      change.disabled=true;
+      editor.append(feedback);d.append(editor);
+      const editToggle=button(controlsRow,'この日だけ変更する',()=>{
+        const opening=editor.classList.contains('hidden');editor.classList.toggle('hidden',!opening);
+        editToggle.textContent=opening?'変更欄を閉じる':'この日だけ変更する';
+        editToggle.setAttribute('aria-expanded',String(opening));
+        if(opening)refreshBlockChange();
+        else {blockCheckSeq++;checking=false;change.disabled=true;}
+      });
+      editToggle.setAttribute('aria-expanded','false');
+      const remove=button(controlsRow,'この日だけ解除',()=>rowAction(remove,feedback,'adminBlockChange',[$('pin').value,r.id,'解除','','',''],
+        'この日の予定を解除しました。','ブロックを解除しますか？',r.date+' '+r.start+'～'+r.end+'\n'+r.label+' '+r.allocation,r.date));
+      remove.classList.add('danger');
+      let blockCheckSeq=0,checking=false;
+      function validBlockDuration(){return !!start.value&&!!end.value&&min(end.value)-min(start.value)>=60}
+      function updateChangeButton(){
+        const edited=start.value!==r.start||end.value!==r.end||allocation.value()!==r.allocation;
+        change.disabled=!adminUnlocked||editor.classList.contains('hidden')||checking||!validBlockDuration()||!allocation.value()||!edited;
+      }
+      function refreshBlockChange(){
+        const seq=++blockCheckSeq;checking=true;updateChangeButton();
+        allocation.setAllowed([]);blockAvailability.textContent='変更後の空き状況を確認中…';
+        if(!validBlockDuration()){
+          checking=false;updateChangeButton();
+          blockAvailability.textContent='終了時刻は開始時刻の1時間以上後にしてください。';return;
+        }
+        rpc().withSuccessHandler(result=>{
+          if(seq!==blockCheckSeq||!adminUnlocked||editor.classList.contains('hidden'))return;
+          const available=Array.isArray(result.available)?result.available:[];
+          allocation.setAllowed(available,desiredAllocation);
+          checking=false;updateChangeButton();
+          blockAvailability.textContent=available.length?'緑：変更後に選択中／白：選択可能／灰：選択不可。元の予定を除外して判定しています。':'変更後に使えるコートがありません。';
+        }).withFailureHandler(error=>{
+          if(seq!==blockCheckSeq||editor.classList.contains('hidden'))return;
+          allocation.setAllowed([]);checking=false;updateChangeButton();
+          blockAvailability.textContent='空き状況の確認に失敗しました：'+(error.message||String(error));
+          adminDiagRecord('ブロック変更の空き確認失敗',error);
+        }).adminBlockAvailableAllocations($('pin').value,r.id,start.value,end.value);
+      }
+      start.onchange=refreshBlockChange;end.onchange=refreshBlockChange;
+      $('list').append(d);return;
+    }
+    if(r.status==='調整中'||r.status==='承認'){const amount=document.createElement('p');amount.textContent='予定料金：'+yen(r.amount)+(r.people?'（'+r.people+'人）':'');d.append(amount);if(eligible(r)&&r.status==='調整中'){const field=document.createElement('label');field.textContent='利用人数（受付で変更可）';const people=document.createElement('input');people.type='number';people.min='1';people.max='99';people.step='1';people.value=r.people||'';field.append(people);d.append(field);const feedbackPeople=document.createElement('div');feedbackPeople.setAttribute('role','status');const save=button(d,'人数と料金を更新',()=>{save.disabled=true;localMessage(feedbackPeople,'処理中…');rpc().withSuccessHandler(result=>{save.disabled=false;localMessage(feedbackPeople,'更新後の予定料金：'+yen(result.amount));loadAdmin(adminPendingMode)}).withFailureHandler(e=>{save.disabled=false;localMessage(feedbackPeople,e.message||String(e),true)}).adminPeople($('pin').value,r.id,people.value)});d.append(feedbackPeople)}const allocation=allocationPicker(r);d.append(allocation.element);
+      if(r.status==='承認' && r.type==='soccer')appendCourtChangeEditor_(d,r);
+      // 人数変更・延長。精算済みは初回入金を保全し、変更後の差額を別途精算する。
+      if(r.status==='承認'){
+        const edit=document.createElement('details');edit.className='block-editor';
+        const title=document.createElement('summary');title.textContent='利用人数・終了時刻を変更（料金自動計算）';edit.append(title);
+        const guidance=document.createElement('p');guidance.className='hint';
+        guidance.textContent='変更内容を入力して、まず料金と空き状況を確認してください。既存の支払履歴は変更しません。';edit.append(guidance);
+        const fields=document.createElement('div');fields.className='grid';edit.append(fields);
+        const countLabel=document.createElement('label');countLabel.textContent='利用人数';
+        const editPeople=document.createElement('input');editPeople.type='number';editPeople.min='1';editPeople.max='99';editPeople.step='1';editPeople.value=r.people||1;
+        if(!eligible(r)){editPeople.disabled=true;countLabel.textContent='利用人数（料金に反映しない施設）'}
+        countLabel.append(editPeople);fields.append(countLabel);
+        const endLabel=document.createElement('label');endLabel.textContent='変更後の終了時刻';
+        const editEnd=document.createElement('select');
+        for(let t=min(r.end);t<=22*60;t+=30){const opt=document.createElement('option');opt.value=opt.textContent=hm(t);editEnd.append(opt)}
+        editEnd.value=r.end;endLabel.append(editEnd);fields.append(endLabel);
+        const editStatus=document.createElement('div');editStatus.setAttribute('role','status');editStatus.className='notice';
+        editStatus.textContent='「変更後の料金を確認」を押してください。';edit.append(editStatus);
+        const editActions=document.createElement('div');editActions.className='row';edit.append(editActions);
+        const previewButton=button(editActions,'変更後の料金を確認',()=>{
+          previewButton.disabled=true;applyButton.disabled=true;editStatus.textContent='料金と空き状況を確認中…';
+          const n=eligible(r)?editPeople.value:'';
+          rpc().withSuccessHandler(q=>{
+            previewButton.disabled=false;
+            editStatus.textContent='変更前 '+yen(q.oldAmount)+' → 変更後 '+yen(q.newAmount)+' ／ 差額 '+yen(q.estimatedDifference)+'。これは見積もりです。';
+            applyButton.disabled=!!(r.paymentStatus==='振込待ち'||!((q.newEnd!==q.oldEnd)||(q.newPeople!==q.oldPeople)));
+            if(r.paymentStatus==='振込待ち')editStatus.textContent+=' 振込予定登録中は着金確認後に変更してください。';
+            if(r.paymentStatus==='精算済')editStatus.textContent+=' 入金済額は維持し、変更確定後に追加精算または返金額を確認します。';
+          }).withFailureHandler(e=>{previewButton.disabled=false;applyButton.disabled=true;localMessage(editStatus,e.message||String(e),true)})
+            .adminPreviewBookingAdjustment($('pin').value,r.id,n,editEnd.value);
+        });
+        const applyButton=button(editActions,'この内容で予約を変更',async()=>{
+          if(applyButton.disabled)return;
+          if(!await confirmAction('予約内容を変更しますか？',r.date+' '+r.start+'～'+r.end+' → '+editEnd.value+'\n人数：'+(r.people||'-')+' → '+editPeople.value+'\n精算済みの場合は既存の入金を保持し、差額を別途精算します。'))return;
+          applyButton.disabled=true;previewButton.disabled=true;editStatus.textContent='変更を保存中…';
+          rpc().withSuccessHandler(result=>{loadAdmin(adminPendingMode,result.warning||'記録できました：予約内容を変更しました。')})
+            .withFailureHandler(e=>{previewButton.disabled=false;applyButton.disabled=true;localMessage(editStatus,e.message||String(e),true)})
+            .adminApplyBookingAdjustment($('pin').value,r.id,eligible(r)?editPeople.value:'',editEnd.value);
+        });applyButton.disabled=true;
+        const invalidate=()=>{applyButton.disabled=true;editStatus.textContent='変更内容が変わりました。再度、料金を確認してください。'};
+        editEnd.addEventListener('change',invalidate);editPeople.addEventListener('input',invalidate);
+        d.append(edit);
+      }
+      const noteLabel=document.createElement('label');noteLabel.className='admin-note';noteLabel.textContent='スタッフ用メモ';const note=document.createElement('textarea');note.rows=2;note.placeholder='必要な連絡事項など';note.value=r.note||'';noteLabel.append(note);d.append(noteLabel);
+      const memoFeedback=document.createElement('div');memoFeedback.setAttribute('role','status');
+      const saveNote=button(d,'メモだけ保存',()=>{saveNote.disabled=true;localMessage(memoFeedback,'メモを保存中…');
+        rpc().withSuccessHandler(()=>{saveNote.disabled=false;localMessage(memoFeedback,'メモを保存しました。');}).withFailureHandler(e=>{
+          saveNote.disabled=false;localMessage(memoFeedback,e.message||String(e),true)}).adminSaveNote($('pin').value,r.id,note.value)
+      });d.append(memoFeedback);
+      const actions=document.createElement('div');actions.className='row admin-actions';
+      const feedback=document.createElement('div');feedback.setAttribute('role','status');
+      for(const s of ['承認','調整中','不承認','キャンセル']){
+        if(s===r.status)continue;
+        const action=button(actions,({承認:'予約を承認する',調整中:'調整中に戻す',不承認:'不承認にする',キャンセル:'予約をキャンセル'})[s],async()=>{
+          if(s==='承認'&&!allocation.value())return localMessage(feedback,'使用コートを選んでください。',true);
+          const info=r.date+' '+r.start+'～'+r.end+'\n'+r.label+(allocation.value()?'（'+allocation.value()+'）':'')+'\n'+r.name+'\n'+r.status+' → '+s;
+          if(s==='キャンセル'){
+            const reason=await chooseCancelReason(r);if(!reason)return;
+            action.disabled=true;localMessage(feedback,'キャンセル料を計算中…');
+            rpc().withSuccessHandler(async quote=>{
+              action.disabled=false;
+              const due='\nキャンセル料：'+yen(quote.fee)+'（'+quote.rate+'％）'+
+                (quote.fee?'\n振込期限：'+quote.dueDate+'中まで':'')+
+                (quote.fee?'\n\n※振込案内はスタッフがLINE・SMS等で送信してください。':'');
+              const settlement='\n入金累計：'+yen(quote.paid||0)+
+                (quote.refundDue>0?'\nキャンセル後の要返金：'+yen(quote.refundDue)+'（実際の返金後に記録）':
+                 quote.remaining>0?'\nキャンセル後の未収：'+yen(quote.remaining):'\n精算差額なし');
+              if(!await confirmAction('予約をキャンセルしますか？',info+'\n理由：'+reason+due+settlement,'予約をキャンセルする'))return localMessage(feedback,'取消しは実行していません。');
+              [...actions.children].forEach(b=>b.disabled=true);localMessage(feedback,'処理中…');
+              rpc().withSuccessHandler(result=>{
+                const q=result.cancellation||quote;const text=cancelMessage(r,q);
+                feedback.innerHTML='';localMessage(feedback,'記録できました：キャンセルしました。キャンセル料：'+yen(q.fee)+'。'+(q.refundDue>0?'返金待ち：'+yen(q.refundDue)+'。実際の返金後に「入金・返金」から記録してください。':q.remaining>0?'未収：'+yen(q.remaining)+'。':'差額なし。')+(q.fee?' 必要な請求案内を確認してください。':''));
+                if(q.fee){const copy=button(feedback,'振込案内をコピー',()=>copyPlain(text));copy.className='secondary';}
+                refreshStaffIfSameDate(r.date);
+                // 旧カードの精算欄はキャンセル前の料金を保持するため、
+                // 必ずサーバーから予約・入出金を再取得して表示し直す。
+                loadAdmin(false,'記録できました：キャンセルを記録しました。返金待ち・未収額は該当予約の「入金・返金」欄に表示されます。');
+              }).withFailureHandler(e=>{[...actions.children].forEach(b=>b.disabled=false);localMessage(feedback,e.message||String(e),true)})
+                .adminChange($('pin').value,r.id,s,allocation.value(),note.value,reason);
+            }).withFailureHandler(e=>{action.disabled=false;localMessage(feedback,e.message||String(e),true)})
+              .adminCancelQuote($('pin').value,r.id,reason);
+            return;
+          }
+          const description=s==='不承認'?'WEB申込みを不承認として処理します。':s==='承認'?'予約を確定します。テスト専用版では承認メールは送信しません。':'状態を調整中に変更します。';
+          if(!await confirmAction(s+'に変更しますか？',info+'\n\n'+description,s==='承認'?'予約を承認する':s==='不承認'?'不承認にする':'調整中に戻す'))return;
+          [...actions.children].forEach(b=>b.disabled=true);localMessage(feedback,'処理中…');
+          rpc().withSuccessHandler(result=>{localMessage(feedback,result.warning||s+'に変更しました。',!!result.warning);refreshStaffIfSameDate(r.date);loadAdmin(adminPendingMode,result.warning||'記録できました：'+s+'に変更しました。')})
+            .withFailureHandler(e=>{[...actions.children].forEach(b=>b.disabled=false);localMessage(feedback,e.message||String(e),true)})
+            .adminChange($('pin').value,r.id,s,allocation.value(),note.value)
+        });
+        if(s==='キャンセル'||s==='不承認')action.classList.add('danger')
+      }
+      d.append(actions,feedback)}
+    if(['調整中','承認','キャンセル'].includes(r.status)){
+      // 変更履歴を統合表示。人数・時間とコート移動・増面の両方を読み取り専用で確認する。
+      if(r.status==='承認'||r.status==='キャンセル'){
+        const history=document.createElement('details');history.className='block-editor';
+        const heading=document.createElement('summary');heading.textContent='予約の変更履歴を見る（コート・人数・時間・料金）';history.append(heading);
+        const content=document.createElement('div');content.className='notice';content.textContent='開くと履歴を読み込みます。';history.append(content);
+        let requested=false;
+        history.addEventListener('toggle',()=>{
+          if(!history.open||requested)return;requested=true;content.textContent='変更履歴を読み込み中…';
+          rpc().withSuccessHandler(rows=>{
+            content.replaceChildren();
+            if(!rows.length){content.textContent='変更履歴はありません。';return}
+            rows.forEach(a=>{
+              const item=document.createElement('p');item.style.whiteSpace='pre-line';
+              let detail='';
+              if(a.type==='コート'){
+                detail='コート：'+a.beforeAllocation+'（'+a.beforeUnits+'/3面） → '+a.afterAllocation+'（'+a.afterUnits+'/3面）\n';
+              }else{
+                if(a.beforePeople!==a.afterPeople)detail+='人数：'+a.beforePeople+'人 → '+a.afterPeople+'人\n';
+                if(a.beforeEnd!==a.afterEnd)detail+='終了：'+a.beforeEnd+' → '+a.afterEnd+'\n';
+              }
+              detail+='料金：'+yen(a.beforeAmount)+' → '+yen(a.afterAmount)+'（差額 '+yen(a.afterAmount-a.beforeAmount)+'）';
+              item.textContent=a.timestamp+' ／ '+a.type+' ／ '+a.state+'\n'+detail+
+                (a.actor?'\n変更者：'+a.actor:'')+(a.calendar?'\nカレンダー：'+a.calendar:'');
+              item.style.borderBottom='1px solid #c7dbe5';item.style.paddingBottom='10px';
+              content.append(item)
+            })
+          }).withFailureHandler(e=>{requested=false;content.textContent='履歴の取得に失敗しました：'+(e.message||String(e))})
+            .adminUnifiedBookingChangeHistory($('pin').value,r.id)
+        });
+        d.append(history)
+
+      }
+      if(r.channel!=='管理'&&!r.series&&r.type!=='closed'){
+      if(r.status==='承認'||r.status==='キャンセル'){
+        appendAdjustmentEditor_(d,r);
+      }else{
+        const note=document.createElement('p');note.className='hint';
+        note.textContent=r.status==='調整中'?'入金の記録は、予約を承認してから行ってください。':'不承認の予約は入金を記録できません。';d.append(note);
+      }
+      }
+
+    }
+    $('list').append(d)})}
+// 入出金の保存結果でカードを更新する。画面全体の再読み込みは不要。
+function appendAdjustmentEditor_(parent,r){
+  if(!PAY_REC)return;
+  const adj=document.createElement('details');adj.className='block-editor';
+  const title=document.createElement('summary');title.textContent='入金・返金：確認中…';adj.append(title);
+  const banner=document.createElement('div');banner.style.cssText='border-radius:10px;padding:14px;margin:10px 0;font-weight:700;font-size:20px';banner.textContent='残額を確認中…';adj.append(banner);const steps=document.createElement('div');steps.className='notice';steps.style.whiteSpace='pre-line';steps.hidden=true;adj.append(steps);const bal=document.createElement('p');bal.textContent='台帳の最新入出金を確認中…';adj.append(bal);
+  const feedback=document.createElement('div');feedback.setAttribute('role','status');adj.append(feedback);
+  const fields=document.createElement('div');adj.append(fields);
+  function field(text,input){const label=document.createElement('label');label.textContent=text;label.append(input);fields.append(label);return label}
+  const kind=document.createElement('select');for(const v of ['追加入金','返金']){const o=document.createElement('option');o.value=v;o.textContent=v==='追加入金'?'入金':v;kind.append(o)}kind.disabled=true;field('区分',kind);
+  const amount=document.createElement('input');amount.type='number';amount.min='1';amount.step='1';amount.className='nospin';amount.inputMode='numeric';field('実際の金額（円）',amount);
+  const method=document.createElement('select');for(const v of ['現金','PayPay','楽天Pay','銀行振込']){const o=document.createElement('option');o.value=o.textContent=v;method.append(o)}field('受領・返金方法',method);method.value=r.paymentMethod||'現金';
+  const date=document.createElement('input');date.type='date';date.required=true;
+  const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  date.value=date.max=today;field('実際の入金日・返金日',date);
+  const hint=document.createElement('p');hint.className='hint';hint.textContent='実際に受領・返金した日を選んでください。記録日時は別に自動保存します。';fields.append(hint);
+  const controls=document.createElement('div');controls.className='row';adj.append(controls);
+  const history=document.createElement('details');const heading=document.createElement('summary');heading.textContent='入金・返金の履歴';history.append(heading);
+  const historyBody=document.createElement('div');history.append(historyBody);adj.append(history);
+  if(r.paymentHistory){const old=document.createElement('details'),label=document.createElement('summary'),body=document.createElement('p');label.textContent='従来の精算操作履歴';body.textContent=r.paymentHistory;body.style.whiteSpace='pre-wrap';old.append(label,body);adj.append(old)}
+  let current=null,pending=null,busy=false,edited=false;
+  function updateHold(){if(busy||pending)adminHolds.add(r.id);else adminHolds.delete(r.id)}
+  function recordLabel(){const v=Number(amount.value),ok=Number.isSafeInteger(v)&&v>0;record.textContent=(ok?yen(v):'金額')+(kind.value==='返金'?'の返金':'の入金')+'を記録'}
+  amount.addEventListener('input',()=>{edited=true;recordLabel()});
+  function display(result){
+    current=result;
+    const outstanding=result.remaining||result.refundDue;
+    const state=result.remaining>0?'入金待ち '+yen(result.remaining):result.refundDue>0?'返金待ち '+yen(result.refundDue):result.refunded>0?'返金後の精算完了':result.income>0?'精算完了':'請求・入出金なし';
+    bal.textContent='請求 '+yen(result.charge)+' ／ 入金累計 '+yen(result.income)+' ／ 返金累計 '+yen(result.refunded)+' ／ '+state;
+    title.textContent='入金・返金：'+state;{const rem=result.remaining,rf=result.refundDue;banner.textContent=rem>0?'あと'+yen(rem)+' 受け取ってください':rf>0?yen(rf)+' お返ししてください':'精算完了';banner.style.background=rem>0?'#fff1d3':rf>0?'#fbe7e5':'#dcf0e6';banner.style.color=rem>0?'#845615':rf>0?'#922d2d':'#176e40';steps.hidden=!(rem||rf);steps.textContent=(rf>0?'① 先に、お客様へ実際に'+yen(rf)+'を返す\n② 返し終えたら、下の「'+yen(rf)+'の返金を記録」を押す':'① お客様から実際に'+yen(rem)+'を受け取る\n② 受け取ったら、下の「'+yen(rem)+'の入金を記録」を押す')+'\n※この画面はお金を動かしません。済んだことを記録するだけです。';}
+    kind.value=result.refundDue>0?'返金':'追加入金';if(!edited||Number(amount.value)>outstanding||!(Number(amount.value)>0))amount.value=String(outstanding);amount.max=String(outstanding);amount.parentNode.firstChild.nodeValue=kind.value==='返金'?'実際に返した金額（円）':'実際に受け取った金額（円）';
+    fields.hidden=!outstanding;record.hidden=!outstanding;
+    recordLabel();record.disabled=!outstanding;date.parentNode.firstChild.nodeValue=kind.value==='返金'?'実際に返した日':'実際に受け取った日';partial.hidden=!outstanding||amount.parentNode.style.display!=='none';
+    historyBody.replaceChildren();
+    if(!(result.history||[]).length)historyBody.textContent='入金・返金の履歴はありません。';
+    for(const entry of result.history||[]){const line=document.createElement('p');line.textContent=(entry.actualDate||'実際の日付：未記録')+' ／ '+(entry.kind==='追加入金'?'入金':entry.kind)+' '+yen(entry.amount)+' ／ '+entry.method+'（記録日時：'+entry.recordedAt+'）';historyBody.append(line)}
+    plan.hidden=!(r.status==='承認'&&result.income===0&&result.extraEntries===0&&result.remaining>0&&r.paymentStatus!=='振込待ち'&&method.value==='銀行振込');
+    localMessage(feedback,outstanding?'実際に受け取った・返金した後に記録してください。':'入出金操作は不要です。');
+  }
+  function freeze(value){busy=value;updateHold();plan.disabled=value||!!pending;refresh.disabled=value;record.disabled=value;[amount,method,date].forEach(x=>x.disabled=value||!!pending)}
+  const refresh=button(controls,'残額を最新にする',()=>{
+    if(busy||pending)return;freeze(true);
+    rpc().withSuccessHandler(result=>{freeze(false);display(result);const t=new Date();localMessage(feedback,'最新の残額を確認しました（'+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+'）。入力した金額はそのままです。')}).withFailureHandler(e=>{freeze(false);record.disabled=true;localMessage(feedback,e.message||String(e),true)}).adminGetAdjustmentBalance($('pin').value,r.id);
+  });
+  const record=button(controls,'入金・返金を記録',async()=>{
+    if(busy||!current)return;
+    if(!pending){
+      const money=Number(amount.value),outstanding=kind.value==='返金'?current.refundDue:current.remaining;
+      if(!Number.isSafeInteger(money)||money<=0||money>outstanding)return localMessage(feedback,'金額は1円以上、残額以下で入力してください。',true);
+      if(!date.value||date.value>today||!date.checkValidity())return localMessage(feedback,'実際の入出金日は今日以前の日付を選んでください。',true);
+      const data={kind:kind.value,amount:money,method:method.value,date:date.value,id:'adj_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12)};
+      freeze(true);
+      const accepted=await confirmAction((data.kind==='返金'?'返金':'入金')+'を記録しますか？',r.date+' '+r.start+'～'+r.end+' ／ '+r.name+'\n'+(data.kind==='返金'?'返金':'入金')+' '+yen(data.amount)+' ／ '+data.method+'\n実際に'+(data.kind==='返金'?'返した日':'受け取った日')+'：'+data.date+'\n※実際のお金の受け渡しが済んでいる場合だけ記録してください。',yen(data.amount)+(data.kind==='返金'?'の返金':'の入金')+'を記録');
+      if(!accepted){freeze(false);return}pending=data;
+    }
+    const data=pending;freeze(true);localMessage(feedback,'入出金記録を保存中…');
+    rpc().withSuccessHandler(result=>{
+      pending=null;edited=false;amount.parentNode.style.display='none';freeze(false);display(result.balance);
+      localMessage(feedback,result.warning||'記録できました：'+(data.kind==='返金'?'返金':'入金')+yen(data.amount)+'・'+data.date+'・'+data.method,!!result.warning);if(!result.warning)feedback.firstChild.style.cssText='background:#dcf0e6;color:#176e40;font-weight:700';
+    }).withFailureHandler(e=>{
+      busy=false;record.disabled=false;record.textContent='同じ記録の保存結果を確認・再試行';refresh.disabled=true;
+      localMessage(feedback,(e.message||String(e))+'。お金を再度受け渡す必要はありません。記録の保存を確認するだけです。下のボタンは同じ操作IDなので二重記録されません。',true);
+    }).adminRecordAdjustmentPayment($('pin').value,r.id,data.kind,data.amount,data.method,data.id,data.date);
+  });record.disabled=true;
+  const partial=button(controls,'金額が違う場合（一部のみ）',()=>{amount.parentNode.style.display='';partial.hidden=true});amount.parentNode.style.display='none';const plan=button(controls,'振込待ちにする（入金はまだ記録しない）',async()=>{
+    if(busy||pending||!current)return;
+    freeze(true);
+    if(!await confirmAction('振込予定を登録しますか？','まだ入金としては記録しません。着金後、この画面で入金日・金額を記録してください。')){freeze(false);return}
+    rpc().withSuccessHandler(()=>{r.paymentStatus='振込待ち';freeze(false);display(current);localMessage(feedback,'振込予定を登録しました。着金後に入金を記録してください。')})
+      .withFailureHandler(e=>{freeze(false);localMessage(feedback,e.message||String(e),true)})
+      .adminSetPayment($('pin').value,r.id,'銀行振込','予定登録');
+  });plan.hidden=true;
+  method.addEventListener('change',()=>{if(current&&!busy&&!pending)plan.hidden=!(r.status==='承認'&&current.income===0&&current.extraEntries===0&&current.remaining>0&&r.paymentStatus!=='振込待ち'&&method.value==='銀行振込')});
+  parent.append(adj);adj.open=true;
+  adj.addEventListener('toggle',()=>{if(adj.open&&!current&&!busy)refresh.click()});
+  if(adj.open)refresh.click();
+}
+
+function chooseCancelReason(r){return new Promise(resolve=>{
+  const dlg=document.createElement('dialog');dlg.className='modal-backdrop';dlg.innerHTML='<form method="dialog"><h2>キャンセル理由</h2><p>該当する理由を選んでください。</p><div class="modal-actions"><button value="cancel" class="secondary">戻る</button><button value="user">利用者都合</button><button value="facility" class="secondary">施設都合</button></div></form>';
+  const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  if(r&&r.status==='調整中'&&r.date<today){const b=document.createElement('button');b.value='expired';b.textContent='未承認の申込みを終了（利用日経過）';dlg.querySelector('.modal-actions').append(b)}
+  document.body.appendChild(dlg);dlg.addEventListener('close',()=>{const v=dlg.returnValue;dlg.remove();resolve(v==='user'?'利用者都合':v==='facility'?'施設都合':v==='expired'?'未承認の申込みを終了（利用日経過）':null)},{once:true});dlg.showModal()})}
+function cancelMessage(r,q){return 'にいかわスポーツドーム\n'+r.date+' '+r.start+'～'+r.end+' '+r.label+'のキャンセルを受け付けました。\n'+q.paymentText}
+function copyPlain(text){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).catch(()=>window.prompt('この文章をコピーしてください',text))}else window.prompt('この文章をコピーしてください',text)}
+function refreshStaffIfSameDate(date){if(adminUnlocked&&date&&$('staff-date')&&$('staff-date').value===date)refreshStaffAllocations()}
+function localMessage(el,s,error=false){el.innerHTML='';const item=document.createElement('div');item.className='notice'+(error?' error':'');item.textContent=s;el.append(item)}
+async function rowAction(button,feedback,name,args,success,title,details,affectedDate=''){
+  if(title&&!await confirmAction(title,details))return;
+  button.disabled=true;localMessage(feedback,'処理中…');
+  rpc().withSuccessHandler(r=>{button.disabled=false;localMessage(feedback,r.warning||success,!!r.warning);refreshStaffIfSameDate(affectedDate);loadAdmin(adminPendingMode,r.warning||'記録できました：'+success)})
+    .withFailureHandler(e=>{button.disabled=false;localMessage(feedback,e.message||String(e),true)})[name](...args)
+}
+function allocationValues(r){return r.type==='soccer'?(r.units===3?courtOptions.slice(5):r.units===2?courtOptions.slice(3,5):courtOptions.slice(0,3)):
+  r.type==='multi'?[['M','多目的']]:r.label==='ブルペン'?(r.allocation==='P'?[['P','従来のブルペン全体']]:laneOptions(r.units)):[['S','サブコート']]}
+function laneOptions(n){return n===3?[['P123','1＋2＋3']]:n===2?[['P12','1＋2'],['P23','2＋3']]:[['P1','1'],['P2','2'],['P3','3']]}
+function allocationPicker(r,onSelectionChange){const values=allocationValues(r),wrap=document.createElement('div');wrap.className='allocation';
+  const title=document.createElement('strong');title.textContent='使用コート'+(r.type==='soccer'&&values.length>1?'（空いているものだけ選択可能）':'');wrap.append(title);
+  const choices=document.createElement('div');choices.className='row';wrap.append(choices);
+  let allowed=Array.isArray(r.availableAllocations)?r.availableAllocations:values.map(v=>v[0]);
+  let selected=allowed.includes(r.allocation)?r.allocation:(allowed.length===1?allowed[0]:'');
+  function render(){choices.replaceChildren();values.forEach(([value,label])=>{
+    const b=document.createElement('button');b.type='button';b.className='secondary'+(value===selected?' active':'');b.textContent=label;
+    b.disabled=!allowed.includes(value);if(b.disabled)b.title='ほかの予約・調整中の申込みと重なるため選べません';
+    b.setAttribute('aria-pressed',value===selected?'true':'false');
+    b.onclick=()=>{if(b.disabled)return;selected=value;render();if(typeof onSelectionChange==='function')onSelectionChange(selected)};choices.append(b)
+  })}
+  render();
+  const note=document.createElement('p');note.className='hint';wrap.append(note);
+  function setAllowed(next,preferred=''){allowed=Array.isArray(next)?next:[];selected=allowed.includes(preferred)?preferred:allowed.includes(selected)?selected:(allowed.length===1?allowed[0]:'');render();note.textContent=allowed.length?'':'現在、この時間に割り当てられるコートがありません。'}
+  setAllowed(allowed);
+  return {element:wrap,value:()=>selected,setAllowed}
+}
+function button(parent,label,fn){const b=document.createElement('button');b.type='button';b.className='secondary';b.textContent=label;b.onclick=fn;parent.append(b);return b}
+async function formAction(buttonId,messageId,name,args,success,confirmation){
+  // 二重の確認画面にはせず、従来のPIN入力画面に確定内容をまとめて表示する。
+  const fresh=await confirmRegistrationPin(confirmation);if(!fresh)return;args[0]=fresh;
+  const b=$(buttonId);if(b.disabled)return;b.disabled=true;msg(messageId,'処理中…');
+  rpc().withSuccessHandler(r=>{b.disabled=false;const plain=typeof success==='function'?success(r):success;
+      msg(messageId,plain+(r.warning?'\n【要確認】'+r.warning:''),!!r.warning);loadAdmin(adminPendingMode,r.warning||'');
+      if(buttonId==='staff-submit'){['staff-name','staff-phone','staff-note'].forEach(i=>$(i).value='');$('staff-member').value='';staffPeopleReset();staffNowDefaults();refreshStaffAllocations()}
+    }).withFailureHandler(e=>{b.disabled=false;const t=e.message||String(e);msg(messageId,/PINが違います/.test(t)?'PINが違います。もう一度、登録ボタンを押して、あなたのPIN（6桁）を入れてください。':t,true)})[name](...args)
+}
+function staffAdd(){const x={...formData('staff'),name:$('staff-name').value.trim(),phone:$('staff-phone').value.trim(),
+  received:'',note:$('staff-note').value};
+  {const miss=staffMissing(x);if(miss.length)return msg('staff-msg','まだ入力されていない項目：'+miss.join('、')+'。',true)}
+  if(eligible(x)&&(!staffPriceHolidayKnown||staffPriceDate!==x.date))return msg('staff-msg','料金と空き状況の確認が完了してから確定してください。',true);
+  if(!staffAllocationReady||!x.allocation)return msg('staff-msg','空き状況の確認が終わり、使用コートを選べてから確定してください。',true);
+  const facility=($('staff-facility').selectedOptions[0]||{}).textContent||x.label;
+  formAction('staff-submit','staff-msg','adminAdd',[$('pin').value,x],
+    '予約を承認（確定）として登録しました。',
+    {title:'この内容で予約を確定しますか？',body:(x.date<new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date())?'※過去の日付の予約です。\n':'')+x.date+' '+x.start+'～'+x.end+'\n'+facility+'（'+x.allocation+'）\n'+x.name+'（'+x.memberType+'）\n'+(eligible(x)?'利用人数：'+x.people+'人\n':'')+'予定料金：'+staffPriceAmount(x)+'\n\n確定後、予約台帳に「承認」として登録し、カレンダーへの反映を試みます。'});
+}
+function blockPlan(){
+  const from=$('from').value,mode=$('block-mode').value,to=mode==='single'?from:$('to').value;
+  if(!from||!to)return {count:0,error:'利用日・期間を入力してください。'};
+  const fromDate=new Date(from+'T12:00:00+09:00'),toDate=new Date(to+'T12:00:00+09:00');
+  if(!Number.isFinite(fromDate.getTime())||!Number.isFinite(toDate.getTime())||toDate<fromDate)return {count:0,error:'期間を確認してください。'};
+  const days=Math.round((toDate-fromDate)/86400000);
+  if(days>370)return {count:0,error:'登録期間は1年以内にしてください。'};
+  const weekday=mode==='single'?fromDate.getUTCDay():Number($('weekday').value);
+  let count=0;for(let i=0;i<=days;i++){const date=new Date(fromDate);date.setUTCDate(date.getUTCDate()+i);if(date.getUTCDay()===weekday)count++}
+  return {from,to,weekday,count,mode,error:count?'':'期間内に指定曜日がありません。曜日か期間を変更してください。'};
+}
+function blockPreview(){const p=blockPlan();$('block-count-preview').textContent=p.error?p.error:p.count+'日分を登録します。';$('block-count-preview').classList.toggle('error',!!p.error)}
+function blockModeChanged(){const single=$('block-mode').value==='single';
+  $('block-weekday-wrap').classList.toggle('hidden',single);$('block-to-wrap').classList.toggle('hidden',single);
+  $('block-from-label').textContent=single?'利用日':'開始日';$('block-submit').textContent=single?'この日の予定を登録':'毎週の予定を登録';blockPreview()
+}
+function blockAdd(){const plan=blockPlan();if(plan.error)return msg('block-msg',plan.error,true);
+  const x={...formData('block'),name:$('block-kind').value+'｜'+$('block-name').value.trim(),from:plan.from,to:plan.to,weekday:String(plan.weekday)};
+  if(!x.start||!x.end||!$('block-name').value.trim())return msg('block-msg','予定名と利用時間を入力してください。',true);
+  if(!x.allocation)return msg('block-msg','使用コートを選んでください。',true);
+  if(min(x.end)-min(x.start)<60)return msg('block-msg','利用時間は1時間以上にしてください。',true);
+  const detail=plan.count+'日分｜'+plan.from+(plan.mode==='weekly'?'～'+plan.to+'／'+$('weekday').selectedOptions[0].textContent:'')+'\n'+x.name+'\n'+$('block-facility').selectedOptions[0].textContent+'（'+x.allocation+'） '+x.start+'～'+x.end;
+  formAction('block-submit','block-msg','adminRecurring',[$('pin').value,x],r=>r.count+'日分の予定を登録しました。',{title:'予定登録の確認',body:detail})
+}
+function closeDays(){if(!$('closed-from').value||!$('closed-to').value)return msg('closed-msg','開始日と終了日を入力してください。',true);
+  formAction('closed-submit','closed-msg','adminClosure',[$('pin').value,$('closed-from').value,$('closed-to').value,$('closed-name').value],r=>r.count+'日分の休館日を登録しました。')}
+
+let adminEpoch=0,lastAdminActivity=Date.now(),adminUnlocked=false;
+// 確認画面が開いている間、または入金・返金の記録が途中の間は、自動ロックを延ばす（最大15分）。
+const adminHolds=new Set();
+function holding(){return (adminHolds.size>0||!!document.querySelector('dialog[open]'))&&Date.now()-lastAdminActivity<900000}
+function adminStay(){lastAdminActivity=Date.now();const w=$('lock-warning');if(w)w.classList.add('hidden');if(adminUnlocked)rpc().withSuccessHandler(()=>{}).withFailureHandler(()=>{}).adminKeepAlive($('pin').value)}
+function dialogNote(text){document.querySelectorAll('dialog .lock-note').forEach(n=>{if(!text)n.remove()});if(!text)return;const d=document.querySelector('dialog[open]');if(!d)return;let n=d.querySelector('.lock-note');
+  if(!n){n=document.createElement('p');n.className='lock-note';n.style.cssText='background:#fff1d3;color:#673c00;font-weight:700;padding:8px;border-radius:6px;margin:10px 0 0';const form=d.querySelector('form')||d;form.insertBefore(n,form.children[1]||null)}n.textContent=text}
+function lockTick(){if(!adminUnlocked)return;const idle=Date.now()-lastAdminActivity,hold=holding(),w=$('lock-warning');
+  if(idle>=300000&&!hold){lockAdmin();return}
+  const show=idle>=240000;dialogNote(show&&hold?'操作がないため、ロックを延ばしています。何も記録されていません。閉じるときは「戻る」を押してください。':'');if(!w)return;w.classList.toggle('hidden',!show);
+  if(show)$('lock-text').textContent=hold?'確認・記録の途中のため、ロックを延ばしています。':'あと'+Math.max(0,Math.ceil((300000-idle)/1000))+'秒で画面をロックします。入力中の内容は消えます。'}
+// スタッフ画面専用の診断。個人情報やPIN、通信引数は記録しない。
+const adminDiag={session:'ログイン前',list:'未開始',alloc:'未開始',touches:0,events:[]};
+function adminDiagRecord(label,error){
+ if(!ADMIN_MODE)return;
+ let suffix='';if(error){const safe=String(error.message||error).slice(0,120)
+   .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,'[メール省略]')
+   .replace(/0\d{9,10}/g,'[電話省略]');suffix='：'+safe}
+ adminDiag.events.push(new Date().toLocaleTimeString('ja-JP')+' '+label+suffix);
+ if(adminDiag.events.length>20)adminDiag.events.shift();
+ adminDiagDraw();
+}
+function adminDiagPhase(phase,value){if(!ADMIN_MODE)return;adminDiag[phase]=value;adminDiagRecord(phase+'='+value)}
+function adminDiagDraw(){
+ const status=$('admin-health'),log=$('admin-diag-log');
+ if(status)status.textContent='動作状況｜認証：'+adminDiag.session+'｜予約一覧：'+adminDiag.list+'｜電話受付の空き確認：'+adminDiag.alloc+'｜画面反応：'+adminDiag.touches+'回';
+ if(log)log.textContent=adminDiag.events.join('\n');
+}
+function adminInteractionTest(){adminDiag.touches++;adminDiagRecord('画面の反応を確認しました（予約データは変更しません）')}
+if(ADMIN_MODE){
+ window.addEventListener('error',e=>adminDiagRecord('画面内でJavaScriptエラー',e.error||e.message));
+ window.addEventListener('unhandledrejection',e=>adminDiagRecord('画面内で未処理エラー',e.reason));
+}
+
+// 遅れて返った通信結果がロック後に個人情報を再表示することを防ぐ。
+function rpc(){const epoch=adminEpoch;function wrap(runner){return new Proxy(runner,{get(target,key){if(key==='withSuccessHandler')return fn=>wrap(target.withSuccessHandler(value=>{if(epoch===adminEpoch)fn(value)}));if(key==='withFailureHandler')return fn=>wrap(target.withFailureHandler(error=>{if(epoch!==adminEpoch)return;const clean=String((error&&error.message)||error||'').replace(/^\s*(Error|エラー)\s*[:：]\s*/,'');if(ADMIN_MODE&&/管理認証/.test(clean)){lockAdmin(clean);return}fn({message:clean})}));const value=target[key];return typeof value==='function'?value.bind(target):value}})}return wrap(google.script.run)}
+let adminUser={name:'',role:'',label:''};
+function adminCanChief(){return adminUser.role==='chief'||adminUser.role==='owner'}
+let PAY_REC=true;
+function setAdminUser(r){adminUser={name:r.name,role:r.role,label:r.roleLabel};PAY_REC=r.paymentRecording!==false;$('report-box').classList.toggle('hidden',!PAY_REC);
+  $('admin-who').textContent='ログイン中：'+r.name+'（'+r.roleLabel+'）';
+  $('admin-tools').classList.toggle('hidden',!adminCanChief());
+  $('staff-admin').classList.toggle('hidden',adminUser.role!=='owner');
+  if(adminCanChief()){loadBookingEnd();const n=jstNow();$('report-month').value=n.date.slice(0,7)}
+  if(adminUser.role==='owner')staffAdminLoad()}
+function staffAdminLoad(){if(adminUser.role!=='owner')return;
+  rpc().withSuccessHandler(rows=>renderStaffList(rows)).withFailureHandler(e=>msg('staff-admin-msg',e.message||String(e),true)).adminStaffList($('pin').value)}
+function renderStaffList(rows){const box=$('staff-list');box.replaceChildren();
+  rows.forEach(s=>{const d=document.createElement('div');d.className='item';
+    const h=document.createElement('strong');h.textContent=s.name+'（'+s.roleLabel+'）';d.append(h);
+    const st=document.createElement('span');st.className='pill'+(s.active?' ok':'');st.textContent=s.active?'使用中':'停止中';st.style.marginLeft='8px';d.append(st);
+    const pinLine=document.createElement('p');pinLine.className='hint';pinLine.textContent='PIN：●●●●●●';d.append(pinLine);
+    const row=document.createElement('div');row.className='row';d.append(row);let timer=null;
+    const show=button(row,'PINを見る',()=>{show.disabled=true;
+      rpc().withSuccessHandler(r=>{show.disabled=false;pinLine.textContent='PIN：'+r.pin+'（15秒で隠れます）';clearTimeout(timer);timer=setTimeout(()=>{pinLine.textContent='PIN：●●●●●●'},15000)})
+        .withFailureHandler(e=>{show.disabled=false;msg('staff-admin-msg',e.message||String(e),true)}).adminStaffShowPin($('pin').value,s.id)});
+    if(s.role!=='owner'){
+      const ed=button(row,'名前・役割を直す',()=>{
+        if(d.querySelector('.staff-edit')){return}
+        const f=document.createElement('div');f.className='staff-edit';f.style.marginTop='8px';
+        const ni=document.createElement('input');ni.type='text';ni.maxLength=20;ni.value=s.name;ni.setAttribute('aria-label','名前');
+        const se=document.createElement('select');se.setAttribute('aria-label','役割');
+        [['chief','責任者'],['staff','スタッフ']].forEach(p=>{const o=document.createElement('option');o.value=p[0];o.textContent=p[1];if(p[0]===s.role)o.selected=true;se.append(o)});
+        const r2=document.createElement('div');r2.className='row';
+        const ok=button(r2,'保存',()=>{ok.disabled=true;
+          rpc().withSuccessHandler(r=>{staffAdminLoad();msg('staff-admin-msg',r.name+'（'+r.roleLabel+'）に直しました。'+(r.roleChanged?'役割が変わった人は、一度ログインし直してください（PINは同じです）。':''))})
+            .withFailureHandler(e=>{ok.disabled=false;msg('staff-admin-msg',e.message||String(e),true)}).adminStaffEdit($('pin').value,s.id,ni.value,se.value)});
+        const cn=button(r2,'やめる',()=>f.remove());
+        f.append(ni,se,r2);d.append(f)});
+      if(s.active){
+        const re=button(row,'PINを再発行',async()=>{if(!await confirmAction('PINを再発行しますか？',s.name+'の古いPINは、すぐに使えなくなります。\nPINが漏れた疑いがあるときだけ行ってください。','再発行する'))return;
+          re.disabled=true;rpc().withSuccessHandler(r=>{re.disabled=false;staffAdminLoad();msg('staff-admin-msg',s.name+'の新しいPIN：'+r.pin+'　（あとから「PINを見る」でも確認できます）')})
+            .withFailureHandler(e=>{re.disabled=false;msg('staff-admin-msg',e.message||String(e),true)}).adminStaffReissue($('pin').value,s.id)});
+        const stop=button(row,'停止する',async()=>{if(!await confirmAction('停止しますか？',s.name+'は、すぐにログインできなくなります。\n過去の記録に出る名前は残ります。','停止する'))return;
+          stop.disabled=true;rpc().withSuccessHandler(()=>{staffAdminLoad();msg('staff-admin-msg',s.name+'を停止しました。')})
+            .withFailureHandler(e=>{stop.disabled=false;msg('staff-admin-msg',e.message||String(e),true)}).adminStaffSetActive($('pin').value,s.id,false)});
+        stop.classList.add('danger')
+      }else{
+        const on=button(row,'再開する',async()=>{if(!await confirmAction('再開しますか？',s.name+'は、同じPINで、またログインできるようになります。','再開する'))return;
+          on.disabled=true;rpc().withSuccessHandler(()=>{staffAdminLoad();msg('staff-admin-msg',s.name+'を再開しました。')})
+            .withFailureHandler(e=>{on.disabled=false;msg('staff-admin-msg',e.message||String(e),true)}).adminStaffSetActive($('pin').value,s.id,true)})
+      }
+    }
+    box.append(d)})}
+const REPORT_METHODS=['現金','銀行振込','PayPay','楽天Pay'];
+function yenN(n){return Number(n).toLocaleString('ja-JP')+'円'}
+function sumItems(list){const i=list.filter(x=>x.kind==='入金').reduce((a,x)=>a+x.amount,0),o=list.filter(x=>x.kind==='返金').reduce((a,x)=>a+x.amount,0);return {i,o,n:i-o}}
+function cellEl(tag,text,cls){const e=document.createElement(tag);e.textContent=text;if(cls)e.className=cls;return e}
+function rowEl(cells,cls){const tr=document.createElement('tr');if(cls)tr.className=cls;cells.forEach(c=>tr.append(c));return tr}
+function buildReport(d){const root=document.createElement('div');
+  const ym=d.ym.split('-'),title=ym[0]+'年'+Number(ym[1])+'月';
+  root.append(cellEl('h2','入出金の確認資料　'+title));
+  const meta=cellEl('div','作成：'+d.created+'　作成者：'+d.by);meta.style.fontSize='13px';root.append(meta);
+  const all=sumItems(d.items);
+  root.append(cellEl('h3','支払方法ごとの合計'));
+  const t1=document.createElement('table'),h1=document.createElement('tr');['支払方法','入金','返金','差引（入金−返金）','件数'].forEach((x,i)=>h1.append(cellEl('th',x,i?'num':'')));t1.append(h1);
+  REPORT_METHODS.forEach(m=>{const list=d.items.filter(x=>x.method===m),r=sumItems(list);t1.append(rowEl([cellEl('td',m),cellEl('td',yenN(r.i),'num'),cellEl('td',yenN(r.o),'num'),cellEl('td',yenN(r.n),'num'),cellEl('td',list.length+'件','num')]))});
+  const others=d.items.filter(x=>!REPORT_METHODS.includes(x.method));
+  if(others.length){const r=sumItems(others);t1.append(rowEl([cellEl('td','その他'),cellEl('td',yenN(r.i),'num'),cellEl('td',yenN(r.o),'num'),cellEl('td',yenN(r.n),'num'),cellEl('td',others.length+'件','num')]))}
+  t1.append(rowEl([cellEl('td','合計'),cellEl('td',yenN(all.i),'num'),cellEl('td',yenN(all.o),'num'),cellEl('td',yenN(all.n),'num'),cellEl('td',d.items.length+'件','num')],'tot'));
+  root.append(t1);
+  const heads=['日付','区分','金額','お客様名','利用日','施設','記録者','記録日時'];
+  const methods=[...REPORT_METHODS,...(others.length?['その他']:[])];
+  methods.forEach(m=>{const list=m==='その他'?others:d.items.filter(x=>x.method===m);
+    root.append(cellEl('h3',m+(m==='現金'?'（日ごとの小計つき）':'')));
+    if(!list.length){root.append(cellEl('div','この月の記録はありません。'));return}
+    const t=document.createElement('table'),hr=document.createElement('tr');heads.forEach((x,i)=>hr.append(cellEl('th',x,i===2?'num':'')));t.append(hr);
+    const days=[...new Set(list.map(x=>x.day))];
+    days.forEach(day=>{const rows=list.filter(x=>x.day===day);
+      rows.forEach(x=>t.append(rowEl([cellEl('td',x.day),cellEl('td',x.kind),cellEl('td',(x.kind==='返金'?'−':'')+yenN(x.amount),'num'),cellEl('td',x.name),cellEl('td',x.useDate),cellEl('td',x.facility),cellEl('td',x.recorder),cellEl('td',x.recordedAt)])));
+      if(m==='現金'){const r=sumItems(rows);const td=cellEl('td',day+'の小計　入金 '+yenN(r.i)+'　返金 '+yenN(r.o)+'　差引 '+yenN(r.n));td.colSpan=8;t.append(rowEl([td],'sub'))}});
+    const r=sumItems(list);const td=cellEl('td',m+'の合計　入金 '+yenN(r.i)+'　返金 '+yenN(r.o)+'　差引 '+yenN(r.n));td.colSpan=8;t.append(rowEl([td],'tot'));
+    root.append(t)});
+  const notes=['確認用の資料です（帳簿ではありません）。システムに記録された入出金だけを載せています。記録漏れや、現金・通帳との差は、この資料には表れません。'];
+  if(d.undated)notes.push('入出金日が記録されていない入出金が '+d.undated+'件（合計 '+yenN(d.undatedAmount)+'）あります。この資料には含まれていません。');
+  if(d.legacy)notes.push('旧データの「初回入金」（入金日が未確認）が '+d.legacy+'件あります。この資料には含まれていません。');
+  notes.forEach(x=>{const p=cellEl('p',x);p.style.fontSize='13px';root.append(p)});
+  return root}
+function loadReport(){const ym=$('report-month').value;if(!ym)return msg('report-msg','月を選んでください。',true);
+  $('report-btn').disabled=true;msg('report-msg','集計中…');
+  rpc().withSuccessHandler(d=>{$('report-btn').disabled=false;const v=$('report-view');v.replaceChildren(buildReport(d));$('report-print-btn').classList.remove('hidden');
+      msg('report-msg','表示しました。PDFにするときは「PDFとして保存（印刷）」を押してください。');window.__reportMonth=d.ym})
+    .withFailureHandler(e=>{$('report-btn').disabled=false;msg('report-msg',e.message||String(e),true)}).adminMonthlyReport($('pin').value,ym)}
+function printReport(){const v=$('report-view');if(!v.firstChild)return;
+  const host=document.createElement('div');host.id='report-host';host.append(v.firstChild.cloneNode(true));document.body.append(host);document.body.classList.add('printing-report');
+  const old=document.title;document.title='入出金確認_'+(window.__reportMonth||'');
+  let done=false;const finish=()=>{if(done)return;done=true;document.body.classList.remove('printing-report');host.remove();document.title=old;window.removeEventListener('afterprint',finish)};
+  window.addEventListener('afterprint',finish);setTimeout(finish,120000);
+  try{window.print()}catch(e){finish();msg('report-msg','印刷画面を開けませんでした。ブラウザのメニューから「印刷」を選んでください。',true)}}
+function staffAddNew(){const name=$('staff-new-name').value.trim();if(!name)return msg('staff-admin-msg','名前を入力してください。',true);
+  const b=$('staff-new-btn');b.disabled=true;msg('staff-admin-msg','追加中…');
+  rpc().withSuccessHandler(r=>{b.disabled=false;$('staff-new-name').value='';staffAdminLoad();msg('staff-admin-msg',r.name+'（'+r.roleLabel+'）を追加しました。PIN：'+r.pin+'　（あとから「PINを見る」でも確認できます）')})
+    .withFailureHandler(e=>{b.disabled=false;msg('staff-admin-msg',e.message||String(e),true)}).adminStaffAdd($('pin').value,name,$('staff-new-role').value)}
+function adminSignIn(){const pin=$('login-pin').value;if(!pin)return msg('login-msg','PINを入力してください。',true);$('login-button').disabled=true;
+ rpc().withSuccessHandler(r=>{
+  closeAdminDialogs();$('login-pin').value='';$('pin').value=r.token;adminUnlocked=true;setAdminUser(r);lastAdminActivity=Date.now();
+  $('login-button').disabled=false;$('login-msg').textContent='';$('admin-login').classList.add('hidden');$('admin').classList.remove('hidden');
+  adminDiag.session='認証済み';adminDiag.list='未開始';adminDiag.alloc='未開始';adminDiag.touches=0;
+  adminDiagRecord('PINログイン成功・画面表示');
+  // 片方の初期化エラーで、もう片方の読み込みまで止めない。
+  try{refreshStaffAllocations()}catch(error){adminDiagPhase('alloc','画面処理エラー');adminDiagRecord('電話受付初期化失敗',error)}
+  try{loadAdmin(true)}catch(error){adminDiagPhase('list','画面処理エラー');adminDiagRecord('一覧初期化失敗',error);$('admin-load').disabled=false}
+ }).withFailureHandler(e=>{$('login-button').disabled=false;msg('login-msg',e.message||String(e),true);adminDiagRecord('PINログイン失敗',e)}).adminLogin(pin)}
+// 管理用のダイアログがロックをまたいで画面操作を遮らないよう、明示的に閉じる。
+function closeAdminDialogs(){
+ for(const id of ['action-confirm-dialog','confirm-pin-dialog']){
+   const dialog=$(id);if(dialog&&dialog.open)dialog.close('cancel');
+ }
+ actionDialogOpen=false;
+}
+function lockAdmin(message='画面をロックしました。PINで再ログインしてください。'){
+ if(!ADMIN_MODE)return;const token=$('pin').value;adminEpoch++;adminUnlocked=false;adminDiag.session='ロック';adminDiagRecord('管理画面ロック');
+ closeAdminDialogs();adminHolds.clear();adminUser={name:'',role:'',label:''};{const who=$('admin-who');if(who)who.textContent=''}if($('staff-list'))$('staff-list').replaceChildren();if($('report-view'))$('report-view').replaceChildren();if($('report-print-btn'))$('report-print-btn').classList.add('hidden');{const w=$('lock-warning');if(w)w.classList.add('hidden')}$('pin').value='';$('login-pin').value='';$('login-button').disabled=false;
+ $('admin').classList.add('hidden');$('admin-login').classList.remove('hidden');$('list').replaceChildren();$('pending-count').textContent='';
+ for(const id of ['admin-msg','staff-msg','block-msg','closed-msg','staff-admin-msg','report-msg'])$(id).replaceChildren();
+ document.querySelectorAll('#admin input:not([type="hidden"]),#admin textarea').forEach(e=>{if(!['date','time'].includes(e.type))e.value=''});
+ document.querySelectorAll('#admin button').forEach(e=>e.disabled=false);document.querySelectorAll('#admin details').forEach(e=>e.open=false);staffAllocationRequest++;staffAllocationReady=false;
+ $('confirm-pin').value='';msg('login-msg',message);
+ if(token)google.script.run.withFailureHandler(()=>{}).adminLogout(token)
+}
+function confirmRegistrationPin(confirmation){return new Promise(resolve=>{if(!adminUnlocked){lockAdmin('時間がたったため、ログアウトしました。PINで入り直してください。');resolve(null);return}const dialog=$('confirm-pin-dialog'),input=$('confirm-pin');$('confirm-pin-title').textContent=confirmation?.title||'登録の確認';$('confirm-pin-details').textContent=confirmation?.body||'';$('confirm-pin-ok').textContent=confirmation?'予約を登録する':'登録する';input.value='';dialog.returnValue='cancel';dialog.addEventListener('close',()=>{const value=dialog.returnValue==='ok'?input.value:null;input.value='';resolve(value)},{once:true});input.onkeydown=ev=>{if(ev.key==='Enter'){ev.preventDefault();if(/^\d{6}$/.test(input.value))dialog.close('ok')}};dialog.showModal();input.focus()})}
+if(ADMIN_MODE){for(const event of ['pointerdown','keydown','input','scroll'])document.addEventListener(event,()=>{if(adminUnlocked){if(Date.now()-lastAdminActivity>=300000&&!holding()){lockAdmin();return}lastAdminActivity=Date.now();const w=$('lock-warning');if(w)w.classList.add('hidden')}},true);
+ // スマホで一時的に他アプリへ切り替えても即ロックしない。経過時間は継続して数える。
+ setInterval(lockTick,1000);
+ // バックグラウンド中はPINセッションの延長をしない。
+ setInterval(()=>{if(adminUnlocked&&!document.hidden&&(Date.now()-lastAdminActivity<300000||holding()))rpc().withSuccessHandler(()=>{}).withFailureHandler(()=>lockAdmin()).adminKeepAlive($('pin').value)},60000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&adminUnlocked&&Date.now()-lastAdminActivity>=300000&&!holding())lockAdmin()});
+ // ページ自体を離れるときはロックする（短時間のアプリ切替では pagehide は通常発火しない）。
+ window.addEventListener('pagehide',()=>{if(adminUnlocked)lockAdmin()});
+ $('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();adminSignIn()}});
+}
+
+const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());const today=now.toISOString().slice(0,10);
+$('date').value=today;
+if(!ADMIN_MODE){const tom=new Date(now.getTime()+webMinDays*86400000).toISOString().slice(0,10);$('date').value=tom;$('date').min=tom}
+if(ADMIN_MODE)for(const id of ['filter-date','from','to','closed-from','closed-to']){if($(id))$(id).value=today}
+if(ADMIN_MODE){makeFacilityForm('staff');makeFacilityForm('block');staffNowDefaults();blockModeChanged()}typeChanged();if(!ADMIN_MODE){restoreSelection();draftReady=true;saveSelection();}
+if(!ADMIN_MODE)publicBookingWindow();if(CANCEL_TOKEN)showCancellation();else if(ADMIN_MODE){$('user').classList.add('hidden');$('admin-login').classList.remove('hidden')}
+setInterval(()=>{if(!document.hidden&&!$('user').classList.contains('hidden'))refreshSlots(true)},30000);
+
+// 開発候補：差し替えしません！ Index.html の admin list render 内へ統合前。
+// 依存: button, rpc, confirmAction, yen, loadAdmin, adminPendingMode, $('pin')。
+function appendCourtChangeEditor_(parent,r){
+  if(r.status!=='承認'||r.type!=='soccer')return;
+  const current=String(r.allocation||'');
+  const size=s=>({A:1,B:1,C:1,AB:2,BC:2,ABC:3})[s]||0;
+  const options=['A','B','C','AB','BC','ABC'].filter(x=>x!==current&&size(x)>=size(current));
+  const editor=document.createElement('details');editor.className='block-editor';
+  const summary=document.createElement('summary');summary.textContent='使用コートを移動・追加する';editor.append(summary);
+  const note=document.createElement('p');note.className='hint';note.textContent='利用開始前の予約時間全体が対象です。面数を減らす操作・利用途中の拡張には対応しません。';editor.append(note);
+  const currentLine=document.createElement('p');currentLine.textContent='現在の割当：'+current+'（'+size(current)+'/3面）';editor.append(currentLine);
+  const label=document.createElement('label');label.textContent='変更方法・変更先';
+  const select=document.createElement('select');
+  const selected=document.createElement('option');selected.value='';selected.textContent='変更内容を選択';select.append(selected);
+  options.forEach(x=>{const opt=document.createElement('option');opt.value=x;opt.textContent=(size(x)===size(current)?'移動：':'追加：')+current+' → '+x+'（'+size(x)+'/3面）';select.append(opt)});
+  label.append(select);editor.append(label);
+  const consentLabel=document.createElement('label');
+  const consent=document.createElement('input');consent.type='checkbox';consentLabel.append(consent,document.createTextNode('利用者に変更内容・料金を説明し、了承を得た'));
+  editor.append(consentLabel);
+  const status=document.createElement('p');status.setAttribute('role','status');status.className='notice';status.textContent='変更先を選んで、料金と空きを確認してください。';editor.append(status);
+  const actions=document.createElement('div');actions.className='row';editor.append(actions);
+  const check=button(actions,'料金と空き状況を確認',()=>{
+    apply.disabled=true;if(!select.value)return;
+    check.disabled=true;status.textContent='確認中…';
+    rpc().withSuccessHandler(q=>{
+      check.disabled=false;
+      status.textContent=q.beforeAllocation+' → '+q.afterAllocation+' ／ 変更前 '+yen(q.beforeAmount)+' ／ 変更後 '+yen(q.afterAmount)+' ／ 差額 '+yen(q.difference)+'。確定前に空きを再判定します。';
+      apply.disabled=!consent.checked;
+      previewTarget=select.value;
+    }).withFailureHandler(e=>{check.disabled=false;apply.disabled=true;previewTarget='';status.textContent='変更できません：'+(e.message||String(e))})
+      .adminPreviewCourtChange($('pin').value,r.id,select.value)
+  });
+  let previewTarget='';
+  const apply=button(actions,'このコート変更を確定',async()=>{
+    if(apply.disabled||!consent.checked||previewTarget!==select.value)return;
+    const target=previewTarget;
+    if(!await confirmAction('予約のコート変更を確定しますか？','現在：'+current+' → 変更後：'+target+'\n変更内容と料金について利用者の了承を得ていることを確認してください。'))return;
+    apply.disabled=true;check.disabled=true;select.disabled=true;consent.disabled=true;
+    status.textContent='保存中…';
+    // 同一クリックの再送でも同じ識別子を利用する。成功後のみ画面を更新。
+    attempted=true;
+    rpc().withSuccessHandler(q=>{
+      status.textContent=q.warning?'予約変更は保存されました。ただし '+q.warning+'。同期状況を確認してください。':'予約変更が保存されました。';
+      verify.style.display='';
+      if(!q.warning)loadAdmin(adminPendingMode,'コート変更を保存しました。');
+    }).withFailureHandler(e=>{
+      verify.style.display='';
+      status.textContent='保存結果を確認してください。もう一度「確定」は押さないでください：'+(e.message||String(e));
+    }).adminApplyCourtChange($('pin').value,r.id,target,true,requestId)
+  });apply.disabled=true;
+  // 変更IDは1回の確定操作に固定。確認ボタンは台帳の読み取りのみで再送しない。
+  let attempted=false;
+  const verify=button(actions,'前回の変更結果を確認',()=>{
+    if(!attempted)return;
+    verify.disabled=true;
+    status.textContent='予約台帳の記録を照会中…';
+    rpc().withSuccessHandler(q=>{
+      verify.disabled=false;
+      status.textContent='確認結果：'+q.state+'。'+q.message;
+      if(q.state==='確定'){
+        apply.disabled=true;
+        check.disabled=true;
+      }
+    }).withFailureHandler(e=>{
+      verify.disabled=false;
+      status.textContent='状態を照会できません。再実行せず担当者へ確認してください：'+(e.message||String(e));
+    }).adminCourtChangeStatus($('pin').value,requestId);
+  });verify.style.display='none';
+  const requestId='cc_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12);
+  const invalidate=()=>{previewTarget='';apply.disabled=true;status.textContent='変更内容を選択し、料金と空きを再確認してください。'};
+  select.addEventListener('change',invalidate);
+  consent.addEventListener('change',()=>{apply.disabled=!(consent.checked&&previewTarget===select.value)});
+  parent.append(editor);
+}
+
+
+// 受付フォームを触るたびに、古いエラー文を消し、足りない項目の一覧を更新する。
+(function(){const card=$('staff-submit')&&$('staff-submit').closest('details');if(!card)return;buildPeopleButtons();
+  const refresh=ev=>{const t=ev.target;if(!t||t.id==='staff-submit')return;
+    if(ev.type==='click'&&!(t.closest&&t.closest('#staff-allocation-choices, #staff-people-buttons')))return;
+    const m=$('staff-msg');if(m)m.replaceChildren();setTimeout(staffTodo,0)};
+  ['input','change','click'].forEach(t=>card.addEventListener(t,refresh,true));
+  setTimeout(staffTodo,0)})();
+</script></body></html>
