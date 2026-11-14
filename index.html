@@ -88,14 +88,26 @@ h2.step{font-size:20px;margin:18px 0 8px;color:#0b4f73}h2.step.wide{grid-column:
 @keyframes skp{from{opacity:.45}to{opacity:1}}
 .basis{color:#48677a;font-size:13px}
 .done-box{background:#f3f9f5;border:2px solid #00a566;border-radius:12px;padding:16px;margin-top:14px}
-.mail-note{background:#fff8e1;border:2px solid #f0b400;border-radius:10px;padding:12px;margin-top:12px;font-size:15px;line-height:1.7}
-.mail-note strong{display:block;color:#8a5a00;font-size:16px;margin-bottom:4px}
+.mail-note{background:#f3f5f6;border:1px solid #dde3e7;border-radius:10px;padding:12px;margin-top:12px;font-size:15px;line-height:1.7}
+.mail-note strong{display:block;color:#233;font-size:15px;margin-bottom:4px}
 .privacy{margin:10px 0 4px}
 .done-box h3{margin:0 0 8px;font-size:19px;color:#0b6b46}
 .done-status{background:#fff2da;border:1px solid #bd7c18;border-radius:8px;padding:10px;margin:8px 0 12px;font-weight:700;color:#673c00}
 .done-item{background:#fff;border:1px solid #c9d8cf;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.7}
 .done-item strong{font-size:17px;color:#123247}
 .done-total{font-size:18px;font-weight:700;text-align:right;margin:10px 0 6px}
+/* ===== 色を減らす：1画面で強いものは1つ ===== */
+h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!important}
+.chip{border:1.5px solid #cbd7de!important;font-weight:600!important;color:#233!important;background:#fff!important}
+.chip.on{background:#e8f3fa!important;border:2px solid #0a75ae!important;color:#0b4f73!important}
+.tint{background:#f5f8fa!important;border-color:#e3ebf0!important}
+.multi-wrap{display:flex!important;align-items:center;gap:12px!important;border:1.5px solid #cbd7de!important;border-radius:10px!important;padding:12px 14px!important;background:#fff!important;font-size:16px!important;font-weight:600!important;color:#233!important}
+.multi-wrap input{width:24px!important;height:24px!important}
+.multi-wrap:has(input:checked){background:#e8f3fa!important;border:2px solid #0a75ae!important;color:#0b4f73!important}
+.slots button.chosen{background:#e8f3fa!important;color:#0b4f73!important;border:2px solid #0a75ae!important;box-shadow:none!important}
+.slot-status{background:#f1f7fb!important;color:#0b4f73!important;border:1px solid #cfe0ea!important;border-left:5px solid #0a75ae!important;text-align:left!important;font-size:17px!important;padding:12px 14px!important}
+.done-box{background:#f8fbf9!important;border:1px solid #cddfd5!important}
+.done-box h3{color:#233!important;font-size:18px!important}
 </style></head><body>
 <header><strong>にいかわスポーツドーム</strong><small>コート予約</small></header><main>
 
@@ -117,8 +129,8 @@ h2.step{font-size:20px;margin:18px 0 8px;color:#0b4f73}h2.step.wide{grid-column:
    <label>利用時間<select id="duration" onchange="refreshSlots()"><option value="60">1時間</option><option value="90">1時間30分</option><option value="120">2時間</option><option value="150">2時間30分</option><option value="180">3時間</option><option value="210">3時間30分</option><option value="240">4時間</option><option value="270">4時間30分</option><option value="300">5時間</option><option value="330">5時間30分</option><option value="360">6時間</option><option value="390">6時間30分</option><option value="420">7時間</option><option value="450">7時間30分</option><option value="480">8時間</option></select></label></div>
   <p id="hours" class="hours-line"></p><p class="pick-head">開始時刻を選んでください</p><div id="slots" class="slots"></div>
   <p id="selected-time" class="slot-status hidden" role="status"></p>
-  <div id="price-box" class="price-box hidden"><strong>予定料金（税込）</strong><p class="hint">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。人数が変わった場合は受付でお知らせください。実際の人数で再計算します。</p></details><div id="price-list"></div><div id="total" class="total"></div></div>
-  <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。振込をご希望の場合は、ご相談ください。</p>
+  <div id="price-box" class="price-box hidden"><strong>予定料金（税込）</strong><p class="hint">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。</p></details><div id="price-list"></div><div id="total" class="total"></div></div>
+  <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。振込をご希望の場合は、ご相談ください。人数が変わったら、受付でお知らせください。実際の人数で精算します。</p>
    <h3>キャンセル</h3><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table>
    <p class="hint small">キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p></div>
   <p class="hint small privacy">お預かりした個人情報（お名前・電話番号・メールアドレス）は、ご予約の連絡と受付の管理にのみ使います。</p>
@@ -306,7 +318,7 @@ function submit(){if(chosen&&allPicked().some(x=>eligible(x)&&(!Number.isInteger
       box.append(c);total+=Number(item.amount)||0});
     if((r.items||[]).length>1){const sm=document.createElement('div');sm.className='done-total';sm.textContent='予定料金の合計　'+yen(total);box.append(sm)}
     const mail=document.createElement('div');mail.className='mail-note';const mt=document.createElement('strong');mt.textContent='メールが届かない時は';mail.append(mt);
-    ['受付のメールを、入力されたアドレスに送りました。','「迷惑メール」のフォルダをご確認ください。','携帯電話のメールは、gmail.com からのメールを受け取れる設定にしてください。','確定のお知らせも、同じアドレスに届きます。'].forEach(x=>{const d=document.createElement('div');d.textContent=x;mail.append(d)});
+    ['受付のメールを、入力されたアドレスに送りました。','予約確定のお知らせも、同じアドレスに届きます。','携帯電話のメールは、gmail.com からのメールを受け取れる設定にしてください。','見当たらない場合は「迷惑メール」のフォルダもご確認ください。'].forEach(x=>{const d=document.createElement('div');d.textContent=x;mail.append(d)});
     const ct=document.createElement('div');const ca=document.createElement('a');ca.href='tel:0765323807';ca.textContent='電話 0765-32-3807';const cb=document.createElement('a');cb.href='https://lin.ee/p2QUSXa';cb.target='_blank';cb.rel='noopener noreferrer';cb.textContent='公式LINE';ct.append(document.createTextNode('届かない時は、'),cb,document.createTextNode('か、'),ca,document.createTextNode('へご連絡ください。'));mail.append(ct);box.append(mail);
     target.append(box);target.scrollIntoView({behavior:'smooth',block:'start'});
   },'user-msg',()=>{done();refreshSlots(true)})}
