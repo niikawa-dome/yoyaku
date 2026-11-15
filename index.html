@@ -127,6 +127,28 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
 .fac-row .multi-wrap:has(input:checked){border:0!important;background:transparent!important}
 .fac-body{padding:2px 0 4px 6px!important}.time-line select{width:122px!important;min-width:0!important}.time-line label{flex:0 0 auto}.fac-body .fac-opt{margin:6px 0!important}
 .bulk-bar{border:2px solid #0a75ae;border-radius:12px;background:#f4f9fc;padding:12px;margin:14px 0 6px}.bulk-bar>strong{display:block;font-size:17px;color:#0b3a57}.bulk-bar button{margin-top:8px}
+/* v45b: 見た目の整理（施設の行） */
+#fac-list{gap:12px!important}
+.fac-row{border:1px solid #d3dde4!important;border-radius:14px!important;padding:0!important;background:#fff!important;overflow:hidden;box-shadow:0 1px 2px #0a2a3d0d}
+.fac-row.on{border-color:#9cc3da!important;background:#fff!important;box-shadow:inset 5px 0 0 #0a75ae,0 1px 3px #0a2a3d14}
+.fac-row .multi-wrap{padding:15px 18px!important;font-size:17px!important;font-weight:700!important;color:#233!important;gap:14px!important;cursor:pointer}
+.fac-row.on .multi-wrap{color:#0b3a57!important}
+.fac-row .multi-wrap input{appearance:none;-webkit-appearance:none;width:24px!important;height:24px!important;border:2px solid #9fb2bf;border-radius:7px;background:#fff;display:grid;place-content:center;margin:0;flex:none;cursor:pointer}
+.fac-row .multi-wrap input:checked{background:#0a75ae;border-color:#0a75ae}
+.fac-row .multi-wrap input:checked::after{content:"";width:6px;height:12px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.fac-body{display:grid!important;gap:12px;padding:0 18px 16px 56px!important}.fac-body.hidden{display:none!important}
+.fac-body .fac-opt{display:flex!important;align-items:center;gap:10px;margin:0!important;font-size:15px;font-weight:600;color:#4a5f6c}
+.fac-body .fac-opt.hidden{display:none!important}
+.fac-body .fac-opt select{width:auto!important;min-width:200px;max-width:100%}
+.fac-opt input[type=number]{width:88px!important;margin:0!important}
+.time-line{display:flex;align-items:center;gap:12px;margin:0!important}
+.time-line select{height:48px;width:132px!important;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.tl-from{color:#4a5f6c;font-weight:600}
+.fac-row.need .tl-start select{border:2px solid #d9a441;background:#fffaf0}
+.row-msg{margin:0!important}
+.date-block{margin:12px 0 6px!important}.date-block input{height:48px;font-size:17px}
+h2.step{margin-top:22px!important}
+@media(max-width:480px){.fac-body{padding:0 14px 14px 14px!important}.fac-row .multi-wrap{padding:14px!important}.fac-body .fac-opt select{min-width:0;flex:1}.time-line select{width:120px!important}}
 </style></head><body>
 <header><strong>にいかわスポーツドーム</strong><small>コート予約</small></header><main>
 
