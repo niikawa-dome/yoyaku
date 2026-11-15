@@ -215,9 +215,9 @@ function chipLabel(id,v,t){if(id==='facility'&&$('type').value==='soccer'){const
 function syncChips(){['type','facility'].forEach(id=>{const sel=$(id),box=$(id+'-chips');if(!sel||!box)return;box.innerHTML='';
   [...sel.options].forEach(o=>{const b=document.createElement('button');b.type='button';b.className='chip'+(sel.value===o.value?' on':'');b.innerHTML=chipLabel(id,o.value,o.textContent);
     b.onclick=()=>{if(sel.value===o.value)return;sel.value=o.value;sel.dispatchEvent(new Event('change'))};box.append(b)})})}
-function typeChanged(){const t=$('type').value;const booked=cart.filter(x=>x.type==='baseball').map(x=>x.label);
+function typeChanged(){const t=$('type').value;
   options('facility',t==='soccer'?[['1','ミニコート（1/3面）'],['2','ミニコート×2（2/3面）'],['3','フルコート']]:
-  t==='baseball'?[['ブルペン','ブルペン'],['サブコート','サブコート']].filter(x=>!booked.includes(x[0])):[['多目的','多目的']]);facilityChanged()}
+  t==='baseball'?[['ブルペン','ブルペン'],['サブコート','サブコート']]:[['多目的','多目的']]);facilityChanged()}
 function facilityChanged(){syncChips();const visible=$('type').value==='baseball'&&$('facility').value==='ブルペン';$('lane-wrap').classList.toggle('hidden',!visible);moreUI();refreshSlots()}
 function withMulti(){return !!$('with-multi')&&$('with-multi').checked&&!$('multi-wrap').classList.contains('hidden')}
 function picked(){const type=$('type').value,value=$('facility').value;const r={type,units:type==='soccer'?Number(value):type==='baseball'&&value==='ブルペン'?Number($('lane-count').value):1,label:type==='baseball'?value:'多目的',
@@ -226,8 +226,8 @@ function picked(){const type=$('type').value,value=$('facility').value;const r={
 function allPicked(){const r=picked();const list=[r];if(withMulti()){list.push({...r,type:'multi',units:1,label:'多目的',people:Number($('people').value)})}return list}
 function needPeople(){return eligible(picked())||withMulti()}
 function multiChanged(){$('people-wrap').classList.toggle('hidden',!needPeople());refreshSlots()}
-function moreUI(){const t=$('type').value,hasMulti=cart.some(x=>x.type==='multi');$('add-more').classList.toggle('hidden',t!=='baseball'||hasMulti);
-  const showMulti=(t==='soccer'||t==='baseball')&&!hasMulti;$('multi-wrap').classList.toggle('hidden',!showMulti);if(!showMulti)$('with-multi').checked=false;$('people-wrap').classList.toggle('hidden',!needPeople())}
+function moreUI(){const t=$('type').value;$('add-more').classList.remove('hidden');
+  const showMulti=(t==='soccer'||t==='baseball');$('multi-wrap').classList.toggle('hidden',!showMulti);if(!showMulti)$('with-multi').checked=false;$('people-wrap').classList.toggle('hidden',!needPeople())}
 function min(t){const [h,m]=t.split(':').map(Number);return h*60+m}function hm(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
 function yen(v){return v.toLocaleString('ja-JP')+'円'}
 function rate(r){if(r.memberType==='一般')return r.type==='soccer'?(r.units===3?8500:4000*r.units):r.type==='multi'?4000:r.label==='ブルペン'?1500*r.units:1500;return r.type==='soccer'?(r.units===3?7000:3000*r.units):r.type==='multi'?3000:r.label==='ブルペン'?1500*r.units:1000}
@@ -291,16 +291,13 @@ function renderCart(){saveSelection();$('cart').innerHTML='';$('price-list').inn
   cart.forEach((r,i)=>{const d=summaryRow(r);const b=document.createElement('button');b.className='secondary';b.textContent='選択を取り消す';b.onclick=()=>{cart.splice(i,1);restrictNext();renderCart()};d.append(b);$('cart').append(d);$('price-list').append(summaryRow(r,true))});
   if(chosen)allPicked().forEach(x=>$('price-list').append(summaryRow(x,true)));
   $('total').textContent=$('member').value?'合計の目安：'+yen(cart.reduce((sum,r)=>sum+charge(r),chosen?allPicked().reduce((q,x)=>q+charge(x),0):0)):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。'}
-function restrictNext(){const first=cart[0],allowed=!first?[['soccer','サッカー'],['baseball','野球'],['multi','多目的のみ']]:
-  first.type==='soccer'?[['multi','多目的']]:first.type==='baseball'?
-  [...(cart.some(x=>x.type==='multi')?[]:[['multi','多目的']]),...(cart.filter(x=>x.type==='baseball').length<2?[['baseball','野球']]:[])]:[['multi','多目的']];
-  options('type',allowed);typeChanged();const fixed=cart.length>0&&allowed.length===1&&allowed[0][0]==='multi';
-  $('type-wrap').classList.toggle('hidden',fixed);$('facility-wrap').classList.toggle('hidden',fixed);$('next-fixed').classList.toggle('hidden',!fixed);moreUI()}
-function addToCart(){if(eligible(picked())&&(!Number.isInteger(picked().people)||picked().people<1||picked().people>99))return msg('user-msg','利用人数を1～99人で入力してください。',true);if(!chosen)return msg('user-msg','開始時刻を選んでください。',true);
-  if($('type').value==='multi'&&cart.length||cart.some(x=>x.type==='multi'))return msg('user-msg','多目的を追加済みです。この内容で送信してください。',true);
-  if($('type').value==='multi'&&!cart.length)return msg('user-msg','多目的のみの場合は、そのまま「この内容で申し込む」を押してください。');
-  cart.push(picked());chosen='';selectedTime();restrictNext();renderCart();msg('user-msg','選択した施設を保存しました。上の内容を確認してください。まだ予約は確定していません。')}
-function submit(){if(chosen&&allPicked().some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','人数を1～99人で入力してください。',true);const items=[...cart];if(chosen)items.push(...allPicked());if(!items.length)return msg('user-msg','開始時刻を選んでください。',true);
+function restrictNext(){const allowed=[['soccer','サッカー'],['baseball','野球'],['multi',cart.length?'多目的':'多目的のみ']];
+  options('type',allowed);typeChanged();$('type-wrap').classList.remove('hidden');$('facility-wrap').classList.remove('hidden');$('next-fixed').classList.add('hidden');moreUI()}
+function addToCart(){const list=allPicked();if(list.some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','利用人数を1～99人で入力してください。',true);if(!chosen)return msg('user-msg','開始時刻を選んでください。',true);
+  if(cart.length+list.length>8)return msg('user-msg','一度に申し込めるのは8件までです。この内容で申し込んだあと、続けて申し込んでください。',true);
+  cart.push(...list);$('with-multi').checked=false;chosen='';selectedTime();restrictNext();renderCart();msg('user-msg','選択した施設を保存しました。日付と時間の長さは、そのままです。続けて別の施設を選べます（開始時刻を選び直してください）。まだ予約は確定していません。')}
+function sameItem(a,b){return a.type===b.type&&a.units===b.units&&a.label===b.label&&a.date===b.date&&a.start===b.start&&a.end===b.end}
+function submit(){if(chosen&&allPicked().some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','人数を1～99人で入力してください。',true);const items=[...cart];if(chosen)allPicked().forEach(x=>{if(!items.some(y=>sameItem(y,x)))items.push(x)});if(!items.length)return msg('user-msg','開始時刻を選んでください。',true);
   const payload={name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),memberType:$('member').value,items};
   for(const [id,label] of [['name','お名前'],['phone','電話番号'],['email','メールアドレス']]){const input=$(id);if(!input.value.trim()||!input.checkValidity()){input.focus();return msg('user-msg',label+(id==='email'&&input.value.trim()?'の形式を確認してください。':'を入力してください。'),true)}}
   if(!$('member').value){$('member').focus();return msg('user-msg','お客様の区分（会員／一般）を選んでください。',true)}
