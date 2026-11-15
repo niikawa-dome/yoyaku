@@ -120,7 +120,7 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
    <p class="hint small">会員の方は、利用時に会員証を確認します。料金は、区分によって変わります。</p><p class="hint small">18歳未満の方は、保護者の同伴と署名が必要です。</p></div>
   <div class="grid"><label>お名前<span class="required">必須</span><input id="name" autocomplete="name" required></label><label>電話番号<span class="required">必須</span><input id="phone" type="tel" autocomplete="tel" required></label><label>メールアドレス<span class="required">必須</span><input id="email" type="email" autocomplete="email" required></label></div></div>
  <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>受付のくわしい案内（当日・前日・先の日程）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></details></div><h2 class="step">1　利用する施設</h2><div id="summary" class="summary hidden"><strong>追加した施設</strong><div id="cart"></div></div>
-  <div class="grid"><div id="fac-wrap" class="field wide"><span class="fl">使う施設にチェックしてください（いくつでも選べます）</span>
+  <div class="grid"><div id="fac-wrap" class="field wide"><span class="fl">使う施設にチェックしてください（複数選択できます）</span>
    <div class="fac-list">
     <div class="fac-row"><label class="multi-wrap"><input type="checkbox" id="use-soccer" onchange="facChanged()"><span>サッカーコート</span></label>
      <label id="soccer-opt" class="fac-opt hidden">使う広さ<select id="soccer-size" onchange="facChanged()"><option value="1">ミニコート（1/3面）</option><option value="2">ミニコート×2（2/3面）</option><option value="3">フルコート（全面）</option></select></label></div>
@@ -128,7 +128,7 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
      <label id="bull-opt" class="fac-opt hidden">レーン数<select id="bull-lanes" onchange="facChanged()"><option value="1">1レーン</option><option value="2">2レーン</option><option value="3">3レーン</option></select></label></div>
     <div class="fac-row"><label class="multi-wrap"><input type="checkbox" id="use-sub" onchange="facChanged()"><span>サブコート</span></label></div>
     <div class="fac-row"><label class="multi-wrap"><input type="checkbox" id="use-multi" onchange="facChanged()"><span>多目的コート</span></label></div>
-   </div></div>
+   </div><p class="hint small">施設ごとに時間をずらして使うとき（例：先にブルペン、あとで多目的）は、先に使う施設を選んで「＋ 別の時間の予約を追加」を押し、続けて、あとで使う施設を選んでください。</p></div>
    <label id="people-wrap" class="hidden">人数<span class="hint small">ミニコート（1/3面）・サブコート・多目的の料金に使います</span><input id="people" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" oninput="updatePrice()"></label>
    <h2 class="step wide">2　日時</h2><label>利用日<input id="date" type="date" onchange="refreshSlots()"></label><div id="date-label" class="date-label wide"></div><div id="booking-date-warning" class="notice error hidden" role="alert" style="border:2px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700"></div>
    <label>利用時間<select id="duration" onchange="refreshSlots()"><option value="60">1時間</option><option value="90">1時間30分</option><option value="120">2時間</option><option value="150">2時間30分</option><option value="180">3時間</option><option value="210">3時間30分</option><option value="240">4時間</option><option value="270">4時間30分</option><option value="300">5時間</option><option value="330">5時間30分</option><option value="360">6時間</option><option value="390">6時間30分</option><option value="420">7時間</option><option value="450">7時間30分</option><option value="480">8時間</option></select></label></div>
@@ -139,7 +139,7 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
    <h3>キャンセル</h3><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table>
    <p class="hint small">キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p></div>
   <p class="hint small privacy">お預かりした個人情報（お名前・電話番号・メールアドレス）は、ご予約の連絡と受付の管理にのみ使います。</p>
-  <div class="row"><button type="button" id="add-more" class="secondary" onclick="addToCart()">＋ 別の日・別の時間も追加</button><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
+  <div class="row"><button type="button" id="add-more" class="secondary" onclick="addToCart()">＋ 別の時間の予約を追加</button><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
   <div id="user-msg" role="status"></div>
   <div id="sending" class="sending hidden" role="status"><div><strong>送信しています…</strong><br>10秒ほどかかります。このままお待ちください。</div></div>
  </div>
@@ -296,7 +296,7 @@ function restrictNext(){facChanged()}
 function addToCart(){const list=allPicked();if(!list.length)return msg('user-msg','使う施設にチェックしてください。',true);
   if(list.some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','利用人数を1～99人で入力してください。',true);if(!chosen)return msg('user-msg','開始時刻を選んでください。',true);
   if(cart.length+list.length>8)return msg('user-msg','一度に申し込めるのは8件までです。この内容で申し込んだあと、続けて申し込んでください。',true);
-  cart.push(...list);chosen='';selectedTime();restrictNext();renderCart();msg('user-msg','選択した内容を保存しました。続けて、別の日や別の時間の予約も選べます（施設・時間の長さは、そのままです。日付と開始時刻を選び直してください）。まだ予約は確定していません。')}
+  cart.push(...list);clearFacilities();chosen='';selectedTime();restrictNext();renderCart();msg('user-msg','選択した内容を保存しました。続けて、別の施設や別の時間も選べます（日付と時間の長さは、そのままです）。まだ予約は確定していません。')}
 function sameItem(a,b){return a.type===b.type&&a.units===b.units&&a.label===b.label&&a.date===b.date&&a.start===b.start&&a.end===b.end}
 function submit(){if(chosen&&allPicked().some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','人数を1～99人で入力してください。',true);const items=[...cart];if(chosen)allPicked().forEach(x=>{if(!items.some(y=>sameItem(y,x)))items.push(x)});if(!items.length)return msg('user-msg',facItems().length?'開始時刻を選んでください。':'使う施設にチェックしてください。',true);
   const payload={name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),memberType:$('member').value,items};
