@@ -143,7 +143,7 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
 <script>window.addEventListener('error',function(e){const box=document.getElementById('slots');if(box&&!box.querySelector('button'))box.textContent='画面の初期化でエラーが発生しました：'+e.message});</script>
 <script>
 /* Apps Script の画面用の呼び出し（google.script.run）を、通常の通信に置き換える。処理はApps Script側が行う。 */
-const EXEC_URL="https://script.google.com/macros/s/AKfycbyz7YIR3DmJZFkRSoHeKMoWOYuJXVESXEALb6OWikNP-W_uNhgJ8kp0TD_YW4e_YLizPQ/exec";
+const EXEC_URL="https://script.google.com/macros/s/AKfycbyQoZwffUsuolty0mYRjGkV3EfA9OsOwLnh8A5oK-YFCeeFls7ScIS43jd5IVbwWfQByA/exec";
 window.google={script:{run:(function(){
   function make(ok,fail){return new Proxy({},{get(_,key){
     if(key==='withSuccessHandler')return f=>make(f,fail);
