@@ -108,6 +108,25 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
 .slot-status{background:#f1f7fb!important;color:#0b4f73!important;border:1px solid #cfe0ea!important;border-left:5px solid #0a75ae!important;text-align:left!important;font-size:17px!important;padding:12px 14px!important}
 .done-box{background:#f8fbf9!important;border:1px solid #cddfd5!important}
 .done-box h3{color:#233!important;font-size:18px!important}
+
+/* v45: 施設ごとの時間 */
+#web-booking-window{font-size:18px;font-weight:800;color:#0b4f73;line-height:1.5}
+.date-block{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:flex-end;margin:10px 0 4px}.date-block label{margin:0}
+.date-block .date-label{font-size:22px;font-weight:800;color:#0b3a57;margin:0 0 6px}
+.fac-list{display:grid;gap:10px;margin:12px 0}.fac-row{display:block;border:1.5px solid #cbd7de;border-radius:12px;padding:6px 10px 8px;background:#fff}
+.fac-row.on{border:2px solid #0a75ae;background:#f4f9fc}.fac-row .multi-wrap{border:0!important;background:transparent!important;padding:6px 0!important}
+.fac-body{padding:2px 0 4px 34px}.fac-body.hidden{display:none}.fac-body .fac-opt{margin:6px 0!important;display:block}.fac-body .fac-opt.hidden{display:none!important}
+.fac-opt input[type=number]{width:84px;display:inline-block;margin:0 6px}.fac-opt .unit{font-weight:600}
+.time-line{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0}.time-line label{margin:0;display:block}.time-line select{min-width:118px}.tl-from{font-weight:700}
+.fac-row.need .tl-start select{border:2px solid #bd7c18;background:#fff8ea}
+.row-msg{margin-top:6px;padding:8px 10px;border-left:4px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700;border-radius:6px}.row-msg.hidden{display:none}
+.sr{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+#price-box{border:2px solid #0a75ae;background:#f7fbff;border-radius:12px;padding:14px}.sum-head{font-size:19px;color:#0b3a57}
+.sum-item{padding:10px 0;border-top:1px solid #d5e3ec}.sum-item:first-child{border-top:0}.sum-when{font-size:21px;font-weight:800;color:#0b3a57}.sum-what{font-size:16px;margin-top:2px}
+.sum-item.pending .sum-title{color:#673c00;font-weight:700}#day-msg:empty{display:none}#day-msg{margin:6px 0}
+.fac-row .multi-wrap:has(input:checked){border:0!important;background:transparent!important}
+.fac-body{padding:2px 0 4px 6px!important}.time-line select{width:122px!important;min-width:0!important}.time-line label{flex:0 0 auto}.fac-body .fac-opt{margin:6px 0!important}
+.bulk-bar{border:2px solid #0a75ae;border-radius:12px;background:#f4f9fc;padding:12px;margin:14px 0 6px}.bulk-bar>strong{display:block;font-size:17px;color:#0b3a57}.bulk-bar button{margin-top:8px}
 </style></head><body>
 <header><strong>にいかわスポーツドーム</strong><small>コート予約</small></header><main>
 
@@ -119,33 +138,25 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
   <div class="tint"><label class="big-label">お客様の区分<span class="required">必須</span><select id="member" onchange="memberChanged()"><option value="">選んでください</option><option value="会員">会員の方</option><option value="一般">会員でない方（一般）</option></select></label>
    <p class="hint small">会員の方は、利用時に会員証を確認します。料金は、区分によって変わります。</p><p class="hint small">18歳未満の方は、保護者の同伴と署名が必要です。</p></div>
   <div class="grid"><label>お名前<span class="required">必須</span><input id="name" autocomplete="name" required></label><label>電話番号<span class="required">必須</span><input id="phone" type="tel" autocomplete="tel" required></label><label>メールアドレス<span class="required">必須</span><input id="email" type="email" autocomplete="email" required></label></div></div>
- <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>受付のくわしい案内（当日・前日・先の日程）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></details></div><h2 class="step">1　利用する施設</h2><div id="summary" class="summary hidden"><strong>追加した施設</strong><div id="cart"></div></div>
-  <div class="grid"><div id="fac-wrap" class="field wide"><span class="fl">使う施設にチェックしてください（複数選択できます）</span>
-   <div class="fac-list">
-    <div class="fac-row"><label class="multi-wrap"><input type="checkbox" id="use-soccer" onchange="facChanged()"><span>サッカーコート</span></label>
-     <label id="soccer-opt" class="fac-opt hidden">使う広さ<select id="soccer-size" onchange="facChanged()"><option value="1">ミニコート（1/3面）</option><option value="2">ミニコート×2（2/3面）</option><option value="3">フルコート（全面）</option></select></label></div>
-    <div class="fac-row"><label class="multi-wrap"><input type="checkbox" id="use-bull" onchange="facChanged()"><span>ブルペン（野球の練習場）</span></label>
-     <label id="bull-opt" class="fac-opt hidden">レーン数<select id="bull-lanes" onchange="facChanged()"><option value="1">1レーン</option><option value="2">2レーン</option><option value="3">3レーン</option></select></label></div>
-    <div class="fac-row"><label class="multi-wrap"><input type="checkbox" id="use-sub" onchange="facChanged()"><span>サブコート</span></label></div>
-    <div class="fac-row"><label class="multi-wrap"><input type="checkbox" id="use-multi" onchange="facChanged()"><span>多目的コート</span></label></div>
-   </div><p class="hint small">施設ごとに時間をずらして使うとき（例：先にブルペン、あとで多目的）は、先に使う施設を選んで「＋ 別の時間の予約を追加」を押し、続けて、あとで使う施設を選んでください。</p></div>
-   <label id="people-wrap" class="hidden">人数<span class="hint small">ミニコート（1/3面）・サブコート・多目的の料金に使います</span><input id="people" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" oninput="updatePrice()"></label>
-   <h2 class="step wide">2　日時</h2><label>利用日<input id="date" type="date" onchange="refreshSlots()"></label><div id="date-label" class="date-label wide"></div><div id="booking-date-warning" class="notice error hidden" role="alert" style="border:2px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700"></div>
-   <label>利用時間<select id="duration" onchange="refreshSlots()"><option value="60">1時間</option><option value="90">1時間30分</option><option value="120">2時間</option><option value="150">2時間30分</option><option value="180">3時間</option><option value="210">3時間30分</option><option value="240">4時間</option><option value="270">4時間30分</option><option value="300">5時間</option><option value="330">5時間30分</option><option value="360">6時間</option><option value="390">6時間30分</option><option value="420">7時間</option><option value="450">7時間30分</option><option value="480">8時間</option></select></label></div>
-  <p id="hours" class="hours-line"></p><p class="pick-head">開始時刻を選んでください</p><div id="slots" class="slots"></div>
-  <p id="selected-time" class="slot-status hidden" role="status"></p>
-  <div id="price-box" class="price-box hidden"><strong>予定料金（税込）</strong><p class="hint">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。</p></details><div id="price-list"></div><div id="total" class="total"></div></div>
+ <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>受付のくわしい案内（当日・前日・先の日程）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></details></div>
+  <h2 class="step">使う施設と時間</h2><p class="hint">使う施設にチェックして、時間を決めてください。</p>
+  <div class="date-block"><label>利用日<input id="date" type="date" onchange="dateChanged()"></label><div id="date-label" class="date-label"></div></div>
+  <div id="booking-date-warning" class="notice error hidden" role="alert" style="border:2px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700"></div>
+  <p id="hours" class="hours-line"></p><div id="day-msg" role="status"></div>
+  <div id="fac-list" class="fac-list"></div>
+  <p class="hint small">チェックを入れると、最初に選んだ施設と同じ時間が入ります。変えたいときは、その施設の時間だけ変えます。</p>
   <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。振込をご希望の場合は、ご相談ください。人数が変わったら、受付でお知らせください。実際の人数で精算します。</p>
    <h3>キャンセル</h3><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table>
    <p class="hint small">キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p></div>
+  <div id="price-box" class="price-box hidden"><strong class="sum-head">選んだ内容</strong><p class="hint small">スタッフが承認すると、予約が確定します。日時と施設を確認して、申し込んでください。</p><div id="price-list"></div><div id="total" class="total"></div><p class="hint small">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。</p></details></div>
   <p class="hint small privacy">お預かりした個人情報（お名前・電話番号・メールアドレス）は、ご予約の連絡と受付の管理にのみ使います。</p>
-  <div class="row"><button type="button" id="add-more" class="secondary" onclick="addToCart()">＋ 別の時間の予約を追加</button><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
+  <div class="row"><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
   <div id="user-msg" role="status"></div>
   <div id="sending" class="sending hidden" role="status"><div><strong>送信しています…</strong><br>10秒ほどかかります。このままお待ちください。</div></div>
  </div>
 </section>
 </main>
-<script>window.addEventListener('error',function(e){const box=document.getElementById('slots');if(box&&!box.querySelector('button'))box.textContent='画面の初期化でエラーが発生しました：'+e.message});</script>
+<script>window.addEventListener('error',function(e){const box=document.getElementById('user-msg');if(box&&!box.textContent)box.textContent='画面の初期化でエラーが発生しました：'+e.message});</script>
 <script>
 /* Apps Script の画面用の呼び出し（google.script.run）を、通常の通信に置き換える。処理はApps Script側が行う。 */
 const EXEC_URL="https://script.google.com/macros/s/AKfycbyQoZwffUsuolty0mYRjGkV3EfA9OsOwLnh8A5oK-YFCeeFls7ScIS43jd5IVbwWfQByA/exec";
@@ -164,7 +175,7 @@ window.google={script:{run:(function(){
   return make(null,null)})()}};
 </script>
 <script>
-const $=id=>document.getElementById(id);let cart=[],chosen='',slotRequest=0,adminPendingMode=false;
+const $=id=>document.getElementById(id);let adminPendingMode=false;
 const CANCEL_TOKEN=(new URLSearchParams(location.search).get('cancel')||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,120),ADMIN_MODE=false;let bookingEndDate='2026-11-30';
 let webMinDays=2;
 function tomorrowStr(){return new Date(Date.now()+9*3600e3+webMinDays*86400e3).toISOString().slice(0,10)}
@@ -191,7 +202,7 @@ function showBookingDateWarning(date){const el=$('booking-date-warning');if(!el)
   el.textContent=invalid?'WEB予約の受付期間外です。'+bookingEndLabel(bookingEndDate)+'まで受け付けています。それ以降はLINEでお問い合わせください。':''}
 function publicBookingWindow(){rpc().withSuccessHandler(r=>{bookingEndDate=r.endDate;$('date').max=bookingEndDate;
   updateWindow();
-  showBookingDateWarning($('date').value);if($('date').value>bookingEndDate){chosen='';$('slots').textContent='受付期間外です。先の日程はLINEでお問い合わせください。'}
+  showBookingDateWarning($('date').value);
 }).withFailureHandler(e=>msg('web-booking-window',e.message||String(e),true)).publicBookingSettings()}
 function loadBookingEnd(){if(!$('pin')||!$('pin').value)return;rpc().withSuccessHandler(r=>{$('booking-end-admin').value=r.endDate;$('booking-end-current').textContent='現在、'+bookingEndLabel(r.endDate)+'までWEB予約受付中'}).withFailureHandler(e=>msg('booking-end-msg',e.message||String(e),true)).adminBookingSettings($('pin').value)}
 async function saveBookingEnd(){const d=$('booking-end-admin').value;if(!d)return msg('booking-end-msg','受付期限を入力してください。',true);if(!await confirmAction('WEB予約の受付期限を変更しますか？','一般WEB予約を'+bookingEndLabel(d)+'まで受け付けます。既存予約・管理者の登録は変更しません。'))return;rpc().withSuccessHandler(r=>{msg('booking-end-msg','変更しました。');$('booking-end-current').textContent='現在、'+bookingEndLabel(r.endDate)+'までWEB予約受付中'}).withFailureHandler(e=>msg('booking-end-msg',e.message||String(e),true)).adminSetBookingEnd($('pin').value,d)}
@@ -217,18 +228,86 @@ function msg(id,s,error=false){$(id).innerHTML='';const e=document.createElement
 function api(name,args,ok,id,fail){rpc().withSuccessHandler(ok).withFailureHandler(e=>{msg(id,e.message||String(e),true);if(fail)fail(e)})[name](...args)}
 function options(id,values){$(id).innerHTML='';values.forEach(([value,label])=>{const e=document.createElement('option');e.value=value;e.textContent=label;$(id).append(e)})}
 function vis(id){return !!$(id)&&!$(id).classList.contains('hidden')}
-function facItems(){const o=[];
-  if($('use-soccer').checked){const u=Number($('soccer-size').value)||1;o.push({type:'soccer',units:u,label:u===3?'フルコート':u===2?'ミニコート×2':'ミニコート'})}
-  if($('use-bull').checked)o.push({type:'baseball',units:Number($('bull-lanes').value)||1,label:'ブルペン'});
-  if($('use-sub').checked)o.push({type:'baseball',units:1,label:'サブコート'});
-  if($('use-multi').checked)o.push({type:'multi',units:1,label:'多目的'});return o}
-function baseSel(){return {date:$('date').value,memberType:$('member').value,start:chosen,end:chosen?hm(min(chosen)+Number($('duration').value)):''}}
-function allPicked(){const b=baseSel();return facItems().map(f=>{const r={...b,...f,people:0};if(eligible(r))r.people=Number($('people').value);return r})}
-function picked(){return allPicked()[0]||{...baseSel(),type:'soccer',units:1,label:'ミニコート',people:0}}
-function needPeople(){return allPicked().some(eligible)}
-function clearFacilities(){['use-soccer','use-bull','use-sub','use-multi'].forEach(id=>{if($(id))$(id).checked=false})}
-function moreUI(){$('soccer-opt').classList.toggle('hidden',!$('use-soccer').checked);$('bull-opt').classList.toggle('hidden',!$('use-bull').checked);$('people-wrap').classList.toggle('hidden',!needPeople());$('add-more').classList.remove('hidden')}
-function facChanged(){moreUI();refreshSlots()}
+/* ===== v45: 施設ごとの時間 ===== */
+const FACS=[['soccer','サッカーコート'],['bull','ブルペン（野球の練習場）'],['sub','サブコート'],['multi','多目的コート']];
+const ST={};FACS.forEach(([k])=>{ST[k]={start:'',dur:'60',autoStart:true,autoDur:true,slots:null,msg:'',req:0}});
+let order=[],probeReq=0;
+function durLabel(m){return Math.floor(m/60)+'時間'+(m%60?'30分':'')}
+function buildRows(){const box=$('fac-list');box.replaceChildren();let durOpts='';for(let m=60;m<=480;m+=30)durOpts+='<option value="'+m+'">'+durLabel(m)+'</option>';
+  FACS.forEach(([k,name])=>{const row=document.createElement('div');row.className='fac-row';row.id='row-'+k;
+    const opt=k==='soccer'?'<label class="fac-opt">使う広さ<select id="soccer-size" onchange="optChanged(\'soccer\')"><option value="1">ミニコート（1/3面）</option><option value="2">ミニコート×2（2/3面）</option><option value="3">フルコート（全面）</option></select></label>':k==='bull'?'<label class="fac-opt">レーン数<select id="bull-lanes" onchange="optChanged(\'bull\')"><option value="1">1レーン</option><option value="2">2レーン</option><option value="3">3レーン</option></select></label>':'';
+    const people=k==='bull'?'':'<label id="pw-'+k+'" class="fac-opt hidden">人数<input id="people-'+k+'" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" oninput="peopleChanged()"><span class="unit">人</span></label>';
+    row.innerHTML='<label class="multi-wrap"><input type="checkbox" id="use-'+k+'" onchange="facToggled(\''+k+'\')"><span>'+name+'</span></label><div id="body-'+k+'" class="fac-body hidden">'+opt+'<div class="time-line"><label class="tl-start"><span class="sr">開始時刻</span><select id="start-'+k+'" onchange="startChanged(\''+k+'\')"></select></label><span class="tl-from">から</span><label class="tl-dur"><span class="sr">利用時間</span><select id="dur-'+k+'" onchange="durChanged(\''+k+'\')">'+durOpts+'</select></label></div>'+people+'<div id="msg-'+k+'" class="row-msg hidden" role="status"></div></div>';
+    box.append(row)})}
+function rowOn(k){return !!$('use-'+k)&&$('use-'+k).checked}
+function checkedKeys(){return order.filter(rowOn)}
+function firstKey(){return checkedKeys()[0]||''}
+function rowItem(k){if(k==='soccer'){const u=Number($('soccer-size').value)||1;return {type:'soccer',units:u,label:u===3?'フルコート':u===2?'ミニコート×2':'ミニコート'}}
+  if(k==='bull')return {type:'baseball',units:Number($('bull-lanes').value)||1,label:'ブルペン'};
+  if(k==='sub')return {type:'baseball',units:1,label:'サブコート'};return {type:'multi',units:1,label:'多目的'}}
+function rowSel(k){const s=ST[k],r={date:$('date').value,memberType:$('member').value,...rowItem(k),start:s.start,end:s.start?hm(min(s.start)+Number(s.dur)):'',people:0};if(eligible(r))r.people=Number($('people-'+k).value);return r}
+function allPicked(){return checkedKeys().map(rowSel)}
+function addOpt(sel,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;sel.append(o)}
+function draw(k){const on=rowOn(k);$('row-'+k).classList.toggle('on',on);$('body-'+k).classList.toggle('hidden',!on);if(!on)return;
+  const s=ST[k],sel=$('start-'+k);sel.replaceChildren();
+  if(s.slots===null){sel.disabled=true;addOpt(sel,s.start||'',s.start?s.start+'（確認中）':'空きを確認中…')}
+  else{sel.disabled=false;addOpt(sel,'','選んでください');s.slots.forEach(t=>addOpt(sel,t,t))}
+  sel.value=s.start||'';$('dur-'+k).value=s.dur;$('row-'+k).classList.toggle('need',!s.start);
+  const pw=$('pw-'+k);if(pw)pw.classList.toggle('hidden',!eligible(rowItem(k)));
+  const m=$('msg-'+k);m.textContent=s.msg||'';m.classList.toggle('hidden',!s.msg)}
+function drawAll(){FACS.forEach(([k])=>draw(k))}
+function dayStatus(data){const el=$('day-msg');el.replaceChildren();let blocked=false;
+  if(data.bookingEnd){bookingEndDate=data.bookingEnd;$('date').max=bookingEndDate;updateWindow()}if(data.minDays)webMinDays=data.minDays;showBookingDateWarning($('date').value);
+  if(data.bookingClosed)blocked=true;
+  else if(data.sameDay||data.past||data.tooSoon){blocked=true;contactNotice(el,data.past?'past':data.sameDay?'sameDay':'tooSoon')}
+  else if(data.closed){blocked=true;const d=document.createElement('div');d.className='notice error';d.textContent='休館日です。';el.append(d)}
+  if(data.hours){if(data.hours.holiday)HOLIDAYS.add($('date').value);else HOLIDAYS.delete($('date').value)}
+  $('hours').textContent=data.hours?('この日の営業時間　'+data.hours.open+'～'+data.hours.close+(data.hours.holiday?'（祝日）':'')):'';
+  return blocked}
+const availCache=new Map();
+function fetchRow(k,silent){const s=ST[k],it=rowItem(k),date=$('date').value,dur=Number(s.dur),req=++s.req;
+  if(!silent){s.slots=null;draw(k)}
+  const key=JSON.stringify([date,dur,it.type,it.units,it.label]),hit=availCache.get(key);
+  const handle=d=>{if(req!==s.req||!rowOn(k))return;applyRow(k,d,silent)};
+  if(hit&&Date.now()-hit.t<45000){setTimeout(()=>handle(JSON.parse(JSON.stringify(hit.d))),0);return}
+  api('availability',[date,it.type,it.units,dur,it.label,[]],d=>{try{availCache.set(key,{t:Date.now(),d:JSON.parse(JSON.stringify(d))})}catch(e){}handle(d)},'user-msg',()=>{if(req===s.req&&!silent){s.slots=[];s.msg='空き状況を確認できませんでした。もう一度お試しください。';draw(k)}})}
+function autoFill(k){const f=firstKey(),s=ST[k];if(!f||f===k||!s.autoStart||s.slots===null)return;const fs=ST[f];
+  if(!fs.start){s.start='';s.msg='';return}
+  if(s.slots.includes(fs.start)){s.start=fs.start;s.msg=''}else{s.start='';s.msg=fs.start+' は、ほかの予約が入っています'}}
+function applyRow(k,data,silent){const s=ST[k],blocked=dayStatus(data),before=s.start,oldSlots=JSON.stringify(s.slots),oldMsg=s.msg;
+  s.slots=blocked?[]:(data.slots||[]);
+  if(s.start&&!s.slots.includes(s.start)){s.msg=blocked?'':s.start+' は、ほかの予約が入っています';s.start=''}
+  else if(s.start)s.msg='';
+  if(!s.start&&k!==firstKey())autoFill(k);
+  if(!blocked&&!s.slots.length&&!s.msg)s.msg='この日は空きがありません'+(Number(s.dur)>60?'（利用時間を短くすると、選べる場合があります）':'');
+  if(blocked&&!s.start)s.msg='';
+  if(k===firstKey()&&s.start!==before)propagateStart();
+  if(silent&&JSON.stringify(s.slots)===oldSlots&&s.start===before&&s.msg===oldMsg)return;
+  draw(k);renderSummary();saveSelection()}
+function propagateStart(){const f=firstKey();checkedKeys().forEach(k=>{if(k===f)return;const s=ST[k];if(s.autoStart&&s.slots!==null){autoFill(k);draw(k)}});renderSummary();saveSelection()}
+function propagateDur(){const f=firstKey();if(!f)return;checkedKeys().forEach(k=>{if(k===f)return;const s=ST[k];if(s.autoDur){s.dur=ST[f].dur;fetchRow(k)}})}
+function facToggled(k){const s=ST[k];order=order.filter(x=>x!==k);
+  if(rowOn(k)){order.push(k);const f=firstKey();Object.assign(s,{start:'',autoStart:true,autoDur:true,slots:null,msg:''});s.dur=f&&f!==k?ST[f].dur:'60';fetchRow(k)}else{s.req++}
+  drawAll();renderSummary();saveSelection();if(!checkedKeys().length)probeDay()}
+function optChanged(k){if(rowOn(k))fetchRow(k);draw(k);renderSummary();saveSelection()}
+function peopleChanged(){renderSummary();saveSelection()}
+function startChanged(k){const s=ST[k];s.start=$('start-'+k).value;s.msg='';if(k===firstKey())propagateStart();else{s.autoStart=false;renderSummary();saveSelection()}draw(k)}
+function durChanged(k){const s=ST[k];s.dur=$('dur-'+k).value;if(k===firstKey())propagateDur();else s.autoDur=false;fetchRow(k)}
+function dateChanged(){checkedKeys().forEach((k,i)=>{const s=ST[k];s.start='';s.msg='';if(i>0)s.autoStart=true});refreshAll()}
+function probeDay(){const date=$('date').value,req=++probeReq;if(!date)return;
+  api('availability',[date,'multi',1,60,'多目的',[]],d=>{if(req===probeReq&&!checkedKeys().length)dayStatus(d)},'user-msg')}
+function refreshAll(silent=false){if(!ADMIN_MODE)publicBookingWindow();$('date-label').textContent=$('date').value?dayLabel($('date').value):'';
+  const keys=checkedKeys();if(!silent)drawAll();renderSummary();
+  if(!keys.length){probeDay();return}keys.forEach(k=>fetchRow(k,silent))}
+function renderSummary(){const box=$('price-box'),list=$('price-list');list.replaceChildren();const keys=checkedKeys();box.classList.toggle('hidden',!keys.length);
+  let total=0;const mem=$('member').value;
+  keys.forEach(k=>{const r=rowSel(k),d=document.createElement('div');d.className='sum-item';
+    if(!r.start){d.classList.add('pending');const t=document.createElement('div');t.className='sum-title';t.textContent=labelOf(r)+'：開始時刻を選んでください';d.append(t);list.append(d);return}
+    const w=document.createElement('div');w.className='sum-when';w.textContent=dayLabel(r.date)+'　'+r.start+'〜'+r.end;
+    const x=document.createElement('div');x.className='sum-what';x.textContent=labelOf(r)+(r.people?'　'+r.people+'人':'')+'　'+(mem?yen(charge(r)):'');
+    d.append(w,x);if(mem){const sm=document.createElement('small');sm.className='basis';sm.textContent=basisOf(r);d.append(sm);total+=charge(r)}list.append(d)});
+  $('total').textContent=mem?'合計の目安：'+yen(total):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。'}
+function resetAll(){FACS.forEach(([k])=>{$('use-'+k).checked=false;Object.assign(ST[k],{start:'',dur:'60',autoStart:true,autoDur:true,slots:null,msg:'',req:ST[k].req+1})});order=[];drawAll();renderSummary()}
 function min(t){const [h,m]=t.split(':').map(Number);return h*60+m}function hm(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
 function yen(v){return v.toLocaleString('ja-JP')+'円'}
 function rate(r){if(r.memberType==='一般')return r.type==='soccer'?(r.units===3?8500:4000*r.units):r.type==='multi'?4000:r.label==='ブルペン'?1500*r.units:1500;return r.type==='soccer'?(r.units===3?7000:3000*r.units):r.type==='multi'?3000:r.label==='ブルペン'?1500*r.units:1000}
@@ -242,69 +321,33 @@ function basisOf(r){if(!r.end||!r.start)return '';const hrs=(min(r.end)-min(r.st
   if(min(r.end)>min(cutoff))return 'コート料金';const unit=r.memberType==='一般'?800:600;
   return unit*r.people*hrs<court?'個人料金（'+unit+'円×'+r.people+'人'+(hrs===1?'':'×'+hrs+'時間')+'）':'コート料金'}
 function labelOf(r){return r.type==='soccer'?(r.units===3?'フルコート':r.units===2?'ミニコート×2（2/3面）':'ミニコート（1/3面）'):r.label==='ブルペン'?'ブルペン '+r.units+'レーン':r.label}
-const DRAFT_KEY='dome-member-selection-v34';let draftReady=false;
-function saveSelection(){if(!draftReady)return;try{sessionStorage.setItem(DRAFT_KEY,JSON.stringify({saved:Date.now(),cart,chosen,date:$('date').value,duration:$('duration').value,people:$('people').value,member:$('member').value,fac:['use-soccer','use-bull','use-sub','use-multi'].map(id=>$(id).checked),sz:$('soccer-size').value,bl:$('bull-lanes').value}))}catch(e){}}
+const DRAFT_KEY='dome-member-selection-v45';let draftReady=false;
+function saveSelection(){if(!draftReady)return;try{const rows={};FACS.forEach(([k])=>{const s=ST[k];rows[k]={on:rowOn(k),start:s.start,dur:s.dur,as:s.autoStart,ad:s.autoDur,size:k==='soccer'?$('soccer-size').value:undefined,lanes:k==='bull'?$('bull-lanes').value:undefined,people:$('people-'+k)?$('people-'+k).value:undefined}});
+  sessionStorage.setItem(DRAFT_KEY,JSON.stringify({saved:Date.now(),date:$('date').value,member:$('member').value,order:checkedKeys(),rows}))}catch(e){}}
 function clearSelection(){try{sessionStorage.removeItem(DRAFT_KEY)}catch(e){}}
 function restoreSelection(){try{const d=JSON.parse(sessionStorage.getItem(DRAFT_KEY)||'null');if(!d||Date.now()-d.saved>7200000){clearSelection();return false}
-  if(!Array.isArray(d.cart)||d.cart.length>8)return false;cart=d.cart.filter(r=>r&&/^20\d\d-\d\d-\d\d$/.test(r.date)&&/^\d\d:\d\d$/.test(r.start));
-  if(d.date)$('date').value=d.date;if(d.duration)$('duration').value=d.duration;
-  if(d.people)$('people').value=d.people;if(d.member)$('member').value=d.member;if(d.sz)$('soccer-size').value=d.sz;if(d.bl)$('bull-lanes').value=d.bl;if(Array.isArray(d.fac))['use-soccer','use-bull','use-sub','use-multi'].forEach((id,k)=>{$(id).checked=!!d.fac[k]});
-  moreUI();chosen=d.chosen||'';selectedTime();renderCart();refreshSlots(true);return true
-}catch(e){clearSelection();return false}}
+  if(d.date&&d.date>=$('date').min)$('date').value=d.date;if(d.member)$('member').value=d.member;
+  FACS.forEach(([k])=>{const r=(d.rows||{})[k];if(!r)return;$('use-'+k).checked=!!r.on;Object.assign(ST[k],{start:/^\d\d:\d\d$/.test(r.start||'')?r.start:'',dur:/^\d+$/.test(r.dur||'')?r.dur:'60',autoStart:r.as!==false,autoDur:r.ad!==false});
+    if(k==='soccer'&&r.size)$('soccer-size').value=r.size;if(k==='bull'&&r.lanes)$('bull-lanes').value=r.lanes;if(r.people&&$('people-'+k))$('people-'+k).value=r.people});
+  order=(d.order||[]).filter(k=>ST[k]&&rowOn(k));FACS.forEach(([k])=>{if(rowOn(k)&&!order.includes(k))order.push(k)});
+  refreshAll();return true}catch(e){clearSelection();return false}}
 function contactNotice(el,kind){const past=kind==='past';el.replaceChildren();const p=document.createElement('div');p.setAttribute('role','alert');p.style.cssText='font-weight:700;color:#673c00;background:#fff2da;border:2px solid #bd7c18;border-radius:8px;padding:10px';
   p.append(document.createTextNode(past?'過去の日付は選べません。'+mdLabel(tomorrowStr())+'以降の日付を選んでください。':kind==='sameDay'?'当日のご利用は、WEBでは受け付けていません。公式LINEまたはお電話でご連絡ください。':'前日のご利用は、WEBでは受け付けていません。公式LINEまたはお電話でご連絡ください（WEB予約は、利用日の'+webMinDays+'日前までです）。'));
   if(!past){const d=document.createElement('div');d.style.marginTop='6px';const a=document.createElement('a');a.href='tel:0765323807';a.textContent='電話 0765-32-3807';
     const b=document.createElement('a');b.href='https://lin.ee/p2QUSXa';b.target='_blank';b.rel='noopener noreferrer';b.textContent='公式LINEで連絡';d.append(a,document.createTextNode('　'),b);p.append(d)}
   el.append(p)}
-function updatePrice(){renderCart()}
-function memberChanged(){cart.forEach(r=>r.memberType=$('member').value);renderCart()}
+function memberChanged(){renderSummary();saveSelection()}
 function dayLabel(d){const x=new Date(d+'T12:00:00+09:00');return (x.getUTCMonth()+1)+'月'+x.getUTCDate()+'日（'+'日月火水木金土'[x.getUTCDay()]+'）'}
-function selectedTime(){const el=$('selected-time');if(!chosen){el.classList.add('hidden');el.textContent='';return}const r=baseSel();el.classList.remove('hidden');el.textContent=dayLabel(r.date)+' '+r.start+'〜'+r.end+'（'+$('duration').selectedOptions[0].textContent+'）　'+allPicked().map(labelOf).join('＋')}
-const availCache=new Map();
-function availabilityMerged(items,date,duration,cartNow,ok,id){const key=JSON.stringify([date,duration,cartNow,items.map(x=>[x.type,x.units,x.label])]),hit=availCache.get(key);
-  if(hit&&Date.now()-hit.t<45000){setTimeout(()=>ok(JSON.parse(JSON.stringify(hit.d))),0);return}
-  const done=d=>{try{availCache.set(key,{t:Date.now(),d:JSON.parse(JSON.stringify(d))})}catch(e){}ok(d)};
-  if(items.length===1){const x=items[0];return api('availability',[date,x.type,x.units,duration,x.label,cartNow],done,id)}
-  const res=new Array(items.length);let n=0,failed=false;
-  const fin=()=>{if(++n<res.length)return;const a=res[0];if(a&&Array.isArray(a.slots))res.slice(1).forEach(b=>{if(b&&Array.isArray(b.slots))a.slots=a.slots.filter(t=>b.slots.includes(t))});done(a)};
-  const bad=e=>{if(failed)return;failed=true;msg(id,e.message||String(e),true)};
-  items.forEach((x,i)=>rpc().withSuccessHandler(y=>{res[i]=y;fin()}).withFailureHandler(bad).availability(date,x.type,x.units,duration,x.label,cartNow))}
-function refreshSlots(keep=false){if(!ADMIN_MODE)publicBookingWindow();$('date-label').textContent=$('date').value?dayLabel($('date').value):'';
-  if(!facItems().length){slotRequest++;chosen='';selectedTime();$('hours').textContent='';$('slots').innerHTML='<p class="hint">上の「使う施設」にチェックすると、空いている開始時刻が出ます。</p>';updatePrice();return}
-  const previous=keep?chosen:'';$('date-label').textContent=$('date').value?dayLabel($('date').value):'';if(!keep)chosen='';selectedTime();if(!keep)$('slots').innerHTML='<span class="sk-note">空き状況を確認中…</span>'+'<i class="sk"></i>'.repeat(12);updatePrice();const r=picked(),request=++slotRequest;
-  availabilityMerged(allPicked(),r.date,$('duration').value,cart,data=>{
-    if(request!==slotRequest)return;
-    if(data.bookingEnd){bookingEndDate=data.bookingEnd;$('date').max=bookingEndDate;updateWindow()}showBookingDateWarning(r.date);
-    if(data.bookingClosed){$('slots').textContent='受付期間外です。先の日程はLINEでお問い合わせください。';return}
-    if(data.minDays){webMinDays=data.minDays}
-    if(data.sameDay||data.past||data.tooSoon){chosen='';selectedTime();renderCart();$('hours').textContent='';contactNotice($('slots'),data.past?'past':data.sameDay?'sameDay':'tooSoon');return}
-    if(data.hours){if(data.hours.holiday)HOLIDAYS.add(r.date);else HOLIDAYS.delete(r.date)}$('hours').textContent=data.hours?('この日の営業時間　'+data.hours.open+'～'+data.hours.close+(data.hours.holiday?'（祝日）':'')):'';
-    $('slots').innerHTML='';if(data.cartChanged){$('slots').textContent='追加済みの予約が埋まりました。内容を確認してください。';msg('user-msg','追加済みの施設の空き状況が変わりました。削除して選び直してください。',true);chosen='';selectedTime();renderCart();return}
-    if(previous&&!data.slots.includes(previous)){chosen='';selectedTime();renderCart();msg('user-msg','選択した時刻の空き状況が変わりました。別の時刻を選んでください。',true)}
-    if(!data.slots.length){$('slots').textContent=data.closed?'休館日です。':'この条件で予約できる開始時刻はありません。';return}
-    data.slots.forEach(t=>{const b=document.createElement('button');b.className='secondary';b.textContent=t;
-      if(chosen===t)b.className='chosen';b.onclick=()=>{chosen=t;saveSelection();[...$('slots').children].forEach(x=>x.className='secondary');b.className='chosen';selectedTime();renderCart()};$('slots').append(b)})
-  },'user-msg')}
-function summaryRow(r,price=false){const d=document.createElement('div');d.className='cart';const detail=document.createElement('span');
-  detail.textContent=price?labelOf(r)+(r.people?' '+r.people+'人':'')+'：'+(r.memberType?yen(charge(r)):'お客様の区分を選ぶと表示されます'):labelOf(r)+'｜'+r.date+' '+r.start+'～'+r.end;
-  if(price&&r.memberType){const sm=document.createElement('small');sm.className='basis';sm.textContent=basisOf(r);detail.append(document.createElement('br'),sm)}d.append(detail);return d}
-function renderCart(){saveSelection();$('cart').innerHTML='';$('price-list').innerHTML='';$('summary').classList.toggle('hidden',!cart.length);$('price-box').classList.toggle('hidden',!cart.length&&!chosen);
-  cart.forEach((r,i)=>{const d=summaryRow(r);const b=document.createElement('button');b.className='secondary';b.textContent='選択を取り消す';b.onclick=()=>{cart.splice(i,1);restrictNext();renderCart()};d.append(b);$('cart').append(d);$('price-list').append(summaryRow(r,true))});
-  if(chosen)allPicked().forEach(x=>$('price-list').append(summaryRow(x,true)));
-  $('total').textContent=$('member').value?'合計の目安：'+yen(cart.reduce((sum,r)=>sum+charge(r),chosen?allPicked().reduce((q,x)=>q+charge(x),0):0)):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。'}
-function restrictNext(){facChanged()}
-function addToCart(){const list=allPicked();if(!list.length)return msg('user-msg','使う施設にチェックしてください。',true);
-  if(list.some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','利用人数を1～99人で入力してください。',true);if(!chosen)return msg('user-msg','開始時刻を選んでください。',true);
-  if(cart.length+list.length>8)return msg('user-msg','一度に申し込めるのは8件までです。この内容で申し込んだあと、続けて申し込んでください。',true);
-  cart.push(...list);clearFacilities();chosen='';selectedTime();restrictNext();renderCart();msg('user-msg','選択した内容を保存しました。続けて、別の施設や別の時間も選べます（日付と時間の長さは、そのままです）。まだ予約は確定していません。')}
-function sameItem(a,b){return a.type===b.type&&a.units===b.units&&a.label===b.label&&a.date===b.date&&a.start===b.start&&a.end===b.end}
-function submit(){if(chosen&&allPicked().some(x=>eligible(x)&&(!Number.isInteger(x.people)||x.people<1||x.people>99)))return msg('user-msg','人数を1～99人で入力してください。',true);const items=[...cart];if(chosen)allPicked().forEach(x=>{if(!items.some(y=>sameItem(y,x)))items.push(x)});if(!items.length)return msg('user-msg',facItems().length?'開始時刻を選んでください。':'使う施設にチェックしてください。',true);
+function submit(){const keys=checkedKeys();if(!keys.length)return msg('user-msg','使う施設にチェックしてください。',true);
+  for(const k of keys){const r=rowSel(k);if(!r.start)return msg('user-msg',labelOf(r)+'の開始時刻を選んでください。',true);
+    if(eligible(r)&&(!Number.isInteger(r.people)||r.people<1||r.people>99))return msg('user-msg',labelOf(r)+'の人数を1～99人で入力してください。',true)}
+  const items=allPicked();
   const payload={name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),memberType:$('member').value,items};
   for(const [id,label] of [['name','お名前'],['phone','電話番号'],['email','メールアドレス']]){const input=$(id);if(!input.value.trim()||!input.checkValidity()){input.focus();return msg('user-msg',label+(id==='email'&&input.value.trim()?'の形式を確認してください。':'を入力してください。'),true)}}
   if(!$('member').value){$('member').focus();return msg('user-msg','お客様の区分（会員／一般）を選んでください。',true)}
   const b=$('user-submit');b.disabled=true;b.textContent='送信しています…';$('sending').classList.remove('hidden');msg('user-msg','');const done=()=>{b.disabled=false;b.textContent='この内容で申し込む';$('sending').classList.add('hidden')};
   api('submitRequest',[payload],r=>{
-    done();availCache.clear();cart=[];chosen='';clearFacilities();clearSelection();restrictNext();renderCart();clearSelection();
+    done();availCache.clear();clearSelection();resetAll();clearSelection();
     const target=$('user-msg');target.replaceChildren();
     const box=document.createElement('div');box.className='done-box';
     const h=document.createElement('h3');h.textContent=(r.count||0)+'件の予約希望を受け付けました';box.append(h);
@@ -319,7 +362,7 @@ function submit(){if(chosen&&allPicked().some(x=>eligible(x)&&(!Number.isInteger
     ['受付のメールを、入力されたアドレスに送りました。','予約確定のお知らせも、同じアドレスに届きます。','携帯電話のメールは、gmail.com からのメールを受け取れる設定にしてください。','見当たらない場合は「迷惑メール」のフォルダもご確認ください。'].forEach(x=>{const d=document.createElement('div');d.textContent=x;mail.append(d)});
     const ct=document.createElement('div');const ca=document.createElement('a');ca.href='tel:0765323807';ca.textContent='電話 0765-32-3807';const cb=document.createElement('a');cb.href='https://lin.ee/p2QUSXa';cb.target='_blank';cb.rel='noopener noreferrer';cb.textContent='公式LINE';ct.append(document.createTextNode('届かない時は、'),cb,document.createTextNode('か、'),ca,document.createTextNode('へご連絡ください。'));mail.append(ct);box.append(mail);
     target.append(box);target.scrollIntoView({behavior:'smooth',block:'start'});
-  },'user-msg',()=>{done();refreshSlots(true)})}
+  },'user-msg',()=>{done();refreshAll(true)})}
 const courtOptions=[['A','A'],['B','B'],['C','C'],['AB','A＋B'],['BC','B＋C'],['ABC','全面']];
 let staffAllocationRequest=0,staffAllocationReady=false;
 function timeItems(){const items=[];for(let t=600;t<=1320;t+=30)items.push([hm(t),hm(t)]);return items}
@@ -469,8 +512,26 @@ function loadAdmin(pendingOnly=false,warning=''){if(!$('pin').value)return msg('
       if(pendingOnly)$('pending-count').textContent='（'+rows.length+'件）';else rpc().withSuccessHandler(p=>{$('pending-count').textContent='（'+p.length+'件）'}).withFailureHandler(e=>adminDiagRecord('未承認件数の取得失敗',e)).adminList($('pin').value,'',true)
     }catch(error){adminDiagPhase('list','描画エラー');adminDiagRecord('予約一覧の表示失敗',error);msg('admin-msg','予約一覧の画面表示に失敗しました。診断履歴を確認してください。',true)}
   },'admin-msg',e=>{clearTimeout(watchdog);b.disabled=false;adminDiagPhase('list','取得失敗');adminDiagRecord('予約一覧の通信失敗',e)})}
+// 同じ申込みの調整中の予約が2件以上あるとき、まとめて承認するボタンを出す（確定メールは1通）。
+function addBulkBars(rows,pickers,cards){const groups=new Map();
+  rows.filter(r=>r.status==='調整中'&&r.group&&pickers.has(r.id)).forEach(r=>{if(!groups.has(r.group))groups.set(r.group,[]);groups.get(r.group).push(r)});
+  groups.forEach((list,group)=>{if(list.length<2)return;const first=cards.get(list[0].id);if(!first)return;
+    const bar=document.createElement('div');bar.className='bulk-bar';
+    const t=document.createElement('strong');t.textContent='同じ申込みの予約が'+list.length+'件あります（'+list[0].name+'）';
+    const n=document.createElement('div');n.className='hint';n.textContent='まとめて承認すると、お客様に確定のメールを1通お送りします。';
+    const feedback=document.createElement('div');feedback.setAttribute('role','status');
+    const b=button(bar,'この'+list.length+'件をまとめて承認する',async()=>{
+      const picks=[];for(const r of list){const v=pickers.get(r.id).value();if(!v)return localMessage(feedback,r.label+'の使用コートを選んでください。',true);picks.push({id:r.id,allocation:v})}
+      const info=list.map((r,i)=>r.date+' '+r.start+'～'+r.end+'　'+r.label+'（'+picks[i].allocation+'）').join('\n');
+      if(!await confirmAction(list.length+'件をまとめて承認しますか？',info+'\n\n'+list[0].name+'\n承認すると、確定のメールを1通お送りします。',list.length+'件を承認する'))return;
+      b.disabled=true;localMessage(feedback,'処理中…');
+      rpc().withSuccessHandler(result=>{loadAdmin(adminPendingMode,result.warning||'記録できました：'+result.count+'件を承認しました。')})
+        .withFailureHandler(e=>{b.disabled=false;localMessage(feedback,e.message||String(e),true);loadAdmin(adminPendingMode)})
+        .adminApproveGroup($('pin').value,group,picks)});
+    b.className='';bar.prepend(t,n);bar.append(feedback);first.before(bar)})}
 function renderAdmin(rows){$('list').innerHTML='';if(!rows.length){$('list').textContent='この日の登録はありません。';return}
-  rows.forEach(r=>{const d=document.createElement('div');d.className='item';const h=document.createElement('strong');
+  const pickers=new Map(),cards=new Map();
+  rows.forEach(r=>{const d=document.createElement('div');d.className='item';cards.set(r.id,d);const h=document.createElement('strong');
     h.textContent=`${r.date} ${r.start}～${r.end}　${r.label}${r.allocation?'（'+r.allocation+'）':''}`;d.append(h);
     const status=document.createElement('p');const tag=document.createElement('span');tag.className='pill'+(r.status==='承認'?' ok':'');tag.textContent=r.status;status.append(tag);
     status.append(document.createTextNode('　'+r.channel+' ／ 受付 '+r.received+(r.registeredBy?' ／ 登録者 '+r.registeredBy:'')));d.append(status);
@@ -553,7 +614,7 @@ function renderAdmin(rows){$('list').innerHTML='';if(!rows.length){$('list').tex
       start.onchange=refreshBlockChange;end.onchange=refreshBlockChange;
       $('list').append(d);return;
     }
-    if(r.status==='調整中'||r.status==='承認'){const amount=document.createElement('p');amount.textContent='予定料金：'+yen(r.amount)+(r.people?'（'+r.people+'人）':'');d.append(amount);if(eligible(r)&&r.status==='調整中'){const field=document.createElement('label');field.textContent='利用人数（受付で変更可）';const people=document.createElement('input');people.type='number';people.min='1';people.max='99';people.step='1';people.value=r.people||'';field.append(people);d.append(field);const feedbackPeople=document.createElement('div');feedbackPeople.setAttribute('role','status');const save=button(d,'人数と料金を更新',()=>{save.disabled=true;localMessage(feedbackPeople,'処理中…');rpc().withSuccessHandler(result=>{save.disabled=false;localMessage(feedbackPeople,'更新後の予定料金：'+yen(result.amount));loadAdmin(adminPendingMode)}).withFailureHandler(e=>{save.disabled=false;localMessage(feedbackPeople,e.message||String(e),true)}).adminPeople($('pin').value,r.id,people.value)});d.append(feedbackPeople)}const allocation=allocationPicker(r);d.append(allocation.element);
+    if(r.status==='調整中'||r.status==='承認'){const amount=document.createElement('p');amount.textContent='予定料金：'+yen(r.amount)+(r.people?'（'+r.people+'人）':'');d.append(amount);if(eligible(r)&&r.status==='調整中'){const field=document.createElement('label');field.textContent='利用人数（受付で変更可）';const people=document.createElement('input');people.type='number';people.min='1';people.max='99';people.step='1';people.value=r.people||'';field.append(people);d.append(field);const feedbackPeople=document.createElement('div');feedbackPeople.setAttribute('role','status');const save=button(d,'人数と料金を更新',()=>{save.disabled=true;localMessage(feedbackPeople,'処理中…');rpc().withSuccessHandler(result=>{save.disabled=false;localMessage(feedbackPeople,'更新後の予定料金：'+yen(result.amount));loadAdmin(adminPendingMode)}).withFailureHandler(e=>{save.disabled=false;localMessage(feedbackPeople,e.message||String(e),true)}).adminPeople($('pin').value,r.id,people.value)});d.append(feedbackPeople)}const allocation=allocationPicker(r);pickers.set(r.id,allocation);d.append(allocation.element);
       if(r.status==='承認' && r.type==='soccer')appendCourtChangeEditor_(d,r);
       // 人数変更・延長。精算済みは初回入金を保全し、変更後の差額を別途精算する。
       if(r.status==='承認'){
@@ -637,7 +698,7 @@ function renderAdmin(rows){$('list').innerHTML='';if(!rows.length){$('list').tex
               .adminCancelQuote($('pin').value,r.id,reason);
             return;
           }
-          const description=s==='不承認'?'WEB申込みを不承認として処理します。':s==='承認'?'予約を確定します。確定のメールが、お客様に届きます。':'状態を調整中に変更します。';
+          const description=s==='不承認'?'不承認にします。お客様には、メールは送られません。LINEかお電話で、お知らせしてください。':s==='承認'?(r.channel==='WEB'?'予約を確定します。お客様に、確定のメールが届きます。':'予約を確定します。'):'状態を調整中に変更します。';
           if(!await confirmAction(s+'に変更しますか？',info+'\n\n'+description,s==='承認'?'予約を承認する':s==='不承認'?'不承認にする':'調整中に戻す'))return;
           [...actions.children].forEach(b=>b.disabled=true);localMessage(feedback,'処理中…');
           rpc().withSuccessHandler(result=>{localMessage(feedback,result.warning||s+'に変更しました。',!!result.warning);refreshStaffIfSameDate(r.date);loadAdmin(adminPendingMode,result.warning||'記録できました：'+s+'に変更しました。')})
@@ -683,14 +744,11 @@ function renderAdmin(rows){$('list').innerHTML='';if(!rows.length){$('list').tex
       if(r.channel!=='管理'&&!r.series&&r.type!=='closed'){
       if(r.status==='承認'||r.status==='キャンセル'){
         appendAdjustmentEditor_(d,r);
-      }else{
-        const note=document.createElement('p');note.className='hint';
-        note.textContent=r.status==='調整中'?'入金の記録は、予約を承認してから行ってください。':'不承認の予約は入金を記録できません。';d.append(note);
       }
       }
 
     }
-    $('list').append(d)})}
+    $('list').append(d)});addBulkBars(rows,pickers,cards)}
 // 入出金の保存結果でカードを更新する。画面全体の再読み込みは不要。
 function appendAdjustmentEditor_(parent,r){
   if(!PAY_REC)return;
@@ -1027,9 +1085,9 @@ const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());co
 $('date').value=today;
 if(!ADMIN_MODE){const tom=new Date(now.getTime()+webMinDays*86400000).toISOString().slice(0,10);$('date').value=tom;$('date').min=tom}
 if(ADMIN_MODE)for(const id of ['filter-date','from','to','closed-from','closed-to']){if($(id))$(id).value=today}
-if(ADMIN_MODE){makeFacilityForm('staff');makeFacilityForm('block');staffNowDefaults();blockModeChanged()}facChanged();if(!ADMIN_MODE){restoreSelection();draftReady=true;saveSelection();}
+if(ADMIN_MODE){makeFacilityForm('staff');makeFacilityForm('block');staffNowDefaults();blockModeChanged()}if(!ADMIN_MODE){buildRows();if(!restoreSelection())refreshAll();draftReady=true;saveSelection();}
 if(!ADMIN_MODE)publicBookingWindow();if(CANCEL_TOKEN)showCancellation();else if(ADMIN_MODE){$('user').classList.add('hidden');$('admin-login').classList.remove('hidden')}
-setInterval(()=>{if(!document.hidden&&!$('user').classList.contains('hidden'))refreshSlots(true)},30000);
+setInterval(()=>{if(!document.hidden&&!$('user').classList.contains('hidden'))refreshAll(true)},30000);
 
 // 開発候補：差し替えしません！ Index.html の admin list render 内へ統合前。
 // 依存: button, rpc, confirmAction, yen, loadAdmin, adminPendingMode, $('pin')。
