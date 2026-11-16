@@ -118,12 +118,12 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
 .fac-body{padding:2px 0 4px 34px}.fac-body.hidden{display:none}.fac-body .fac-opt{margin:6px 0!important;display:block}.fac-body .fac-opt.hidden{display:none!important}
 .fac-opt input[type=number]{width:84px;display:inline-block;margin:0 6px}.fac-opt .unit{font-weight:600}
 .time-line{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0}.time-line label{margin:0;display:block}.time-line select{min-width:118px}.tl-from{font-weight:700}
-.fac-row.need .tl-start select{border:2px solid #bd7c18;background:#fff8ea}
+.fac-row.need .tl-start select{border:2px solid #0a75ae;background:#fff}
 .row-msg{margin-top:6px;padding:8px 10px;border-left:4px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700;border-radius:6px}.row-msg.hidden{display:none}
 .sr{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 #price-box{border:2px solid #0a75ae;background:#f7fbff;border-radius:12px;padding:14px}.sum-head{font-size:19px;color:#0b3a57}
 .sum-item{padding:10px 0;border-top:1px solid #d5e3ec}.sum-item:first-child{border-top:0}.sum-when{font-size:21px;font-weight:800;color:#0b3a57}.sum-what{font-size:16px;margin-top:2px}
-.sum-item.pending .sum-title{color:#673c00;font-weight:700}#day-msg:empty{display:none}#day-msg{margin:6px 0}
+.sum-item.pending .sum-title{color:#8c2f39;font-weight:800}#day-msg:empty{display:none}#day-msg{margin:6px 0}
 .fac-row .multi-wrap:has(input:checked){border:0!important;background:transparent!important}
 .fac-body{padding:2px 0 4px 6px!important}.time-line select{width:122px!important;min-width:0!important}.time-line label{flex:0 0 auto}.fac-body .fac-opt{margin:6px 0!important}
 .bulk-bar{border:2px solid #0a75ae;border-radius:12px;background:#f4f9fc;padding:12px;margin:14px 0 6px}.bulk-bar>strong{display:block;font-size:17px;color:#0b3a57}.bulk-bar button{margin-top:8px}
@@ -144,7 +144,7 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
 .time-line{display:flex;align-items:center;gap:12px;margin:0!important}
 .time-line select{height:48px;width:132px!important;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
 .tl-from{color:#4a5f6c;font-weight:600}
-.fac-row.need .tl-start select{border:2px solid #d9a441;background:#fffaf0}
+.fac-row.need .tl-start select{border:2px solid #0a75ae;background:#fff}
 .row-msg{margin:0!important}
 .date-block{margin:12px 0 6px!important}.date-block input{height:48px;font-size:17px}
 h2.step{margin-top:22px!important}
@@ -178,6 +178,45 @@ h2.step{margin-top:22px!important}
 #staff-cart .cart-item button{white-space:nowrap}
 #staff-cart strong{font-size:17px;color:#0b3a57}
 #price-box .total{font-size:24px;font-weight:800;color:var(--em)}
+/* v47: お客様画面の整理 */
+details>summary{list-style:none;cursor:pointer}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:" ▼";font-size:.75em;color:#0b4f73}
+details[open]>summary::after{content:" ▲"}
+details.how>summary{font-size:15px;font-weight:700;padding:6px 0}
+.date-block{display:flex!important;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:12px 0 6px!important}
+.date-cap{font-size:15px;font-weight:700;color:#4a5f6c}
+.date-btn{position:relative;display:inline-flex!important;align-items:center;gap:10px;margin:0!important;padding:8px 14px;min-height:52px;border:1px solid #9cc3da;border-radius:12px;background:#fff;cursor:pointer}
+.date-btn .date-label{font-size:22px;font-weight:800;color:#0b3a57;margin:0!important;display:inline!important}
+.date-btn::after{content:"▼";font-size:13px;color:#0b4f73}
+.date-btn input{position:absolute;inset:0;width:100%!important;height:100%!important;opacity:0;margin:0!important;cursor:pointer}
+.date-block .hours-line{margin:0!important;font-size:17px;font-weight:700}
+@media(max-width:560px){.date-block .hours-line{flex:1 1 100%}}
+#booking-date-warning{background:none!important;border:0!important;padding:0!important;color:var(--em)!important;font-size:17px;font-weight:800;margin:6px 0}
+.row-msg{background:none!important;border:0!important;border-left:0!important;padding:2px 0!important;color:var(--em)!important;font-weight:800}
+#price-box{border:1px solid #9cc3da!important;background:#fff!important}
+#sticky-total{position:fixed;left:0;right:0;bottom:0;z-index:30;display:none;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #c9d9e3;box-shadow:0 -2px 10px #0a2a3d1f}
+#sticky-total small{display:block;font-size:13px;color:#4a5a65}
+#sticky-total strong{font-size:22px;font-weight:800;color:var(--em)}
+#sticky-total button{margin:0;white-space:nowrap}
+@media(max-width:700px){#sticky-total:not(.hidden){display:flex}#user{padding-bottom:88px}}
+/* v47: これからの予約 */
+#overview-card .seg{display:flex;gap:8px;align-items:center;margin:8px 0 12px;flex-wrap:wrap}
+#overview-card .seg button{margin:0;min-height:42px}
+#overview-card .seg button:not(.on):not(.secondary){background:#fff;color:#0b4f73;border:1px solid #9cc3da}
+#overview-card .seg button.secondary{margin-left:auto}
+.ov-h{font-size:17px;margin:16px 0 6px;color:#0b3a57}.ov-h.alert{color:var(--em);font-size:19px}
+.ov-day{font-weight:800;color:#0b3a57;margin:14px 0 2px;font-size:16px}.ov-day.today{color:var(--em)}
+.ov-line{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;width:100%;text-align:left;background:#fff;color:#123247;border:0;border-top:1px solid #dfe8ee;border-radius:0;padding:10px 4px;margin:0;font-weight:400}
+.ov-line .ov-when{font-weight:800;font-variant-numeric:tabular-nums}.ov-line .ov-name{grid-column:1 / -1;color:#4a5a65;font-size:15px}
+.ov-line:hover{background:#f4f8fb}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin:4px 0 8px}.cal-nav button{margin:0;min-height:40px}.cal-nav strong{font-size:18px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-w{text-align:center;font-size:13px;color:#4a5a65;padding:2px 0}
+.cal-d{display:flex;flex-direction:column;align-items:center;gap:1px;min-height:62px;padding:4px 2px;margin:0;background:#fff;color:#123247;border:1px solid #d3dde4;border-radius:8px;font-weight:400}
+.cal-d .cal-n{font-weight:700;font-size:15px}.cal-d .cal-t{font-size:12px;color:#0b4f73}.cal-d .cal-p{font-size:12px;font-weight:800;color:var(--em)}
+.cal-d.today{border:2px solid #0a75ae}.cal-d.closed{background:#eef1f3;color:#6b7a85}
+@media(min-width:700px){.cal-d{min-height:76px}}
 @media(max-width:480px){#staff-reg #staff-form{padding:14px 14px 14px 20px}}
 </style></head><body>
 <header><strong>にいかわスポーツドーム</strong><small>コート予約</small></header><main>
@@ -186,23 +225,23 @@ h2.step{margin-top:22px!important}
 <section id="cancel-view" class="hidden"><div class="card"><h1>予約のキャンセル</h1><div id="cancel-detail" role="status">予約を確認中…</div><button id="cancel-action" type="button" class="secondary hidden" onclick="cancelSelected()">この予約をキャンセルする</button></div></section>
 <section id="user">
  <div class="card"><h1>予約希望を出す</h1>
-  <ol class="flow" aria-label="申込みの流れ"><li><b>ここで申し込む</b></li><li><b>スタッフが確認・承認</b></li><li><b>確定のメールが届いて、予約が確定</b></li></ol>
+  <ol class="flow" aria-label="申込みの流れ"><li><b>ここで予約希望を出す</b></li><li><b>スタッフが確認・承認</b></li><li><b>確定のメールが届いて、予約が確定</b></li></ol>
   <div class="tint"><label class="big-label">お客様の区分<span class="required">必須</span><select id="member" onchange="memberChanged()"><option value="">選んでください</option><option value="会員">会員の方</option><option value="一般">会員でない方（一般）</option></select></label>
-   <p class="hint small">会員の方は、利用時に会員証を確認します。料金は、区分によって変わります。</p><p class="hint small">18歳未満の方は、保護者の同伴と署名が必要です。</p></div>
+   <p class="hint small">会員の方は、利用時に会員証を確認します。料金は、区分によって変わります。</p><p class="hint small">18歳未満の方は、保護者または指導者の同伴が必要です。</p></div>
   <div class="grid"><label>お名前<span class="required">必須</span><input id="name" autocomplete="name" required></label><label>電話番号<span class="required">必須</span><input id="phone" type="tel" autocomplete="tel" required></label><label>メールアドレス<span class="required">必須</span><input id="email" type="email" autocomplete="email" required></label></div></div>
- <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>受付のくわしい案内（当日・前日・先の日程）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></details></div>
+ <div id="sticky-total" class="hidden" aria-live="polite"><div><small>いまの合計</small><strong id="sticky-amount"></strong></div><button type="button" onclick="document.getElementById('price-box').scrollIntoView({behavior:'smooth',block:'start'})">内容を確認する</button></div>
+ <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>表示期間以外の申し込みについて（詳細を見る）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></details></div>
   <h2 class="step">使う施設と時間</h2><p class="hint">使う施設にチェックして、時間を決めてください。</p>
-  <div class="date-block"><label>利用日<input id="date" type="date" onchange="dateChanged()"></label><div id="date-label" class="date-label"></div></div>
-  <div id="booking-date-warning" class="notice error hidden" role="alert" style="border:2px solid #bd7c18;background:#fff2da;color:#673c00;font-weight:700"></div>
-  <p id="hours" class="hours-line"></p><div id="day-msg" role="status"></div>
+  <div class="date-block"><span class="date-cap">利用日</span><label class="date-btn" id="date-btn"><span id="date-label" class="date-label">日付を選ぶ</span><input id="date" type="date" onchange="dateChanged()" aria-label="利用日"></label><p id="hours" class="hours-line"></p></div>
+  <div id="booking-date-warning" class="notice error hidden" role="alert"></div>
+  <div id="day-msg" role="status"></div>
   <div id="fac-list" class="fac-list"></div>
   <p class="hint small">チェックを入れると、最初に選んだ施設と同じ時間が入ります。変えたいときは、その施設の時間だけ変えます。</p>
-  <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。振込をご希望の場合は、ご相談ください。人数が変わったら、受付でお知らせください。実際の人数で精算します。</p>
-   <h3>キャンセル</h3><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table>
-   <p class="hint small">キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p></div>
-  <div id="price-box" class="price-box hidden"><strong class="sum-head">選んだ内容</strong><p class="hint small">スタッフが承認すると、予約が確定します。日時と施設を確認して、申し込んでください。</p><div id="price-list"></div><div id="total" class="total"></div><p class="hint small">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。</p></details></div>
+  <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。人数が変わったら、受付でお知らせください。実際の人数で精算します。振込をご希望の場合は、ご相談ください。</p>
+   <h3>キャンセル</h3><p>キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table></div>
+  <div id="price-box" class="price-box hidden"><strong class="sum-head">選んだ内容</strong><p class="hint small">スタッフが承認すると、予約が確定します。日時と施設を確認して、「予約希望を出す」を押してください。</p><div id="price-list"></div><div id="total" class="total"></div><p class="hint small">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ（詳細を見る）</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。</p></details></div>
   <p class="hint small privacy">お預かりした個人情報（お名前・電話番号・メールアドレス）は、ご予約の連絡と受付の管理にのみ使います。</p>
-  <div class="row"><button type="button" id="user-submit" onclick="submit()">この内容で申し込む</button></div>
+  <div class="row"><button type="button" id="user-submit" onclick="submit()">予約希望を出す</button></div>
   <div id="user-msg" role="status"></div>
   <div id="sending" class="sending hidden" role="status"><div><strong>送信しています…</strong><br>10秒ほどかかります。このままお待ちください。</div></div>
  </div>
@@ -240,8 +279,7 @@ function bookingWindowText(){const t=tomorrowStr();
 function nextDayStr(s){const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+1);return d.toISOString().slice(0,10)}
 function renderGuide(){const g=$('web-guide');if(!g)return;const t=tomorrowStr();
   if(bookingEndDate&&bookingEndDate<t){g.textContent='';return}
-  const rows=[['当日・前日','公式LINEまたはお電話（0765-32-3807）']];
-  rows.push([mdLabel(t)+'〜'+(bookingEndDate?mdLabel(bookingEndDate):''),'このページから申込み',true]);
+  const rows=[['当日・前日','公式LINEまたはお電話']];
   if(bookingEndDate)rows.push([mdLabel(nextDayStr(bookingEndDate))+'以降','公式LINE']);
   g.textContent='';
   rows.forEach(r=>{const d=document.createElement('div');d.className='g-row'+(r[2]?' on':'');
@@ -348,7 +386,7 @@ function durChanged(k){const s=ST[k];s.dur=$('dur-'+k).value;if(k===firstKey())p
 function dateChanged(){checkedKeys().forEach((k,i)=>{const s=ST[k];s.start='';s.msg='';if(i>0)s.autoStart=true});refreshAll()}
 function probeDay(){const date=$('date').value,req=++probeReq;if(!date)return;
   api('availability',[date,'multi',1,60,'多目的',[]],d=>{if(req===probeReq&&!checkedKeys().length)dayStatus(d)},'user-msg')}
-function refreshAll(silent=false){if(!ADMIN_MODE)publicBookingWindow();$('date-label').textContent=$('date').value?dayLabel($('date').value):'';
+function refreshAll(silent=false){if(!ADMIN_MODE)publicBookingWindow();$('date-label').textContent=$('date').value?dayLabel($('date').value):'日付を選ぶ';
   const keys=checkedKeys();if(!silent)drawAll();renderSummary();
   if(!keys.length){probeDay();return}keys.forEach(k=>fetchRow(k,silent))}
 function renderSummary(){const box=$('price-box'),list=$('price-list');list.replaceChildren();const keys=checkedKeys();box.classList.toggle('hidden',!keys.length);
@@ -358,7 +396,13 @@ function renderSummary(){const box=$('price-box'),list=$('price-list');list.repl
     const w=document.createElement('div');w.className='sum-when';w.textContent=dayLabel(r.date)+'　'+r.start+'〜'+r.end;
     const x=document.createElement('div');x.className='sum-what';x.textContent=labelOf(r)+(r.people?'　'+r.people+'人':'')+'　'+(mem?yen(charge(r)):'');
     d.append(w,x);if(mem){const sm=document.createElement('small');sm.className='basis';sm.textContent=basisOf(r);d.append(sm);total+=charge(r)}list.append(d)});
-  $('total').textContent=mem?'合計の目安：'+yen(total):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。'}
+  $('total').textContent=mem?'合計の目安：'+yen(total):'お客様の区分（会員／一般）を選ぶと、料金が表示されます。';
+  stickyState={on:!!(keys.length&&mem),amount:total,count:keys.length};updateSticky()}
+let stickyState={on:false,amount:0,count:0};
+function updateSticky(){const el=$('sticky-total'),box=$('price-box');if(!el||!box)return;
+  let show=stickyState.on;if(show){const r=box.getBoundingClientRect();if(r.top<window.innerHeight-120&&r.bottom>0)show=false}
+  el.classList.toggle('hidden',!show);if(show)$('sticky-amount').textContent=yen(stickyState.amount)+'（'+stickyState.count+'件）'}
+window.addEventListener('scroll',updateSticky,{passive:true});window.addEventListener('resize',updateSticky);
 function resetAll(){FACS.forEach(([k])=>{$('use-'+k).checked=false;Object.assign(ST[k],{start:'',dur:'60',autoStart:true,autoDur:true,slots:null,msg:'',req:ST[k].req+1})});order=[];drawAll();renderSummary()}
 function min(t){const [h,m]=t.split(':').map(Number);return h*60+m}function hm(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
 function yen(v){return v.toLocaleString('ja-JP')+'円'}
@@ -600,12 +644,57 @@ function rejectKeepRender(){const a=rejectKeepLoad(),box=$('reject-keep'),card=$
     d.append(h,p);
     button(d,'連絡しました',()=>{rejectKeepSave(rejectKeepLoad().filter(y=>y.id!==x.id));rejectKeepRender()});
     box.append(d)})}
+// ---- これからの予約（リスト／カレンダー）
+let ovRows=[],ovTabName='list',ovMonth='',ovTimer=0;
+function jstToday(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date())}
+function ymdAdd(s,n){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
+function mdw(s){const x=new Date(s+'T12:00:00+09:00');return (x.getUTCMonth()+1)+'/'+x.getUTCDate()+'（'+'日月火水木金土'[x.getUTCDay()]+'）'}
+function ovSoon(){clearTimeout(ovTimer);ovTimer=setTimeout(loadOverview,500)}
+function ovTab(t){ovTabName=t;$('ov-tab-list').classList.toggle('on',t==='list');$('ov-tab-cal').classList.toggle('on',t==='cal');$('ov-list').classList.toggle('hidden',t!=='list');$('ov-cal').classList.toggle('hidden',t!=='cal')}
+function loadOverview(){if(!$('pin')||!$('pin').value)return;const today=jstToday(),from=today.slice(0,8)+'01',to=ymdAdd(today,120);
+  $('ov-msg').textContent='読み込み中…';
+  api('adminOverview',[$('pin').value,from,to],data=>{ovRows=data.rows||[];$('ov-msg').textContent='';if(!ovMonth)ovMonth=today.slice(0,7);renderOverview()},'ov-msg',e=>{$('ov-msg').textContent='読み込めませんでした。「更新」を押してください。'})}
+function ovOpen(date){$('filter-date').value=date;loadAdmin();const t=$('list');if(t&&t.scrollIntoView)t.parentNode.scrollIntoView({behavior:'smooth',block:'start'})}
+function ovLine(r,showDate){const b=document.createElement('button');b.type='button';b.className='ov-line';
+  const when=(showDate?mdw(r.date)+' ':'')+r.start+'～'+r.end;
+  const w=document.createElement('span');w.className='ov-when';w.textContent=when;
+  const k=document.createElement('span');k.className='ov-what';k.textContent=r.type==='closed'?'休館日':r.label+(r.status==='ブロック'?'（予定）':'');
+  const n=document.createElement('span');n.className='ov-name';n.textContent=r.status==='ブロック'?(r.name&&r.name!==r.label?r.name:''):r.name;
+  b.append(w,k,n);b.onclick=()=>ovOpen(r.date);return b}
+function renderOverview(){const today=jstToday(),end14=ymdAdd(today,14),pend=ovRows.filter(r=>r.status==='調整中'),act=ovRows.filter(r=>r.status!=='調整中'&&r.type!=='closed');
+  const L=$('ov-list');L.replaceChildren();
+  const h1=document.createElement('h3');h1.className='ov-h'+(pend.length?' alert':'');h1.textContent=pend.length?'未承認 '+pend.length+'件（承認か不承認をしてください）':'未承認はありません';L.append(h1);
+  pend.slice(0,30).forEach(r=>L.append(ovLine(r,true)));
+  const days={};act.filter(r=>r.date>=today&&r.date<=end14).forEach(r=>(days[r.date]=days[r.date]||[]).push(r));
+  const keys=Object.keys(days).sort();
+  const h2=document.createElement('h3');h2.className='ov-h';h2.textContent='今日から2週間の予定';L.append(h2);
+  if(!keys.length){const e=document.createElement('p');e.className='hint';e.textContent='予定はありません。';L.append(e)}
+  keys.forEach(d=>{const t=document.createElement('div');t.className='ov-day'+(d===today?' today':'');t.textContent=(d===today?'今日　':d===ymdAdd(today,1)?'あす　':'')+mdw(d);L.append(t);days[d].forEach(r=>L.append(ovLine(r,false)))});
+  renderCalendar();ovTab(ovTabName)}
+function renderCalendar(){const C=$('ov-cal');C.replaceChildren();const [y,m]=ovMonth.split('-').map(Number),today=jstToday();
+  const nav=document.createElement('div');nav.className='cal-nav';
+  const prev=document.createElement('button');prev.type='button';prev.className='secondary';prev.textContent='◀';prev.onclick=()=>{ovMonth=ymdAdd(ovMonth+'-01',-1).slice(0,7);renderCalendar()};
+  const next=document.createElement('button');next.type='button';next.className='secondary';next.textContent='▶';next.onclick=()=>{ovMonth=ymdAdd(ovMonth+'-28',5).slice(0,7);renderCalendar()};
+  const t=document.createElement('strong');t.textContent=y+'年'+m+'月';nav.append(prev,t,next);C.append(nav);
+  const g=document.createElement('div');g.className='cal-grid';
+  '日月火水木金土'.split('').forEach(w=>{const c=document.createElement('div');c.className='cal-w';c.textContent=w;g.append(c)});
+  const first=new Date(Date.UTC(y,m-1,1)).getUTCDay(),dim=new Date(Date.UTC(y,m,0)).getUTCDate();
+  for(let i=0;i<first;i++)g.append(document.createElement('div'));
+  for(let d=1;d<=dim;d++){const ds=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const rows=ovRows.filter(r=>r.date===ds),pend=rows.filter(r=>r.status==='調整中').length,closed=rows.some(r=>r.type==='closed'),act=rows.filter(r=>r.status!=='調整中'&&r.type!=='closed').length;
+    const c=document.createElement('button');c.type='button';c.className='cal-d'+(ds===today?' today':'')+(closed?' closed':'');
+    const n=document.createElement('span');n.className='cal-n';n.textContent=d;c.append(n);
+    if(closed){const x=document.createElement('span');x.className='cal-t';x.textContent='休館';c.append(x)}
+    else{if(act){const x=document.createElement('span');x.className='cal-t';x.textContent=act+'件';c.append(x)}
+      if(pend){const x=document.createElement('span');x.className='cal-p';x.textContent='未承認'+pend;c.append(x)}}
+    c.onclick=()=>ovOpen(ds);g.append(c)}
+  C.append(g);const h=document.createElement('p');h.className='hint';h.textContent='日にちを押すと、その日の予約が下に出ます。';C.append(h)}
 let adminListRequest=0;
 function loadAdmin(pendingOnly=false,warning=''){if(!$('pin').value)return msg('admin-msg','ログインし直してください。',true);adminPendingMode=pendingOnly;
   const b=$('admin-load');b.disabled=true;msg('admin-msg','一覧を読み込み中…');const seq=++adminListRequest;
   adminDiagPhase('list',pendingOnly?'未承認を取得中':'指定日を取得中');
   const watchdog=setTimeout(()=>{if(seq===adminListRequest){b.disabled=false;adminDiagPhase('list','応答待ちが15秒超');msg('admin-msg','一覧の応答を待っています。何度も押さず診断履歴を確認してください。',true)}},15000);
-  api('adminList',[$('pin').value,$('filter-date').value,pendingOnly],rows=>{if(seq!==adminListRequest)return;clearTimeout(watchdog);b.disabled=false;
+  api('adminList',[$('pin').value,$('filter-date').value,pendingOnly],rows=>{if(seq!==adminListRequest)return;clearTimeout(watchdog);b.disabled=false;ovSoon();
     try{$('admin-msg').textContent=pendingOnly?'未承認 '+rows.length+'件を表示中':'';renderAdmin(rows);
       adminDiagPhase('list','表示完了 '+rows.length+'件');if(warning)msg('admin-msg',warning,!/^(記録できました)/.test(warning));
       if(pendingOnly)$('pending-count').textContent='（'+rows.length+'件）';else rpc().withSuccessHandler(p=>{$('pending-count').textContent='（'+p.length+'件）'}).withFailureHandler(e=>adminDiagRecord('未承認件数の取得失敗',e)).adminList($('pin').value,'',true)
@@ -1159,6 +1248,7 @@ function adminSignIn(){const pin=$('login-pin').value;if(!pin)return msg('login-
   adminDiagRecord('PINログイン成功・画面表示');
   // 片方の初期化エラーで、もう片方の読み込みまで止めない。
   try{refreshStaffAllocations()}catch(error){adminDiagPhase('alloc','画面処理エラー');adminDiagRecord('電話受付初期化失敗',error)}
+  try{loadOverview()}catch(error){adminDiagRecord('これからの予約の読み込み失敗',error)}
   try{loadAdmin(true)}catch(error){adminDiagPhase('list','画面処理エラー');adminDiagRecord('一覧初期化失敗',error);$('admin-load').disabled=false}
  }).withFailureHandler(e=>{$('login-button').disabled=false;msg('login-msg',e.message||String(e),true);adminDiagRecord('PINログイン失敗',e)}).adminLogin(pin)}
 // 管理用のダイアログがロックをまたいで画面操作を遮らないよう、明示的に閉じる。
@@ -1171,7 +1261,7 @@ function closeAdminDialogs(){
 function lockAdmin(message='画面をロックしました。PINで再ログインしてください。'){
  if(!ADMIN_MODE)return;const token=$('pin').value;adminEpoch++;adminUnlocked=false;adminDiag.session='ロック';adminDiagRecord('管理画面ロック');
  closeAdminDialogs();adminHolds.clear();adminUser={name:'',role:'',label:''};{const who=$('admin-who');if(who)who.textContent=''}if($('staff-list'))$('staff-list').replaceChildren();if($('report-view'))$('report-view').replaceChildren();if($('report-print-btn'))$('report-print-btn').classList.add('hidden');{const w=$('lock-warning');if(w)w.classList.add('hidden')}$('pin').value='';$('login-pin').value='';$('login-button').disabled=false;
- $('admin').classList.add('hidden');$('admin-login').classList.remove('hidden');$('list').replaceChildren();$('pending-count').textContent='';
+ $('admin').classList.add('hidden');$('admin-login').classList.remove('hidden');$('list').replaceChildren();$('pending-count').textContent='';ovRows=[];ovMonth='';$('ov-list').replaceChildren();$('ov-cal').replaceChildren();
  for(const id of ['admin-msg','staff-msg','block-msg','closed-msg','staff-admin-msg','report-msg'])$(id).replaceChildren();
  document.querySelectorAll('#admin input:not([type="hidden"]),#admin textarea').forEach(e=>{if(!['date','time'].includes(e.type))e.value=''});
  document.querySelectorAll('#admin button').forEach(e=>e.disabled=false);document.querySelectorAll('#admin details').forEach(e=>e.open=false);staffAllocationRequest++;staffAllocationReady=false;
@@ -1194,7 +1284,7 @@ const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());co
 $('date').value=today;
 if(!ADMIN_MODE){const tom=new Date(now.getTime()+webMinDays*86400000).toISOString().slice(0,10);$('date').value=tom;$('date').min=tom}
 if(ADMIN_MODE)for(const id of ['filter-date','from','to','closed-from','closed-to']){if($(id))$(id).value=today}
-if(ADMIN_MODE){makeFacilityForm('staff');makeFacilityForm('block');staffNowDefaults();blockModeChanged()}if(!ADMIN_MODE){buildRows();if(!restoreSelection())refreshAll();draftReady=true;saveSelection();}
+if(ADMIN_MODE){makeFacilityForm('staff');makeFacilityForm('block');staffNowDefaults();blockModeChanged()}if(!ADMIN_MODE){try{$('date-btn').addEventListener('click',()=>{try{$('date').showPicker()}catch(e){}})}catch(e){}buildRows();if(!restoreSelection())refreshAll();draftReady=true;saveSelection();}
 if(!ADMIN_MODE)publicBookingWindow();if(CANCEL_TOKEN)showCancellation();else if(ADMIN_MODE){$('user').classList.add('hidden');$('admin-login').classList.remove('hidden')}
 setInterval(()=>{if(!document.hidden&&!$('user').classList.contains('hidden'))refreshAll(true)},30000);
 
