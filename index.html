@@ -222,12 +222,18 @@ details.how>summary{font-size:15px;font-weight:700;padding:6px 0}
 .seg3 button.on::before{content:"✔";margin-right:3px;font-size:13px}
 #list .item input[type=number]{margin-bottom:10px}
 #list button.approve-main{background:#0a75ae;color:#fff;border-color:#0a75ae;font-weight:800}
+.item.st-pending{border-left:5px solid #8c2f39;padding-left:12px}
+.item.st-ok{border-left:5px solid #b7c6d0;padding-left:12px}
+.bulk-group{border:2px solid #0a75ae;border-radius:14px;padding:2px 14px 8px;margin:16px 0;background:#f7fbff}
+.bulk-group>.bulk-bar{border:0;background:none;padding:12px 0 4px;margin:0}
+.bulk-group>.item{border-top:1px solid #d5e3ec}
+.bulk-group>.item:first-of-type{border-top:0}
 /* v48 */
 .chg-total{font-size:18px;font-weight:800;color:#0b3a57;margin-bottom:4px}
 .chg-line{font-size:15px;color:#33505f}
 .chg-line.chg-on{color:var(--em);font-weight:800}
 
-.fac-sub{font-weight:400;font-size:13px;color:#6b7a85;margin-left:6px}
+.fac-sub{font-weight:400;font-size:11px;color:#8a98a3;margin-left:4px}
 .tag-miss{display:inline-block;border:1px solid var(--em);color:var(--em);border-radius:4px;padding:0 7px;font-size:13px;font-weight:800;margin-right:8px}
 #price-hint.need{color:var(--em);font-weight:800;font-size:16px}
 .sum-item.pending{cursor:pointer}
@@ -255,7 +261,7 @@ details.how>summary{font-size:15px;font-weight:700;padding:6px 0}
    <p class="hint small">料金は、区分によって変わります。会員の方は、利用時に会員証を確認します。</p><p class="hint small">18歳未満の方は、保護者または指導者の同伴が必要です。</p></div>
   <div class="grid"><label>お名前<span class="required">必須</span><input id="name" autocomplete="name" required></label><label>電話番号<span class="required">必須</span><input id="phone" type="tel" autocomplete="tel" required></label><label>メールアドレス<span class="required">必須</span><input id="email" type="email" autocomplete="email" required></label></div></div>
  <div id="sticky-total" class="hidden" aria-live="polite"><div><small>合計の目安</small><strong id="sticky-amount"></strong></div><button type="button" onclick="document.getElementById('price-box').scrollIntoView({behavior:'smooth',block:'start'})">内容を確認する</button></div>
- <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>表示期間以外の申し込み（詳細を見る）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。<a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>／<a href="tel:0765323807">0765-32-3807</a></p></details></div>
+ <div class="card"><div class="tint slim"><div id="web-booking-window" class="window-line" role="status">WEB予約の受付期間を確認中…</div><details class="how"><summary>表示期間以外の申し込み（詳細を見る）</summary><div id="web-guide" class="guide"></div><p class="hint small">LINEとお電話のお問い合わせの時点では、予約は確定しません。</p></details></div>
   <h2 class="step">使う施設と時間</h2><p class="hint">使う施設にチェックして、時間を決めてください。</p>
   <div class="date-block"><span class="date-cap">利用日</span><label class="date-btn" id="date-btn"><span id="date-label" class="date-label">日付を選ぶ</span><input id="date" type="date" onchange="dateChanged()" aria-label="利用日"></label><p id="hours" class="hours-line"></p></div>
   <div id="booking-date-warning" class="notice error hidden" role="alert"></div>
@@ -309,7 +315,11 @@ function renderGuide(){const g=$('web-guide');if(!g)return;const t=tomorrowStr()
   g.textContent='';
   const tb=document.createElement('table');tb.className='cx';
   const h=document.createElement('tr');['利用日','申込みの方法'].forEach(x=>{const c=document.createElement('th');c.textContent=x;h.append(c)});tb.append(h);
-  rows.forEach(r=>{const tr=document.createElement('tr');r.slice(0,2).forEach(x=>{const c=document.createElement('td');c.textContent=x;tr.append(c)});tb.append(tr)});
+  const lineA=()=>{const a=document.createElement('a');a.href='https://lin.ee/p2QUSXa';a.target='_blank';a.rel='noopener noreferrer';a.textContent='公式LINE';return a};
+  const telA=()=>{const a=document.createElement('a');a.href='tel:0765323807';a.textContent='お電話';return a};
+  rows.forEach(r=>{const tr=document.createElement('tr');const c1=document.createElement('td');c1.textContent=r[0];const c2=document.createElement('td');
+    if(r[1]==='公式LINEまたはお電話')c2.append(lineA(),document.createTextNode('または'),telA());else c2.append(lineA());
+    tr.append(c1,c2);tb.append(tr)});
   g.append(tb)}
 function updateWindow(){$('web-booking-window').textContent=bookingWindowText();renderGuide()}
 function bookingEndLabel(s){return dayLabel(s)}
@@ -759,10 +769,11 @@ function addBulkBars(rows,pickers,cards){const groups=new Map();
       rpc().withSuccessHandler(result=>{loadAdmin(adminPendingMode,result.warning||'記録できました：'+result.count+'件を承認しました。')})
         .withFailureHandler(e=>{b.disabled=false;localMessage(feedback,e.message||String(e),true);loadAdmin(adminPendingMode)})
         .adminApproveGroup($('pin').value,group,picks)});
-    b.className='';bar.prepend(t,n);bar.append(feedback);first.before(bar)})}
+    b.className='';bar.prepend(t,n);bar.append(feedback);
+    const wrap=document.createElement('div');wrap.className='bulk-group';first.before(wrap);wrap.append(bar);list.forEach(r=>{const c=cards.get(r.id);if(c)wrap.append(c)})})}
 function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.length){$('list').textContent='この日の登録はありません。';return}
   const pickers=new Map(),cards=new Map();
-  rows.forEach(r=>{const d=document.createElement('div');d.className='item';d.dataset.id=r.id;cards.set(r.id,d);const h=document.createElement('strong');
+  rows.forEach(r=>{const d=document.createElement('div');d.className='item'+(r.status==='調整中'?' st-pending':r.status==='承認'?' st-ok':'');d.dataset.id=r.id;cards.set(r.id,d);const h=document.createElement('strong');
     h.textContent=`${dayLabel(r.date)}　${r.start}～${r.end}　${r.label}${r.allocation?'（'+r.allocation+'）':''}`;d.append(h);
     const status=document.createElement('p');const tag=document.createElement('span');tag.className='pill'+(r.status==='承認'?' ok':'');tag.textContent=r.status;status.append(tag);
     status.append(document.createTextNode('　'+r.channel+' ／ 受付 '+tsLabel(r.received)+(r.registeredBy?' ／ 登録者 '+r.registeredBy:'')));d.append(status);
@@ -937,10 +948,10 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
               .adminCancelQuote($('pin').value,r.id,reason);
             return;
           }
-          const description=s==='不承認'?'不承認にします。お客様には、メールは送られません。LINEかお電話で、お知らせしてください。':s==='承認'?(r.channel==='WEB'?'予約を確定します。お客様に、確定のメールが届きます。':'予約を確定します。'):'状態を調整中に変更します。';
+          const description=s==='不承認'?(r.channel==='WEB'?'不承認にします。お客様に、お断りのメールが自動で届きます。':'不承認にします。メールは送られません。LINEかお電話で、お知らせしてください。'):s==='承認'?(r.channel==='WEB'?'予約を確定します。お客様に、確定のメールが届きます。':'予約を確定します。'):'状態を調整中に変更します。';
           if(!await confirmAction(s+'に変更しますか？',info+'\n\n'+description,s==='承認'?'予約を承認する':s==='不承認'?'不承認にする':'調整中に戻す'))return;
           [...actions.children].forEach(b=>b.disabled=true);localMessage(feedback,'処理中…');
-          rpc().withSuccessHandler(result=>{if(s==='不承認')rejectKeepAdd(r);localMessage(feedback,result.warning||s+'に変更しました。',!!result.warning);refreshStaffIfSameDate(r.date);loadAdmin(adminPendingMode,result.warning||'記録できました：'+s+'に変更しました。')})
+          rpc().withSuccessHandler(result=>{if(s==='不承認'&&(r.channel!=='WEB'||result.warning))rejectKeepAdd(r);localMessage(feedback,result.warning||s+'に変更しました。',!!result.warning);refreshStaffIfSameDate(r.date);loadAdmin(adminPendingMode,result.warning||'記録できました：'+s+'に変更しました。')})
             .withFailureHandler(e=>{[...actions.children].forEach(b=>b.disabled=false);localMessage(feedback,e.message||String(e),true)})
             .adminChange($('pin').value,r.id,s,allocation.value(),note.value)
         });
