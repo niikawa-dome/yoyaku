@@ -905,6 +905,7 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
       const feedback=document.createElement('div');feedback.setAttribute('role','status');
       for(const s of ['承認','調整中','不承認','キャンセル']){
         if(s===r.status)continue;
+        if(s==='不承認'&&r.status==='承認')continue;
         const action=button(actions,({承認:'予約を承認する',調整中:'調整中に戻す',不承認:'不承認にする',キャンセル:'予約をキャンセル'})[s],async()=>{
           if(s==='承認'&&!allocation.value())return localMessage(feedback,'使用コートを選んでください。',true);
           const info=dayLabel(r.date)+' '+r.start+'～'+r.end+'\n'+(allocation.value()?allocText(r,allocation.value()):r.label)+'\n'+r.name+'\n'+r.status+' → '+s;
@@ -1110,7 +1111,7 @@ async function formAction(buttonId,messageId,name,args,success,confirmation){
   rpc().withSuccessHandler(r=>{b.disabled=false;const plain=typeof success==='function'?success(r):success;
       msg(messageId,plain+(r.warning?'\n【要確認】'+r.warning:''),!!r.warning);loadAdmin(adminPendingMode,r.warning||'');
       if(buttonId==='block-submit'){$('block-name').value='';{const t=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date());$('from').value=t;$('to').value=t};try{blockPreview()}catch(e){}}
-      if(buttonId==='closed-submit'){$('closed-name').value='';{const t=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date());$('closed-from').value=t;$('closed-to').value=t}}
+      if(buttonId==='closed-submit'){$('closed-name').value='';$('closed-from').value='';$('closed-to').value=''}
       if(buttonId==='staff-submit'){staffCart=[];staffCartRender();staffDone='✔ '+plain;$(messageId).replaceChildren();['staff-name','staff-phone','staff-note'].forEach(i=>$(i).value='');$('staff-member').value='';$('staff-combo').value='';staffPeopleReset();staffNowDefaults();refreshStaffAllocations()}
     }).withFailureHandler(e=>{b.disabled=false;const t=e.message||String(e);msg(messageId,/PINが違います/.test(t)?'PINが違います。もう一度、登録ボタンを押して、あなたのPIN（6桁）を入れてください。':t,true)})[name](...args)
 }
@@ -1336,7 +1337,7 @@ if(ADMIN_MODE){for(const event of ['pointerdown','keydown','input','scroll'])doc
 const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());const today=now.toISOString().slice(0,10);
 $('date').value=today;
 if(!ADMIN_MODE){const tom=new Date(now.getTime()+webMinDays*86400000).toISOString().slice(0,10);$('date').value=tom;$('date').min=tom}
-if(ADMIN_MODE)for(const id of ['filter-date','from','to','closed-from','closed-to']){if($(id))$(id).value=today}
+if(ADMIN_MODE)for(const id of ['filter-date','from','to']){if($(id))$(id).value=today}
 if(ADMIN_MODE){makeFacilityForm('staff');makeFacilityForm('block');staffNowDefaults();blockModeChanged()}if(!ADMIN_MODE){['input','change'].forEach(t=>$('user').addEventListener(t,()=>{const m=$('user-msg');if(m&&m.firstChild)m.replaceChildren()},true));try{$('date-btn').addEventListener('click',()=>{try{$('date').showPicker()}catch(e){}})}catch(e){}buildRows();if(!restoreSelection())refreshAll();draftReady=true;saveSelection();}
 if(!ADMIN_MODE)publicBookingWindow();if(CANCEL_TOKEN)showCancellation();else if(ADMIN_MODE){$('user').classList.add('hidden');$('admin-login').classList.remove('hidden')}
 setInterval(()=>{if(!document.hidden&&!$('user').classList.contains('hidden'))refreshAll(true)},30000);
