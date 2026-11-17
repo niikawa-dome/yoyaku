@@ -265,7 +265,7 @@ details.how>summary{font-size:15px;font-weight:700;padding:6px 0}
   <div class="terms"><h3>お支払い</h3><p>利用当日、コートをご利用になる前に、受付でお願いします（現金・PayPay・楽天Pay）。人数が変わったら、受付でお知らせください。実際の人数で精算します。振込をご希望の場合は、ご相談ください。</p>
    <h3>キャンセル</h3><p>キャンセル料が発生した場合は、キャンセルを受け付けた日から7日以内に、銀行振込でお支払いください（振込手数料はお客様のご負担です）。</p><table class="cx"><tr><th>キャンセルの日</th><th>キャンセル料</th><th>連絡の方法</th></tr><tr><td>利用日の7日前まで</td><td>0％</td><td>メールのリンクから</td></tr><tr><td>6〜2日前</td><td>50％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr><tr><td>前日・当日</td><td>100％</td><td><a href="https://lin.ee/p2QUSXa" target="_blank" rel="noopener noreferrer">公式LINE</a>または<a href="tel:0765323807">お電話</a></td></tr></table></div>
   <div id="price-box" class="price-box hidden"><strong class="sum-head">選んだ内容</strong><p id="price-hint" class="hint small">日時と施設を確認して、「予約希望を出す」を押してください。スタッフが承認すると、予約が確定します。</p><div id="price-list"></div><div id="total" class="total"></div><p class="hint small">人数に応じて、個人料金とコート料金のうち、安い方を自動で表示します。</p><details class="how"><summary>料金のしくみ（詳細を見る）</summary><p class="hint">対象施設で、利用時間のすべてが個人料金の対象時間内に収まる場合、申込人数による個人料金（会員は1人1時間600円、一般は800円）とコート料金を比べ、安い方を表示します。対象時間外の利用や、終了時刻が対象時間を超える場合は、全時間をコート料金で計算します。ミニコート・多目的は5人以上、サブコートは2人以上の場合は、コート料金と同額になります。</p></details></div>
-  <p class="hint small privacy">お預かりした個人情報（お名前・電話番号・メールアドレス）は、ご予約の連絡と受付の管理にのみ使います。</p>
+  <p class="hint small privacy">お預かりした個人情報（お名前・電話番号・メールアドレス）は、ご予約の連絡と受付の管理にのみ使います。詳しくは、<a href="https://www.ns-dome.com/article/103" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>をご覧ください。</p>
   <div class="row"><button type="button" id="user-submit" onclick="submit()">予約希望を出す</button></div>
   <div id="user-msg" role="status"></div>
   <div id="sending" class="sending hidden" role="status"><div><strong>送信しています…</strong><br>10秒ほどかかります。このままお待ちください。</div></div>
@@ -674,7 +674,9 @@ function rejectKeepRender(){const a=rejectKeepLoad(),box=$('reject-keep'),card=$
     button(d,'連絡しました',()=>{rejectKeepSave(rejectKeepLoad().filter(y=>y.id!==x.id));rejectKeepRender()});
     box.append(d)})}
 // ---- これからの予約（リスト／カレンダー）
-let ovRows=[],ovTabName='list',ovMonth='',ovTimer=0;
+let ovRows=[],ovTabName='list',ovMonth='',ovTimer=0,ovSeen=null;
+// 新しい未承認が増えたかを調べるための、見た未承認の控え
+function ovPendingIds(rows){return new Set((rows||[]).filter(r=>r.status==='調整中').map(r=>r.id))}
 function jstToday(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date())}
 function ymdAdd(s,n){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
 function mdw(s){return dayLabel(s)}
@@ -684,7 +686,11 @@ function ovTab(t){ovTabName=(ovTabName===t)?'':t;ovShow()}
 function ovShow(){['list','cal','date'].forEach(n=>{const on=ovTabName===n,b=$('ov-tab-'+n);b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');$('ov-panel-'+n).classList.toggle('hidden',!on)});}
 function loadOverview(){if(!$('pin')||!$('pin').value)return;const today=jstToday(),from=today.slice(0,8)+'01',to=ymdAdd(today,120);
   $('ov-msg').textContent='読み込み中…';
-  api('adminOverview',[$('pin').value,from,to],data=>{ovRows=data.rows||[];$('ov-msg').textContent='';if(!ovMonth)ovMonth=today.slice(0,7);renderOverview()},'ov-msg',e=>{$('ov-msg').textContent='読み込めませんでした。「更新」を押してください。'})}
+  api('adminOverview',[$('pin').value,from,to],data=>{ovRows=data.rows||[];ovSeen=ovPendingIds(ovRows);$('ov-msg').textContent='';if(!ovMonth)ovMonth=today.slice(0,7);renderOverview()},'ov-msg',e=>{$('ov-msg').textContent='読み込めませんでした。「更新」を押してください。'})}
+// 1分ごとに、静かに読み直す。入力中の欄には触らない。未承認が増えたら知らせる。
+function ovQuietRefresh(){if(!adminUnlocked||document.hidden||!$('pin')||!$('pin').value)return;const today=jstToday(),from=today.slice(0,8)+'01',to=ymdAdd(today,120);
+  api('adminOverview',[$('pin').value,from,to],data=>{if(!adminUnlocked)return;const rows=data.rows||[],ids=ovPendingIds(rows);let added=0;if(ovSeen)ids.forEach(i=>{if(!ovSeen.has(i))added++});ovSeen=ids;ovRows=rows;renderOverview();
+    if(added)toast('新しい予約希望が入りました（未承認 '+ids.size+'件）')},'',()=>{})}
 function ovOpen(date,id){focusRowId=id||'';$('filter-date').value=date;loadAdmin();const c=$('list-card');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:'smooth',block:'start'})}
 let focusRowId='';
 function ovLine(r,showDate){const b=document.createElement('button');b.type='button';b.className='ov-line';
@@ -692,16 +698,18 @@ function ovLine(r,showDate){const b=document.createElement('button');b.type='but
   const w=document.createElement('span');w.className='ov-when';w.textContent=when;
   const k=document.createElement('span');k.className='ov-what';k.textContent=r.type==='closed'?'休館日':r.label+(r.status==='ブロック'?'（予定）':'');
   const n=document.createElement('span');n.className='ov-name';n.textContent=r.status==='ブロック'?(r.name&&r.name!==r.label?r.name:''):r.name;
+  if(r.status==='調整中'){const t=document.createElement('span');t.className='tag-miss';t.textContent='未承認';k.prepend(t)}
   b.append(w,k,n);b.onclick=()=>ovOpen(r.date,r.id);return b}
-function renderOverview(){const today=jstToday(),end14=ymdAdd(today,14),pend=ovRows.filter(r=>r.status==='調整中'),act=ovRows.filter(r=>r.status!=='調整中'&&r.type!=='closed');
+function renderOverview(){const today=jstToday(),end14=ymdAdd(today,14),pend=ovRows.filter(r=>r.status==='調整中'),act=ovRows.filter(r=>r.type!=='closed');
   const L=$('ov-list');L.replaceChildren();
   const h1=document.createElement('h3');h1.className='ov-h'+(pend.length?' alert':'');h1.textContent=pend.length?'未承認 '+pend.length+'件（承認か不承認をしてください）':'未承認はありません';L.append(h1);
   pend.slice(0,30).forEach(r=>L.append(ovLine(r,true)));
+  if(pend.length)L.append(Object.assign(document.createElement('p'),{className:'hint',textContent:'未承認の予約は、下の日ごとの予定にも「未承認」の札つきで出ます。'}));
   const days={};act.filter(r=>r.date>=today&&r.date<=end14).forEach(r=>(days[r.date]=days[r.date]||[]).push(r));
   const keys=Object.keys(days).sort();
   const h2=document.createElement('h3');h2.className='ov-h';h2.textContent='今日から2週間の予定';L.append(h2);
   if(!keys.length){const e=document.createElement('p');e.className='hint';e.textContent='予定はありません。';L.append(e)}
-  keys.forEach(d=>{const t=document.createElement('div');t.className='ov-day'+(d===today?' today':'');t.textContent=(d===today?'今日　':d===ymdAdd(today,1)?'あす　':'')+mdw(d);L.append(t);days[d].forEach(r=>L.append(ovLine(r,false)))});
+  keys.forEach(d=>{const t=document.createElement('div');t.className='ov-day'+(d===today?' today':'');t.textContent=(d===today?'今日　':d===ymdAdd(today,1)?'あす　':'')+mdw(d);L.append(t);days[d].sort((a,b)=>a.start<b.start?-1:a.start>b.start?1:0).forEach(r=>L.append(ovLine(r,false)))});
   renderCalendar();ovShow()}
 function renderCalendar(){const C=$('ov-cal');C.replaceChildren();const [y,m]=ovMonth.split('-').map(Number),today=jstToday();
   const nav=document.createElement('div');nav.className='cal-nav';
@@ -1305,7 +1313,7 @@ function closeAdminDialogs(){
 function lockAdmin(message='画面をロックしました。PINで再ログインしてください。'){
  if(!ADMIN_MODE)return;const token=$('pin').value;adminEpoch++;adminUnlocked=false;adminDiag.session='ロック';adminDiagRecord('管理画面ロック');
  closeAdminDialogs();adminHolds.clear();adminUser={name:'',role:'',label:''};{const who=$('admin-who');if(who)who.textContent=''}if($('staff-list'))$('staff-list').replaceChildren();if($('report-view'))$('report-view').replaceChildren();if($('report-print-btn'))$('report-print-btn').classList.add('hidden');{const w=$('lock-warning');if(w)w.classList.add('hidden')}$('pin').value='';$('login-pin').value='';$('login-button').disabled=false;
- $('admin').classList.add('hidden');$('admin-login').classList.remove('hidden');$('list').replaceChildren();$('pending-count').textContent='';ovRows=[];ovMonth='';$('ov-list').replaceChildren();$('ov-cal').replaceChildren();
+ $('admin').classList.add('hidden');$('admin-login').classList.remove('hidden');$('list').replaceChildren();$('pending-count').textContent='';ovRows=[];ovSeen=null;ovMonth='';$('ov-list').replaceChildren();$('ov-cal').replaceChildren();
  for(const id of ['admin-msg','staff-msg','block-msg','closed-msg','staff-admin-msg','report-msg'])$(id).replaceChildren();
  document.querySelectorAll('#admin input:not([type="hidden"]),#admin textarea').forEach(e=>{if(!['date','time'].includes(e.type))e.value=''});
  document.querySelectorAll('#admin button').forEach(e=>e.disabled=false);document.querySelectorAll('#admin details').forEach(e=>e.open=false);staffAllocationRequest++;staffAllocationReady=false;
@@ -1318,6 +1326,7 @@ if(ADMIN_MODE){for(const event of ['pointerdown','keydown','input','scroll'])doc
  setInterval(lockTick,1000);
  // バックグラウンド中はPINセッションの延長をしない。
  setInterval(()=>{if(adminUnlocked&&!document.hidden&&(Date.now()-lastAdminActivity<300000||holding()))rpc().withSuccessHandler(()=>{}).withFailureHandler(()=>lockAdmin()).adminKeepAlive($('pin').value)},60000);
+ setInterval(ovQuietRefresh,60000);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&adminUnlocked&&Date.now()-lastAdminActivity>=300000&&!holding())lockAdmin()});
  // ページ自体を離れるときはロックする（短時間のアプリ切替では pagehide は通常発火しない）。
  window.addEventListener('pagehide',()=>{if(adminUnlocked)lockAdmin()});
