@@ -307,9 +307,10 @@ function renderGuide(){const g=$('web-guide');if(!g)return;const t=tomorrowStr()
   const rows=[['当日・前日','公式LINEまたはお電話']];
   if(bookingEndDate)rows.push([mdLabel(nextDayStr(bookingEndDate))+'以降','公式LINE']);
   g.textContent='';
-  rows.forEach(r=>{const d=document.createElement('div');d.className='g-row'+(r[2]?' on':'');
-    const a=document.createElement('span');a.className='g-day';a.textContent='【'+r[0]+'】';
-    const b=document.createElement('span');b.textContent=r[1];d.append(a,b);g.append(d)})}
+  const tb=document.createElement('table');tb.className='cx';
+  const h=document.createElement('tr');['利用日','申込みの方法'].forEach(x=>{const c=document.createElement('th');c.textContent=x;h.append(c)});tb.append(h);
+  rows.forEach(r=>{const tr=document.createElement('tr');r.slice(0,2).forEach(x=>{const c=document.createElement('td');c.textContent=x;tr.append(c)});tb.append(tr)});
+  g.append(tb)}
 function updateWindow(){$('web-booking-window').textContent=bookingWindowText();renderGuide()}
 function bookingEndLabel(s){return dayLabel(s)}
 function showBookingDateWarning(date){const el=$('booking-date-warning');if(!el)return;
