@@ -228,6 +228,10 @@ details.how>summary{font-size:15px;font-weight:700;padding:6px 0}
 .bulk-group>.bulk-bar{border:0;background:none;padding:12px 0 4px;margin:0}
 .bulk-group>.item{border-top:1px solid #d5e3ec}
 .bulk-group>.item:first-of-type{border-top:0}
+.item.cx-fee{border-left:5px solid #8c2f39;padding-left:12px}
+.cx-note{margin:6px 0;padding:8px 10px;border-radius:8px;font-size:15px;line-height:1.5}
+.cx-note.fee{background:#fbeaec;color:#6e1f29;font-weight:700}
+.cx-note.free{background:#eef2f5;color:#44525d}
 /* v48 */
 .chg-total{font-size:18px;font-weight:800;color:#0b3a57;margin-bottom:4px}
 .chg-line{font-size:15px;color:#33505f}
@@ -778,6 +782,11 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
     const status=document.createElement('p');const tag=document.createElement('span');tag.className='pill'+(r.status==='承認'?' ok':'');tag.textContent=r.status;status.append(tag);
     status.append(document.createTextNode('　'+r.channel+' ／ 受付 '+tsLabel(r.received)+(r.registeredBy?' ／ 登録者 '+r.registeredBy:'')));d.append(status);
     const person=document.createElement('p');person.textContent=r.name+(r.phone&&r.phone!=='-'?' ／ '+phoneJp(r.phone):'')+(r.channel==='WEB'?' ／ '+r.email:'');d.append(person);if(r.channel==='WEB'){const mail=document.createElement('p');mail.className='hint';mail.textContent='受付メール：'+(r.receiptSent?'送信済み '+tsLabel(r.receiptSent):'未送信')+' ／ 承認メール：'+(r.approvalSent?'送信済み '+tsLabel(r.approvalSent):(r.status==='承認'?'未送信':'承認すると送ります'));d.append(mail)}
+    if(r.status==='キャンセル'&&r.type!=='closed'){const m=String(r.note||'').match(/【取消 (\d{4})-(\d{2})-(\d{2}) ([^／】]*)／請求 ([\d,]+)円／振込期限 (\d{4})-(\d{2})-(\d{2})】/);const fee=m?Number(m[5].replace(/,/g,'')):0;
+      const n=document.createElement('p');n.className='cx-note '+(fee>0?'fee':'free');
+      const wasApproved=!!(r.approvalSent||r.allocation);
+      n.textContent=fee>0?'キャンセル料 '+fee.toLocaleString('ja-JP')+'円（承認後のキャンセル）　振込期限 '+Number(m[7])+'月'+Number(m[8])+'日まで':'キャンセル料なし（0円）'+(wasApproved?'　承認後のキャンセル':'　承認前のキャンセル');
+      if(fee>0)d.classList.add('cx-fee');d.append(n);if(fee>0&&cancelCopy.has(r.id)){const cb=button(d,'振込案内をコピー',()=>copyPlain(cancelCopy.get(r.id)));cb.className='secondary'}}
     if(r.type==='closed'){if(r.status==='ブロック'&&adminCanChief()){const feedback=document.createElement('div');feedback.setAttribute('role','status');
       const remove=button(d,'その日の休館を解除',()=>rowAction(remove,feedback,'adminClosureRemove',[$('pin').value,r.id],'休館を解除しました。','休館日を解除しますか？',r.date+' ／ '+r.name,r.date));d.append(feedback)}$('list').append(d);return}
     if(r.status==='ブロック'){
@@ -935,7 +944,7 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
               if(!await confirmAction('予約をキャンセルしますか？',info+'\n理由：'+reason+due+settlement,'予約をキャンセルする'))return localMessage(feedback,'取消しは実行していません。');
               [...actions.children].forEach(b=>b.disabled=true);localMessage(feedback,'処理中…');
               rpc().withSuccessHandler(result=>{
-                const q=result.cancellation||quote;const text=cancelMessage(r,q);
+                const q=result.cancellation||quote;const text=cancelMessage(r,q);if(q.fee)cancelCopy.set(r.id,text);
                 feedback.innerHTML='';localMessage(feedback,'記録できました：キャンセルしました。キャンセル料：'+yen(q.fee)+'。'+(q.refundDue>0?'返金待ち：'+yen(q.refundDue)+'。実際の返金後に「入金・返金」から記録してください。':q.remaining>0?'未収：'+yen(q.remaining)+'。':'差額なし。')+(q.fee?' 必要な請求案内を確認してください。':''));
                 if(q.fee){const copy=button(feedback,'振込案内をコピー',()=>copyPlain(text));copy.className='secondary';}
                 refreshStaffIfSameDate(r.date);
@@ -1083,6 +1092,7 @@ function chooseCancelReason(r){return new Promise(resolve=>{
   const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   if(r&&r.status==='調整中'&&r.date<today){const b=document.createElement('button');b.value='expired';b.textContent='未承認の申込みを終了（利用日経過）';dlg.querySelector('.modal-actions').append(b)}
   document.body.appendChild(dlg);dlg.addEventListener('close',()=>{const v=dlg.returnValue;dlg.remove();resolve(v==='user'?'利用者都合':v==='facility'?'施設都合':v==='expired'?'未承認の申込みを終了（利用日経過）':null)},{once:true});dlg.showModal()})}
+const cancelCopy=new Map();
 function cancelMessage(r,q){return 'にいかわスポーツドーム\n'+dayLabel(r.date)+' '+r.start+'～'+r.end+' '+r.label+'のキャンセルを受け付けました。\n'+q.paymentText}
 function copyPlain(text){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).catch(()=>window.prompt('この文章をコピーしてください',text))}else window.prompt('この文章をコピーしてください',text)}
 function refreshStaffIfSameDate(date){if(adminUnlocked&&date&&$('staff-date')&&$('staff-date').value===date)refreshStaffAllocations()}
