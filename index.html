@@ -87,6 +87,7 @@ h2.step{font-size:20px;margin:18px 0 8px;color:#0b4f73}h2.step.wide{grid-column:
 .sk{display:inline-block;width:75px;height:46px;border-radius:8px;background:#e3eaee;animation:skp 1s infinite alternate}.sk-note{width:100%;color:#48677a}
 @keyframes skp{from{opacity:.45}to{opacity:1}}
 .basis{color:#48677a;font-size:13px}
+#list .basis{display:block;margin:2px 0 10px}
 .done-box{background:#f3f9f5;border:2px solid #00a566;border-radius:12px;padding:16px;margin-top:14px}
 .mail-note{background:#f3f5f6;border:1px solid #dde3e7;border-radius:10px;padding:12px;margin-top:12px;font-size:15px;line-height:1.7}
 .mail-note strong{display:block;color:#233;font-size:15px;margin-bottom:4px}
@@ -148,6 +149,9 @@ h2.step{font-size:17px!important;color:#233!important;margin:16px 0 6px!importan
 .row-msg{margin:0!important}
 .date-block{margin:12px 0 6px!important}.date-block input{height:48px;font-size:17px}
 h2.step{margin-top:22px!important}
+/* 開始時刻の欄：文字が切れないよう、広げて、短い言葉にする。未選択は薄い青で目立たせる */
+.time-line{flex-wrap:nowrap!important;gap:8px!important}.time-line .tl-start{flex:1 1 118px!important;min-width:0}.time-line .tl-start select{width:100%!important;min-width:118px!important;padding-left:10px;padding-right:20px}.time-line .tl-dur{flex:0 0 auto}.time-line .tl-dur select{width:92px!important;padding-left:8px;padding-right:18px;font-size:16px!important}.time-line .tl-start select{font-size:16px!important;padding-left:8px;padding-right:18px}.time-line .tl-from{font-size:15px}.time-line .tl-from{white-space:nowrap}@media(max-width:340px){.time-line{gap:5px!important}.time-line .tl-start select,.time-line .tl-dur select{font-size:14px!important;padding-left:6px;padding-right:16px}.time-line .tl-dur select{width:78px!important}.time-line .tl-start select{min-width:100px!important}}
+.fac-row.need .tl-start select{background:#eaf4fb!important;color:#0a5f8f!important;border:2px solid #0a75ae!important}
 @media(max-width:480px){.fac-body{padding:0 14px 14px 14px!important}.fac-row .multi-wrap{padding:14px!important}.fac-body .fac-opt select{min-width:0;flex:1}.time-line select{width:120px!important}}
 /* v45d: スタッフの登録画面を、お客様の画面にそろえる */
 #staff-reg h2.step{font-size:17px!important;color:#233!important;margin:20px 0 8px!important}
@@ -380,8 +384,8 @@ function allPicked(){return checkedKeys().map(rowSel)}
 function addOpt(sel,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;sel.append(o)}
 function draw(k){const on=rowOn(k);$('row-'+k).classList.toggle('on',on);$('body-'+k).classList.toggle('hidden',!on);if(!on)return;
   const s=ST[k],sel=$('start-'+k);sel.replaceChildren();
-  if(s.slots===null){sel.disabled=true;addOpt(sel,s.start||'',s.start?s.start+'（確認中）':'空きを確認中…')}
-  else{sel.disabled=false;addOpt(sel,'','選んでください');s.slots.forEach(t=>addOpt(sel,t,t))}
+  if(s.slots===null){sel.disabled=true;addOpt(sel,s.start||'',s.start?s.start+' …':'確認中…')}
+  else{sel.disabled=false;addOpt(sel,'','時刻を選ぶ');s.slots.forEach(t=>addOpt(sel,t,t))}
   sel.value=s.start||'';$('dur-'+k).value=s.dur;$('row-'+k).classList.toggle('need',!s.start);
   const pw=$('pw-'+k);if(pw)pw.classList.toggle('hidden',!eligible(rowItem(k)));
   const m=$('msg-'+k);m.textContent=s.msg||'';m.classList.toggle('hidden',!s.msg)}
@@ -691,7 +695,7 @@ function rejectKeepRender(){const a=rejectKeepLoad(),box=$('reject-keep'),card=$
 // ---- これからの予約（リスト／カレンダー）
 let ovRows=[],ovTabName='list',ovMonth='',ovTimer=0,ovSeen=null;
 // 新しい未承認が増えたかを調べるための、見た未承認の控え
-function ovPendingCount(rows){const el=$('pending-count');if(el&&!adminPendingMode)el.textContent='（'+(rows||[]).filter(r=>r.status==='調整中').length+'件）'}
+function ovPendingCount(rows){const el=$('pending-count');if(el)el.textContent='（'+(rows||[]).filter(r=>r.status==='調整中').length+'件）'}
 function ovPendingIds(rows){return new Set((rows||[]).filter(r=>r.status==='調整中').map(r=>r.id))}
 function jstToday(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date())}
 function ymdAdd(s,n){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
