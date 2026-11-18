@@ -691,6 +691,7 @@ function rejectKeepRender(){const a=rejectKeepLoad(),box=$('reject-keep'),card=$
 // ---- これからの予約（リスト／カレンダー）
 let ovRows=[],ovTabName='list',ovMonth='',ovTimer=0,ovSeen=null;
 // 新しい未承認が増えたかを調べるための、見た未承認の控え
+function ovPendingCount(rows){const el=$('pending-count');if(el&&!adminPendingMode)el.textContent='（'+(rows||[]).filter(r=>r.status==='調整中').length+'件）'}
 function ovPendingIds(rows){return new Set((rows||[]).filter(r=>r.status==='調整中').map(r=>r.id))}
 function jstToday(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date())}
 function ymdAdd(s,n){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
@@ -701,10 +702,10 @@ function ovTab(t){ovTabName=(ovTabName===t)?'':t;ovShow()}
 function ovShow(){['list','cal','date'].forEach(n=>{const on=ovTabName===n,b=$('ov-tab-'+n);b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');$('ov-panel-'+n).classList.toggle('hidden',!on)});}
 function loadOverview(){if(!$('pin')||!$('pin').value)return;const today=jstToday(),from=today.slice(0,8)+'01',to=ymdAdd(today,120);
   $('ov-msg').textContent='読み込み中…';
-  api('adminOverview',[$('pin').value,from,to],data=>{ovRows=data.rows||[];ovSeen=ovPendingIds(ovRows);$('ov-msg').textContent='';if(!ovMonth)ovMonth=today.slice(0,7);renderOverview()},'ov-msg',e=>{$('ov-msg').textContent='読み込めませんでした。「更新」を押してください。'})}
+  api('adminOverview',[$('pin').value,from,to],data=>{ovRows=data.rows||[];ovSeen=ovPendingIds(ovRows);ovPendingCount(ovRows);$('ov-msg').textContent='';if(!ovMonth)ovMonth=today.slice(0,7);renderOverview()},'ov-msg',e=>{$('ov-msg').textContent='読み込めませんでした。「更新」を押してください。'})}
 // 1分ごとに、静かに読み直す。入力中の欄には触らない。未承認が増えたら知らせる。
 function ovQuietRefresh(){if(!adminUnlocked||document.hidden||!$('pin')||!$('pin').value)return;const today=jstToday(),from=today.slice(0,8)+'01',to=ymdAdd(today,120);
-  api('adminOverview',[$('pin').value,from,to],data=>{if(!adminUnlocked)return;const rows=data.rows||[],ids=ovPendingIds(rows);let added=0;if(ovSeen)ids.forEach(i=>{if(!ovSeen.has(i))added++});ovSeen=ids;ovRows=rows;renderOverview();
+  api('adminOverview',[$('pin').value,from,to],data=>{if(!adminUnlocked)return;const rows=data.rows||[],ids=ovPendingIds(rows);let added=0;if(ovSeen)ids.forEach(i=>{if(!ovSeen.has(i))added++});ovSeen=ids;ovRows=rows;ovPendingCount(rows);renderOverview();
     if(added)toast('新しい予約希望が入りました（未承認 '+ids.size+'件）')},'',()=>{})}
 function ovOpen(date,id){focusRowId=id||'';$('filter-date').value=date;loadAdmin();const c=$('list-card');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:'smooth',block:'start'})}
 let focusRowId='';
@@ -752,7 +753,7 @@ function loadAdmin(pendingOnly=false,warning=''){if(!$('pin').value)return msg('
   adminDiagPhase('list',pendingOnly?'未承認を取得中':'指定日を取得中');
   const watchdog=setTimeout(()=>{if(seq===adminListRequest){b.disabled=false;adminDiagPhase('list','応答待ちが15秒超');msg('admin-msg','一覧の応答を待っています。何度も押さず診断履歴を確認してください。',true)}},15000);
   api('adminList',[$('pin').value,$('filter-date').value,pendingOnly],rows=>{if(seq!==adminListRequest)return;clearTimeout(watchdog);b.disabled=false;ovSoon();{const dd=$('filter-date').value;$('list-title').textContent=pendingOnly?'未承認の予約（すべて）':dd?dayLabel(dd)+'の予約・予定':'予約・予定'}
-    try{$('admin-msg').textContent='';renderAdmin(rows);
+    try{$('admin-msg').textContent='';lastAdminRows=rows;renderAdmin(rows);
       adminDiagPhase('list','表示完了 '+rows.length+'件');if(warning){msg('admin-msg',warning,!/^(記録できました)/.test(warning));toast(warning,!/^(記録できました)/.test(warning))}
       if(pendingOnly)$('pending-count').textContent='（'+rows.length+'件）';else rpc().withSuccessHandler(p=>{$('pending-count').textContent='（'+p.length+'件）'}).withFailureHandler(e=>adminDiagRecord('未承認件数の取得失敗',e)).adminList($('pin').value,'',true)
     }catch(error){adminDiagPhase('list','描画エラー');adminDiagRecord('予約一覧の表示失敗',error);msg('admin-msg','予約一覧の画面表示に失敗しました。診断履歴を確認してください。',true)}
@@ -763,7 +764,7 @@ function addBulkBars(rows,pickers,cards){const groups=new Map();
   groups.forEach((list,group)=>{if(list.length<2)return;const first=cards.get(list[0].id);if(!first)return;
     const bar=document.createElement('div');bar.className='bulk-bar';
     const t=document.createElement('strong');t.textContent='同じ申込みの予約が'+list.length+'件あります（'+list[0].name+'）';
-    const n=document.createElement('div');n.className='hint';n.textContent='まとめて承認すると、お客様に確定のメールを1通お送りします。';
+    const n=document.createElement('div');n.className='hint';n.textContent='押す前に、下の各予約で使用コートを選んでください。まとめて承認すると、お客様に確定のメールを1通お送りします。';
     const feedback=document.createElement('div');feedback.setAttribute('role','status');
     const b=button(bar,'この'+list.length+'件をまとめて承認する',async()=>{
       const picks=[];for(const r of list){const v=pickers.get(r.id).value();if(!v)return localMessage(feedback,r.label+'の使用コートを選んでください。',true);picks.push({id:r.id,allocation:v})}
@@ -865,7 +866,7 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
       start.onchange=refreshBlockChange;end.onchange=refreshBlockChange;
       $('list').append(d);return;
     }
-    if(r.status==='調整中'||r.status==='承認'){const amount=document.createElement('p');amount.textContent='予定料金：'+yen(r.amount)+(r.people?'（'+r.people+'人）':'');d.append(amount);if(eligible(r)&&r.status==='調整中'){const field=document.createElement('label');field.textContent='利用人数（受付で変更可）';const people=document.createElement('input');people.type='number';people.min='1';people.max='99';people.step='1';people.value=r.people||'';field.append(people);d.append(field);const feedbackPeople=document.createElement('div');feedbackPeople.setAttribute('role','status');const save=button(d,'人数と料金を更新',()=>{save.disabled=true;localMessage(feedbackPeople,'処理中…');rpc().withSuccessHandler(result=>{save.disabled=false;localMessage(feedbackPeople,'更新後の予定料金：'+yen(result.amount));loadAdmin(adminPendingMode)}).withFailureHandler(e=>{save.disabled=false;localMessage(feedbackPeople,e.message||String(e),true)}).adminPeople($('pin').value,r.id,people.value)});d.append(feedbackPeople)}const allocation=allocationPicker(r);pickers.set(r.id,allocation);d.append(allocation.element);
+    if(r.status==='調整中'||r.status==='承認'){const amount=document.createElement('p');amount.textContent='予定料金：'+yen(r.amount)+(r.people?'（'+r.people+'人）':'');d.append(amount);if(r.basis){const bs=document.createElement('small');bs.className='basis';bs.textContent=(r.memberType==='一般'?'一般':'会員')+'料金　'+r.basis;d.append(bs)}if(eligible(r)&&r.status==='調整中'){const field=document.createElement('label');field.textContent='利用人数（受付で変更可）';const people=document.createElement('input');people.type='number';people.min='1';people.max='99';people.step='1';people.value=r.people||'';field.append(people);d.append(field);const feedbackPeople=document.createElement('div');feedbackPeople.setAttribute('role','status');const save=button(d,'人数と料金を更新',()=>{save.disabled=true;localMessage(feedbackPeople,'処理中…');rpc().withSuccessHandler(result=>{save.disabled=false;localMessage(feedbackPeople,'更新後の予定料金：'+yen(result.amount));loadAdmin(adminPendingMode)}).withFailureHandler(e=>{save.disabled=false;localMessage(feedbackPeople,e.message||String(e),true)}).adminPeople($('pin').value,r.id,people.value)});d.append(feedbackPeople)}const allocation=allocationPicker(r);pickers.set(r.id,allocation);d.append(allocation.element);
       if(r.status==='承認' && r.type==='soccer')appendCourtChangeEditor_(d,r);
       // 人数変更・延長。精算済みは初回入金を保全し、変更後の差額を別途精算する。
       if(r.status==='承認'){
@@ -947,6 +948,9 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
                 const q=result.cancellation||quote;const text=cancelMessage(r,q);if(q.fee)cancelCopy.set(r.id,text);
                 feedback.innerHTML='';localMessage(feedback,'記録できました：キャンセルしました。キャンセル料：'+yen(q.fee)+'。'+(q.refundDue>0?'返金待ち：'+yen(q.refundDue)+'。実際の返金後に「入金・返金」から記録してください。':q.remaining>0?'未収：'+yen(q.remaining)+'。':'差額なし。')+(q.fee?' 必要な請求案内を確認してください。':''));
                 if(q.fee){const copy=button(feedback,'振込案内をコピー',()=>copyPlain(text));copy.className='secondary';}
+                // 一覧の再取得を待たず、カードをすぐ「キャンセル」の表示にする（本物の内容は、あとから再取得して置き換える）
+                try{if(lastAdminRows.includes(r)){r.status='キャンセル';r.note=((r.note||'')+' 【取消 '+q.cancelDate+' '+q.reason+'／請求 '+Number(q.fee||0).toLocaleString('en-US')+'円／振込期限 '+(q.dueDate||'')+'】').trim();renderAdmin(lastAdminRows)}}catch(e){adminDiagRecord('即時表示の失敗',e)}
+                toast('記録できました：キャンセルしました。',false);
                 refreshStaffIfSameDate(r.date);
                 // 旧カードの精算欄はキャンセル前の料金を保持するため、
                 // 必ずサーバーから予約・入出金を再取得して表示し直す。
@@ -1092,7 +1096,7 @@ function chooseCancelReason(r){return new Promise(resolve=>{
   const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   if(r&&r.status==='調整中'&&r.date<today){const b=document.createElement('button');b.value='expired';b.textContent='未承認の申込みを終了（利用日経過）';dlg.querySelector('.modal-actions').append(b)}
   document.body.appendChild(dlg);dlg.addEventListener('close',()=>{const v=dlg.returnValue;dlg.remove();resolve(v==='user'?'利用者都合':v==='facility'?'施設都合':v==='expired'?'未承認の申込みを終了（利用日経過）':null)},{once:true});dlg.showModal()})}
-const cancelCopy=new Map();
+const cancelCopy=new Map();let lastAdminRows=[];
 function cancelMessage(r,q){return 'にいかわスポーツドーム\n'+dayLabel(r.date)+' '+r.start+'～'+r.end+' '+r.label+'のキャンセルを受け付けました。\n'+q.paymentText}
 function copyPlain(text){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).catch(()=>window.prompt('この文章をコピーしてください',text))}else window.prompt('この文章をコピーしてください',text)}
 function refreshStaffIfSameDate(date){if(adminUnlocked&&date&&$('staff-date')&&$('staff-date').value===date)refreshStaffAllocations()}
