@@ -562,7 +562,7 @@ function formData(p){const type=$(p+'-type').value,value=$(p+'-facility').value,
   const end=p==='staff'&&start?hm(min(start)+Number($('staff-duration').value)):$(p+'-end').value;
   return {date:p==='staff'?$(p+'-date').value:'',type,
     units:type==='soccer'?Number(value):type==='baseball'&&value.startsWith('ブルペン')?Number(value.slice(-1)):1,
-    label:type==='baseball'&&value.startsWith('ブルペン')?'ブルペン':type==='baseball'?value:'多目的',
+    label:type==='soccer'?(Number(value)===3?'フルコート':Number(value)===2?'ミニコート×2（2/3面）':'ミニコート（1/3面）'):type==='baseball'&&value.startsWith('ブルペン')?'ブルペン':type==='baseball'?value:'多目的',
     allocation:$(p+'-allocation').value,memberType:p==='staff'&&$('staff-member')?$('staff-member').value:'',start,end,people:p==='staff'&&eligible({type,units:type==='soccer'?Number(value):1,label:type==='baseball'&&value.startsWith('ブルペン')?'ブルペン':value})?Number($('staff-people').value):0}
 }
 function staffPriceAmount(r){const court=rate(r)*(min(r.end)-min(r.start))/60;
@@ -941,7 +941,7 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
             rpc().withSuccessHandler(async quote=>{
               action.disabled=false;
               const due='\nキャンセル料：'+yen(quote.fee)+'（'+quote.rate+'％）'+
-                (quote.fee?'\n振込期限：'+quote.dueDate+'中まで':'')+
+                (quote.fee?'\n振込期限：'+dayLabel(quote.dueDate)+'まで':'')+
                 (quote.fee?'\n\n※振込案内はスタッフがLINE・SMS等で送信してください。':'');
               const settlement='\n入金累計：'+yen(quote.paid||0)+
                 (quote.refundDue>0?'\nキャンセル後の要返金：'+yen(quote.refundDue)+'（実際の返金後に記録）':
@@ -958,7 +958,7 @@ function renderAdmin(rows){rejectKeepRender();$('list').innerHTML='';if(!rows.le
                 refreshStaffIfSameDate(r.date);
                 // 旧カードの精算欄はキャンセル前の料金を保持するため、
                 // 必ずサーバーから予約・入出金を再取得して表示し直す。
-                loadAdmin(false,'記録できました：キャンセルを記録しました。返金待ち・未収額は該当予約の「入金・返金」欄に表示されます。');
+                loadAdmin(false,'記録できました：キャンセルを記録しました。');
               }).withFailureHandler(e=>{[...actions.children].forEach(b=>b.disabled=false);localMessage(feedback,e.message||String(e),true)})
                 .adminChange($('pin').value,r.id,s,allocation.value(),note.value,reason);
             }).withFailureHandler(e=>{action.disabled=false;localMessage(feedback,e.message||String(e),true)})
