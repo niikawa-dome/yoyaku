@@ -319,7 +319,7 @@ function nextDayStr(s){const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDat
 function renderGuide(){const g=$('web-guide');if(!g)return;const t=tomorrowStr();
   if(bookingEndDate&&bookingEndDate<t){g.textContent='';return}
   const rows=[['当日・前日','公式LINEまたはお電話']];
-  if(bookingEndDate)rows.push([mdLabel(nextDayStr(bookingEndDate))+'以降','公式LINE']);
+  if(bookingEndDate)rows.push([mdLabel(nextDayStr(bookingEndDate))+'以降','公式LINEまたはお電話']);
   g.textContent='';
   const tb=document.createElement('table');tb.className='cx';
   const h=document.createElement('tr');['利用日','申込みの方法'].forEach(x=>{const c=document.createElement('th');c.textContent=x;h.append(c)});tb.append(h);
@@ -333,7 +333,7 @@ function updateWindow(){$('web-booking-window').textContent=bookingWindowText();
 function bookingEndLabel(s){return dayLabel(s)}
 function showBookingDateWarning(date){const el=$('booking-date-warning');if(!el)return;
   const invalid=date&&date>bookingEndDate;el.classList.toggle('hidden',!invalid);
-  el.textContent=invalid?'WEB予約の受付期間外です。'+bookingEndLabel(bookingEndDate)+'まで受け付けています。それ以降はLINEでお問い合わせください。':''}
+  el.textContent=invalid?'WEB予約の受付期間外です。'+bookingEndLabel(bookingEndDate)+'まで受け付けています。それ以降は公式LINEまたはお電話でお問い合わせください。':''}
 function publicBookingWindow(){rpc().withSuccessHandler(r=>{bookingEndDate=r.endDate;$('date').max=bookingEndDate;
   updateWindow();
   showBookingDateWarning($('date').value);
